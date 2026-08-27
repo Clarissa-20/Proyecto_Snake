@@ -1,5 +1,7 @@
 #include "nivel1.h"
 #include "ui_gamewindow.h"
+#include <QDebug>
+
 Nivel1::Nivel1(QWidget *parent)
     : Nivel(parent)
 {
@@ -9,12 +11,24 @@ Nivel1::Nivel1(QWidget *parent)
     setFixedSize(600,600);
     setFocusPolicy(Qt::StrongFocus);
 
-    cellsize=20;
+    //cargamos aqui la img de fondo para el nivel 1
+    fondo.load("fondo_nivel1.jpg");
+
+    /*cellsize=20;
     rows=height()/cellsize;
     cols=width()/cellsize;
     crearMapa();
 
-    cabeza= new Nodo(10, 10);
+    cabeza= new Nodo(10, 10);*/
+
+    //nuevo
+    cellsize=20;
+    marginX=100;
+    marginY=120;
+    cols=((width()-(2*marginX))/cellsize)-1;
+    rows=((height()-marginY-120)/cellsize);
+    crearMapa();
+    cabeza=new Nodo(5, 5);
 
     direction=Right;
     gameover=false;
@@ -32,7 +46,7 @@ Nivel1::Nivel1(QWidget *parent)
                                "background-color:#00aa00;"
                                "color:white;"
                                "font-size:18px;"
-                               "border-raduis:10px;"
+                               "border-radius:10px;"
                                "}"
                                "QPushButton:hover{"
                                "background-color:#00cc00;"

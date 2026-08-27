@@ -6,6 +6,7 @@
 #include <QtCore>
 #include <QtWidgets>
 #include <QtGui>
+#include <QPixmap> //nuevo]a libreria para manejar las imagenes
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -38,6 +39,12 @@ public:
 
 protected:
     Ui::GameWindow *ui;
+
+    QPixmap fondo; //nuevo: variable para la img de fondo
+
+    //nuevo: margenes para centrar el área de juego dentro del marco decorativo
+    int marginX;
+    int marginY;
 
     enum Direction
     {

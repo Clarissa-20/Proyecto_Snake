@@ -337,7 +337,14 @@ void Nivel::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
 
-    painter.fillRect(rect(), Qt::black);
+    //nuevo: para dibujar la img del fondo
+    if(!fondo.isNull()){
+        //dibuja y escala la imagen de fondo al tama;o de la pantalla
+        painter.drawPixmap(rect(), fondo);
+    }else{
+        //fondo negro por si no carga la img
+        painter.fillRect(rect(), Qt::black);
+    }
 
     Nodo* actual = cabeza;
     bool esCabeza=true;
@@ -353,18 +360,35 @@ void Nivel::paintEvent(QPaintEvent *)
             painter.setBrush(QColor(0, 180, 0));
         }
         painter.setPen(Qt::NoPen);
-        painter.drawRoundedRect(actual->x*cellsize, actual->y*cellsize, cellsize, cellsize, 5,5);
+
+        //nuevo: aplicar margen en x - y
+        int posX=marginX+(actual->x*cellsize);
+        int posY=marginY+(actual->y*cellsize);
+
+        painter.drawRoundedRect(posX, posY, cellsize, cellsize, 5, 5);
         actual= actual->siguiente;
     }
-    painter.setPen(Qt::NoPen);
+    /*painter.setPen(Qt::NoPen);
     painter.setBrush(Qt::red);
-    painter.drawEllipse(food.x()*cellsize, food.y()*cellsize, cellsize, cellsize);
+    painter.drawEllipse(food.x()*cellsize, food.y()*cellsize, cellsize, cellsize);*/
+
+    painter.setBrush(Qt::red);
+    int foodX=marginX+(food.x()*cellsize);
+    int foodY=marginY+(food.y()*cellsize);
+    painter.drawEllipse(foodX, foodY, cellsize, cellsize);
 
     //nivel 1
-    if(hayComidaDorada==true)
+    /*if(hayComidaDorada==true)
     {
         painter.setBrush(QColor(255,215,0));
         painter.drawEllipse(comidaDorada.x()*cellsize, comidaDorada.y()*cellsize, cellsize, cellsize);
+    }*/
+
+    if(hayComidaDorada){
+        painter.setBrush(QColor(255, 215, 0));
+        int doradaX=marginX+(comidaDorada.x()*cellsize);
+        int doradaY=marginY+(comidaDorada.y()*cellsize);
+        painter.drawEllipse(doradaX, doradaY, cellsize, cellsize);
     }
 
     painter.setPen(Qt::white);
