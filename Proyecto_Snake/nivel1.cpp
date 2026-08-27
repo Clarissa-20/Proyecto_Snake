@@ -14,12 +14,6 @@ Nivel1::Nivel1(QWidget *parent)
 
     //cargamos aqui la img de fondo para el nivel 1
     fondo.load(":/imagenes/nivel1_fondo.jpg");
-    /*cellsize=20;
-    rows=height()/cellsize;
-    cols=width()/cellsize;
-    crearMapa();
-
-    cabeza= new Nodo(10, 10);*/
 
     //nuevo
     cellsize=20;

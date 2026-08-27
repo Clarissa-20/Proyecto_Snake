@@ -17,13 +17,26 @@ Nivel3::Nivel3(QWidget *parent)
     setFixedSize(600,600);
     setFocusPolicy(Qt::StrongFocus);
 
-    cellsize=20;
+    /*cellsize=20;
     rows=height()/cellsize;
     cols=width()/cellsize;
     crearMapa();
     inicializarBloquesMovibles(); //se agrega la cruz de muros en el mapa
 
-    cabeza= new Nodo(10, 10);
+    cabeza= new Nodo(10, 10);*/
+
+    //cargamos aqui la img de fondo para el nivel 3
+    fondo.load(":/imagenes/nivel3_fondo.jpg");
+
+    //nuevo
+    cellsize=20;
+    marginX=100;
+    marginY=120;
+    cols=((width()-(2*marginX))/cellsize)-1;
+    rows=((height()-marginY-120)/cellsize);
+    crearMapa();
+    inicializarBloquesMovibles();
+    cabeza=new Nodo(5, 5);
 
     direction=Right;
     gameover=false;
@@ -430,7 +443,13 @@ void Nivel3::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
 
-    painter.fillRect(rect(), Qt::black);
+    // Reemplaza el fillRect negro por esto para que dibuje la imagen de fondo:
+    if (!fondo.isNull()) {
+        painter.drawPixmap(0, 0, width(), height(), fondo);
+    } else {
+        // Por si la imagen llegara a fallar, se pinta de negro como respaldo
+        painter.fillRect(rect(), Qt::black);
+    }
 
     //NIVEL 3: dibujar los bloques movibles
     painter.setBrush(QColor(120,110,100));

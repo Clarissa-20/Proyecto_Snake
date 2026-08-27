@@ -13,13 +13,26 @@ Nivel2::Nivel2(QWidget *parent)
     setFixedSize(600,600);
     setFocusPolicy(Qt::StrongFocus);
 
-    cellsize=20;
+    /*cellsize=20;
     rows=height()/cellsize;
     cols=width()/cellsize;
     crearMapa();
     generarMuros(); //se agrega la cruz de muros en el mapa
 
-    cabeza= new Nodo(10, 10);
+    cabeza= new Nodo(10, 10);*/
+
+    //cargamos aqui la img de fondo para el nivel 2
+    fondo.load(":/imagenes/nivel2_fondo.jpg");
+
+    //nuevo
+    cellsize=20;
+    marginX=100;
+    marginY=120;
+    cols=((width()-(2*marginX))/cellsize)-1;
+    rows=((height()-marginY-120)/cellsize);
+    crearMapa();
+    generarMuros();
+    cabeza=new Nodo(5, 5);
 
     direction=Right;
     gameover=false;
@@ -296,7 +309,13 @@ void Nivel2::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
 
-    painter.fillRect(rect(), Qt::black);
+    // Reemplaza el fillRect negro por esto para que dibuje la imagen de fondo:
+    if (!fondo.isNull()) {
+        painter.drawPixmap(0, 0, width(), height(), fondo);
+    } else {
+        // Por si la imagen llegara a fallar, se pinta de negro como respaldo
+        painter.fillRect(rect(), Qt::black);
+    }
 
     //NIVEL 2: dibujar los muros +
     painter.setBrush(QColor(120,110,100));
