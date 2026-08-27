@@ -13,7 +13,7 @@ Nivel1::Nivel1(QWidget *parent)
     setFocusPolicy(Qt::StrongFocus);
 
     //cargamos aqui la img de fondo para el nivel 1
-    fondo.load(":/imagenes/fondo_nivel1.jpg");
+    fondo.load(":/imagenes/nivel1_fondo.jpg");
     /*cellsize=20;
     rows=height()/cellsize;
     cols=width()/cellsize;
