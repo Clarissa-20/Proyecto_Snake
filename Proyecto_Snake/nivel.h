@@ -27,18 +27,16 @@ struct Nodo
     }
 };
 
-class GameWindow : public QWidget
+class Nivel : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit GameWindow(QWidget *parent = nullptr);
-    ~GameWindow() override;
+    explicit Nivel(QWidget *parent = nullptr);
+    ~Nivel() override;
 
-private slots:
-    void gameloop();
-    void resetGame();
-private:
+
+protected:
     Ui::GameWindow *ui;
 
     enum Direction
@@ -77,9 +75,9 @@ private:
     bool nivelGanado;
     static const int MANZANAS_META=6;
 
-    void moveSnake();
-    void spawnFood();
-    void checkCollision();
+    virtual void moveSnake();
+    virtual void spawnFood();
+    virtual void checkCollision();
 
     //integracion de mapa prueba#1
     void crearMapa();
@@ -90,6 +88,10 @@ private:
 
     //manzanas prueba#1
     void intentoComidaDorada();
+
+protected slots:
+    virtual void gameloop();
+    virtual void resetGame();
 protected:
     void paintEvent(QPaintEvent *) override;
     void keyPressEvent(QKeyEvent *event) override;

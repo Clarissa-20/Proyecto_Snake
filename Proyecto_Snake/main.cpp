@@ -1,11 +1,12 @@
-#include "gamewindow.h"
-
 #include <QApplication>
-
+#include "nivel1.h"
+#include "nivel2.h"
+#include "nivel3.h"
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    GameWindow w;
+    Nivel3 w;
     w.show();
-    return QApplication::exec();
+    return a.exec();
 }
+

@@ -14,8 +14,8 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 set(PROJECT_SOURCES
         main.cpp
-        gamewindow.cpp
-        gamewindow.h
+
+
         gamewindow.ui
 )
 
@@ -23,6 +23,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Proyecto_Snake
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        nivel.h nivel.cpp
+        nivel1.h nivel1.cpp
+        nivel2.h nivel2.cpp
+        nivel3.h nivel3.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Proyecto_Snake APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

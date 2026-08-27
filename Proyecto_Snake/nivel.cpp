@@ -1,61 +1,31 @@
-#include "gamewindow.h"
+#include "nivel.h"
 #include "ui_gamewindow.h"
 
-GameWindow::GameWindow(QWidget *parent)
+Nivel::Nivel(QWidget *parent)
     : QWidget(parent)
-    , ui(new Ui::GameWindow)
+    , ui(nullptr)
     //integración de nodo prueba #1
     , cabeza(nullptr)
     //integracion de mapa prueba#1
     , mapa(nullptr)
+    , timer(nullptr)
+    , cellsize(0)
+    , rows(0)
+    , cols(0)
+    , gameover(false)
+    , retryButton(nullptr)
     //nivel1
     , hayComidaDorada(false)
     , crecimientoExtra(0)
     , manzanasComidas(0)
     , puntuacion(0)
     , nivelGanado(false)
-
 {
-    ui->setupUi(this);
 
-    setFixedSize(600,600);
-    setFocusPolicy(Qt::StrongFocus);
-
-    cellsize=20;
-    rows=height()/cellsize;
-    cols=width()/cellsize;
-    crearMapa();
-
-    cabeza= new Nodo(10, 10);
-
-    direction=Right;
-    gameover=false;
-
-    spawnFood();
-    timer= new QTimer(this);
-
-    connect(timer, &QTimer::timeout, this, &GameWindow::gameloop);
-
-    timer->start(150); /*aqui se modifica la rapidez del guano entre mas alto mas lento*/
-
-    retryButton= new QPushButton("Retry", this);
-    retryButton->setGeometry(width()/2-50, height()/2+40, 100, 40);
-    retryButton->setStyleSheet("QPushButton{"
-                               "background-color:#00aa00;"
-                               "color:white;"
-                               "font-size:18px;"
-                               "border-raduis:10px;"
-                               "}"
-                               "QPushButton:hover{"
-                               "background-color:#00cc00;"
-                               "}"
-                               );
-    connect(retryButton, &QPushButton::clicked, this, &GameWindow::resetGame);
-    retryButton->hide();
-    setFocusPolicy(Qt::StrongFocus);
 }
+
 //destructor
-GameWindow::~GameWindow()
+Nivel::~Nivel()
 {
     limpiarSerpiente();
 
@@ -65,50 +35,8 @@ GameWindow::~GameWindow()
     delete ui;
 }
 
-void GameWindow::gameloop()
+void Nivel::moveSnake()
 {
-    if(gameover==true)
-    {
-        return;
-    }
-
-    moveSnake();
-    checkCollision();
-    update();
-}
-
-void GameWindow::resetGame()
-{
-    //snake.clear();
-    //snake.append(QPoint(10,10));
-
-    //integración de nodo prueba #1
-    limpiarSerpiente();
-    //integración de nodo prueba #1
-    cabeza = new Nodo(10, 10);
-
-    direction=Right;
-    gameover=false;
-
-    //NIVEL 1: reiniciar todo lo relacionado al nivel 2
-    manzanasComidas=0;
-    puntuacion=0;
-    nivelGanado=false;
-    hayComidaDorada=false;
-    crecimientoExtra=0; //NIVEL 1
-
-    spawnFood();
-    retryButton->hide();
-    setFocusPolicy(Qt::StrongFocus);
-    setFocus();
-    timer->start(150);
-    update();
-}
-
-void GameWindow::moveSnake()
-{
-    //QPoint Head= snake.first();
-
     //integración de nodo prueba #1
     if(cabeza==nullptr)
     {
@@ -228,24 +156,15 @@ void GameWindow::moveSnake()
     }
 }
 
-void GameWindow::spawnFood()
+void Nivel::spawnFood()
 {
     int x= QRandomGenerator::global()->bounded(cols);
     int y= QRandomGenerator::global()->bounded(rows);
     food= QPoint(x,y);
 }
 
-void GameWindow::checkCollision()
+void Nivel::checkCollision()
 {
-    //QPoint Head = snake.first();
-
-    /*if(Head.x()<0 || Head.y()<0 || Head.x()>=cols || Head.y()>=rows)
-    {
-        gameover=true;
-        timer->stop();
-        retryButton->show();
-    }*/
-
     //integración de nodo prueba #1
     if(cabeza==nullptr)
     {
@@ -255,23 +174,6 @@ void GameWindow::checkCollision()
     int cabezaX= cabeza->x;
     int cabezaY= cabeza->y;
 
-    if(cabezaX<0 || cabezaY<0 || cabezaX>=cols || cabezaY>=rows)
-    {
-        gameover=true;
-        timer->stop();
-        retryButton->show();
-        return;
-    }
-    /*
-    for(int i=1; i<snake.size(); i++)
-    {
-        if(Head==snake[i])
-        {
-            gameover=true;
-            timer->stop();
-            retryButton->show();
-        }
-    }*/
     Nodo* actual = cabeza->siguiente;
     while(actual !=nullptr)
     {
@@ -286,8 +188,7 @@ void GameWindow::checkCollision()
     }
 }
 
-//integracion de mapa prueba#1
-void GameWindow::crearMapa()
+void Nivel::crearMapa()
 {
     mapa = new int*[rows];
 
@@ -300,8 +201,8 @@ void GameWindow::crearMapa()
         }
     }
 }
-//integracion de mapa prueba#1
-void GameWindow::destruirMapa()
+
+void Nivel::destruirMapa()
 {
     if(mapa != nullptr)
     {
@@ -314,8 +215,8 @@ void GameWindow::destruirMapa()
         mapa=nullptr;
     }
 }
-//integración de nodo prueba #1
-void GameWindow::limpiarSerpiente()
+
+void Nivel::limpiarSerpiente()
 {
     Nodo* actual=cabeza;
     while(actual!=nullptr)
@@ -326,8 +227,8 @@ void GameWindow::limpiarSerpiente()
     }
     cabeza=nullptr;
 }
-//integración de nodo prueba #1
-int GameWindow::obtenerLongitudSerpiente()
+
+int Nivel::obtenerLongitudSerpiente()
 {
     int longitud =0;
     Nodo* actual=cabeza;
@@ -339,119 +240,7 @@ int GameWindow::obtenerLongitudSerpiente()
     return longitud;
 }
 
-void GameWindow::paintEvent(QPaintEvent *)
-{
-    QPainter painter(this);
-
-    painter.fillRect(rect(), Qt::black);
-
-    /*painter.setBrush(Qt::green);
-
-    for (int i = 0; i < snake.size(); i++)
-    {
-        if(i==0)
-        {
-            painter.setBrush(QColor(0,255,180));
-        }
-        else
-        {
-            painter.setBrush(QColor(0,180,0));
-        }
-
-        painter.setPen(Qt::NoPen);
-
-        painter.drawRoundedRect(snake[i].x()*cellsize, snake[i].y()*cellsize, cellsize, cellsize, 5,5);
-    }*/
-
-    Nodo* actual = cabeza;
-    bool esCabeza=true;
-    while (actual != nullptr)
-    {
-        if(esCabeza==true)
-        {
-            painter.setBrush(QColor(0, 255, 180));
-            esCabeza=false;
-        }
-        else
-        {
-            painter.setBrush(QColor(0, 180, 0));
-        }
-        painter.setPen(Qt::NoPen);
-        painter.drawRoundedRect(actual->x*cellsize, actual->y*cellsize, cellsize, cellsize, 5,5);
-        actual= actual->siguiente;
-    }
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(Qt::red);
-    painter.drawEllipse(food.x()*cellsize, food.y()*cellsize, cellsize, cellsize);
-
-    //nivel 1
-    if(hayComidaDorada)
-    {
-        painter.setBrush(QColor(255,215,0));
-        painter.drawEllipse(comidaDorada.x()*cellsize, comidaDorada.y()*cellsize, cellsize, cellsize);
-    }
-
-    painter.setPen(Qt::white);
-    painter.setFont(QFont("Arial", 12));
-    painter.drawText(10, 20, QString("Puntos: %1").arg(puntuacion));
-    painter.drawText(10, 40, QString("Manzanas: %1/%2").arg(manzanasComidas).arg(MANZANAS_META));
-
-    if(gameover==true)
-    {
-        painter.setPen(Qt::white);
-        painter.setFont(QFont("Arial", 24));
-        if(nivelGanado)
-        {
-            //NIVEL 1: mensaje de victoria al completar las 6 manzanas rojas
-            painter.drawText(rect(), Qt::AlignCenter, "¡NIVEL COMPLETADO!");
-        }
-        else
-        {
-            painter.drawText(rect(), Qt::AlignCenter, "GAME OVER");
-        }
-    }
-}
-
-void GameWindow::keyPressEvent(QKeyEvent *event)
-{
-    switch (event->key())
-    {
-    case Qt::Key_Up:
-    {
-        if(direction!=Down)
-        {
-            direction=Up;
-        }
-        break;
-    }
-    case Qt::Key_Down:
-    {
-        if(direction!=Up)
-        {
-            direction=Down;
-        }
-        break;
-    }
-    case Qt::Key_Left:
-    {
-        if(direction!=Right)
-        {
-            direction=Left;
-        }
-        break;
-    }
-    case Qt::Key_Right:
-    {
-        if(direction!=Left)
-        {
-            direction=Right;
-        }
-        break;
-    }
-    }
-}
-
-void GameWindow::intentoComidaDorada()
+void Nivel::intentoComidaDorada()
 {
     int probabilidad = QRandomGenerator::global()->bounded(100);
     if(probabilidad >= 40)
@@ -504,5 +293,144 @@ void GameWindow::intentoComidaDorada()
     {
         comidaDorada= QPoint(x,y);
         hayComidaDorada=true;
+    }
+}
+
+void Nivel::gameloop()
+{
+    if(gameover==true)
+    {
+        return;
+    }
+
+    moveSnake();
+    checkCollision();
+    update();
+}
+
+void Nivel::resetGame()
+{
+    //integración de nodo prueba #1
+    limpiarSerpiente();
+    //integración de nodo prueba #1
+    cabeza = new Nodo(10, 10);
+
+    direction=Right;
+    gameover=false;
+
+    //NIVEL 1: reiniciar todo lo relacionado al nivel 2
+    manzanasComidas=0;
+    puntuacion=0;
+    nivelGanado=false;
+    hayComidaDorada=false;
+    crecimientoExtra=0; //NIVEL 1
+
+    spawnFood();
+    retryButton->hide();
+    setFocusPolicy(Qt::StrongFocus);
+    setFocus();
+    timer->start(150);
+    update();
+}
+
+void Nivel::paintEvent(QPaintEvent *)
+{
+    QPainter painter(this);
+
+    painter.fillRect(rect(), Qt::black);
+
+    Nodo* actual = cabeza;
+    bool esCabeza=true;
+    while (actual != nullptr)
+    {
+        if(esCabeza==true)
+        {
+            painter.setBrush(QColor(0, 255, 180));
+            esCabeza=false;
+        }
+        else
+        {
+            painter.setBrush(QColor(0, 180, 0));
+        }
+        painter.setPen(Qt::NoPen);
+        painter.drawRoundedRect(actual->x*cellsize, actual->y*cellsize, cellsize, cellsize, 5,5);
+        actual= actual->siguiente;
+    }
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(Qt::red);
+    painter.drawEllipse(food.x()*cellsize, food.y()*cellsize, cellsize, cellsize);
+
+    //nivel 1
+    if(hayComidaDorada==true)
+    {
+        painter.setBrush(QColor(255,215,0));
+        painter.drawEllipse(comidaDorada.x()*cellsize, comidaDorada.y()*cellsize, cellsize, cellsize);
+    }
+
+    painter.setPen(Qt::white);
+    painter.setFont(QFont("Arial", 12));
+    painter.drawText(10, 20, QString("Puntos: %1").arg(puntuacion));
+    painter.drawText(10, 40, QString("Manzanas: %1/%2").arg(manzanasComidas).arg(MANZANAS_META));
+
+    if(gameover==true)
+    {
+        painter.setPen(Qt::white);
+        painter.setFont(QFont("Arial", 24));
+        if(nivelGanado)
+        {
+            //NIVEL 1: mensaje de victoria al completar las 6 manzanas rojas
+            painter.drawText(rect(), Qt::AlignCenter, "¡NIVEL COMPLETADO!");
+        }
+        else
+        {
+            painter.drawText(rect(), Qt::AlignCenter, "GAME OVER");
+        }
+    }
+}
+
+void Nivel::keyPressEvent(QKeyEvent *event)
+{
+    switch (event->key())
+    {
+        case Qt::Key_Up:
+        {
+            if(direction!=Down)
+            {
+                direction=Up;
+            }
+            break;
+        }
+        case Qt::Key_Down:
+        {
+            if(direction!=Up)
+            {
+                direction=Down;
+            }
+            break;
+        }
+        case Qt::Key_Left:
+        {
+            if(direction!=Right)
+            {
+                direction=Left;
+            }
+            break;
+        }
+        case Qt::Key_Right:
+        {
+            if(direction!=Left)
+            {
+                direction=Right;
+            }
+            break;
+        }
+        case Qt::Key_Space:
+        {
+            if(retryButton->isVisible()==true)
+            {
+                retryButton->click();
+            }
+            break;
+        }
     }
 }
