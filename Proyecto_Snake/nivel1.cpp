@@ -8,12 +8,12 @@ Nivel1::Nivel1(QWidget *parent)
     ui= new Ui::GameWindow();
     ui->setupUi(this);
 
+
     setFixedSize(600,600);
     setFocusPolicy(Qt::StrongFocus);
 
     //cargamos aqui la img de fondo para el nivel 1
-    fondo.load("fondo_nivel1.jpg");
-
+    fondo.load(":/imagenes/fondo_nivel1.jpg");
     /*cellsize=20;
     rows=height()/cellsize;
     cols=width()/cellsize;
