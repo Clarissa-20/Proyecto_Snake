@@ -33,7 +33,7 @@ protected:
     static const int INTERVALO_MOVIMIENTO_BLOQUES=5;
 
     //nivel 3 velocidades
-    static const int VELOCIDAD_INICIAL=150;
+    static const int VELOCIDAD_INICIAL=50;
     static const int VELOCIDAD_MINIMA=20;
     static const int VELOCIDAD_MAXIMA=150;
     static const int CAMBIO_VELOCIDAD_FRUTA=10;

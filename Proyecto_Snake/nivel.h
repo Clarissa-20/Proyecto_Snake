@@ -80,7 +80,7 @@ protected:
     int manzanasComidas;
     int puntuacion;
     bool nivelGanado;
-    static const int MANZANAS_META=6;
+    static const int MANZANAS_META=10;
 
     virtual void moveSnake();
     virtual void spawnFood();

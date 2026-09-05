@@ -393,7 +393,7 @@ void Nivel::paintEvent(QPaintEvent *)
 
     painter.setPen(Qt::white);
     painter.setFont(QFont("Arial", 12));
-    painter.drawText(10, 20, QString("Puntos: %1").arg(puntuacion));
+    painter.drawText(10, 20, QString("Gemas: %1").arg(puntuacion));
     painter.drawText(10, 40, QString("Manzanas: %1/%2").arg(manzanasComidas).arg(MANZANAS_META));
 
     if(gameover==true)
