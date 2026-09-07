@@ -3,9 +3,18 @@
 
 #include <QWidget>
 
-#include <QtCore>
-#include <QtWidgets>
-#include <QtGui>
+//#include <QtCore>
+#include <QTimer>
+#include <QPushButton>
+#include <QPoint>
+
+//#include <QtWidgets>
+#include <QWidget>
+#include <QRandomGenerator>
+#include <QPainter>
+#include <QKeyEvent>
+//#include <QtGui>
+
 #include <QPixmap> //nuevo]a libreria para manejar las imagenes
 
 QT_BEGIN_NAMESPACE
@@ -34,17 +43,22 @@ class Nivel : public QWidget
 
 public:
     explicit Nivel(QWidget *parent = nullptr);
-    ~Nivel() override;
+    virtual ~Nivel() override; //PARA EVITAR FUGAS DE MEMORIA EL VIRTUAL
 
 
 protected:
+    static const int cellsize=20;
+    //nuevo: margenes para centrar el área de juego dentro del marco decorativo
+    static const int marginX=100;
+    static const int marginY=120;
+    static const int MANZANAS_META=10;
+
     Ui::GameWindow *ui;
 
     QPixmap fondo; //nuevo: variable para la img de fondo
 
-    //nuevo: margenes para centrar el área de juego dentro del marco decorativo
-    int marginX;
-    int marginY;
+    int rows;
+    int cols;
 
     enum Direction
     {
@@ -64,23 +78,22 @@ protected:
     Direction direction;
     QTimer *timer;
 
-    int cellsize;
-    int rows;
-    int cols;
-
     bool gameover;
 
     QPushButton *retryButton;
 
     // manzanas prueba#1
     QPoint comidaDorada;
-    bool hayComidaDorada;
-    int crecimientoExtra;
+
     // manzanas prueba#1
     int manzanasComidas;
     int puntuacion;
     bool nivelGanado;
-    static const int MANZANAS_META=10;
+
+    //mecanicas extras
+    bool hayComidaDorada;
+    int crecimientoExtra;
+
 
     virtual void moveSnake();
     virtual void spawnFood();

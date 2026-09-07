@@ -405,18 +405,10 @@ Nivel2::Nivel2(QWidget *parent)
     , efectoDoradaActivo(false)
     , generacionPartida(0)
 {
-    ui= new Ui::GameWindow();
-    ui->setupUi(this);
-
-    setFixedSize(800,800);
-    setFocusPolicy(Qt::StrongFocus);
 
     //Cargamos aquí la img de fondo para el nivel 2
     fondo.load(":/imagenes/nivel2_fondo.jpg");
 
-    cellsize=20;
-    marginX=100;
-    marginY=120;
     cols=((width()-(2*marginX))/cellsize);
     rows=((height()-marginY-120)/cellsize);
     crearMapa();
@@ -425,31 +417,15 @@ Nivel2::Nivel2(QWidget *parent)
     // Cambiamos el inicio a una celda vacía fuera de la cruz de muros
     cabeza=new Nodo(2, 2);
 
-    direction=Right;
-    gameover=false;
-
     spawnFood();
-    timer= new QTimer(this);
+    //timer= new QTimer(this);
 
-    connect(timer, &QTimer::timeout, this, &Nivel2::gameloop);
+    //connect(timer, &QTimer::timeout, this, &Nivel2::gameloop);
 
     timer->start(150);
 
-    retryButton= new QPushButton("Retry", this);
-    retryButton->setGeometry(width()/2-50, height()/2+40, 100, 40);
-    retryButton->setStyleSheet("QPushButton{"
-                               "background-color:#00aa00;"
-                               "color:white;"
-                               "font-size:18px;"
-                               "border-radius:10px;"
-                               "}"
-                               "QPushButton:hover{"
-                               "background-color:#00cc00;"
-                               "}"
-                               );
-    connect(retryButton, &QPushButton::clicked, this, &Nivel2::resetGame);
-    retryButton->hide();
-    setFocusPolicy(Qt::StrongFocus);
+    //connect(retryButton, &QPushButton::clicked, this, &Nivel2::resetGame);
+
 }
 
 void Nivel2::generarMuros()

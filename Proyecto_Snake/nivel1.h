@@ -1,11 +1,11 @@
 #ifndef NIVEL1_H
 #define NIVEL1_H
 
-#include <QObject>
+//#include <QObject>
 #include "nivel.h"
 
 class Nivel1 : public Nivel{
-    Q_OBJECT
+    Q_OBJECT //qwidget trae integrado a Q_OBJECT
 
 public:
     explicit Nivel1(QWidget *parent = nullptr);

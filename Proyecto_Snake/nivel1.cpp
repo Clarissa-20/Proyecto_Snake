@@ -1,110 +1,28 @@
-/*#include "nivel1.h"
-#include "ui_gamewindow.h"
-#include <QDebug>
-
-Nivel1::Nivel1(QWidget *parent)
-    : Nivel(parent)
-{
-    ui= new Ui::GameWindow();
-    ui->setupUi(this);
-
-
-    setFixedSize(800,800);
-    setFocusPolicy(Qt::StrongFocus);
-
-    //cargamos aqui la img de fondo para el nivel 1
-    fondo.load(":/imagenes/nivel1_fondo.png");
-
-    //nuevo
-    cellsize=20;
-    marginX=100;
-    marginY=120;
-    cols=((width()-(2*marginX))/cellsize)-1;
-    rows=((height()-marginY-120)/cellsize);
-    crearMapa();
-    cabeza=new Nodo(5, 5);
-
-    direction=Right;
-    gameover=false;
-
-    spawnFood();
-    timer= new QTimer(this);
-
-    connect(timer, &QTimer::timeout, this, &Nivel1::gameloop);
-
-    timer->start(150); //aqui se modifica la rapidez del guano entre mas alto mas lento
-
-    retryButton= new QPushButton("Retry", this);
-    retryButton->setGeometry(width()/2-50, height()/2+40, 100, 40);
-    retryButton->setStyleSheet("QPushButton{"
-                               "background-color:#00aa00;"
-                               "color:white;"
-                               "font-size:18px;"
-                               "border-radius:10px;"
-                               "}"
-                               "QPushButton:hover{"
-                               "background-color:#00cc00;"
-                               "}"
-                               );
-    connect(retryButton, &QPushButton::clicked, this, &Nivel1::resetGame);
-    retryButton->hide();
-    setFocusPolicy(Qt::StrongFocus);
-}
-*/
-
-
 #include "nivel1.h"
 #include "ui_gamewindow.h"
-#include <QDebug>
-#include <QPainter>
+//#include <QDebug>
+//#include <QPainter>
 
 Nivel1::Nivel1(QWidget *parent)
     : Nivel(parent)
 {
-    ui= new Ui::GameWindow();
-    ui->setupUi(this);
-
-
-    setFixedSize(800,800);
-    setFocusPolicy(Qt::StrongFocus);
-
     //cargamos aqui la img de fondo para el nivel 1
     fondo.load(":/imagenes/nivel1_fondo.png");
 
-    //nuevo
-    cellsize=20;
-    marginX=100;
-    marginY=120;
     cols=((width()-(2*marginX))/cellsize)-1;
     rows=((height()-marginY-120)/cellsize);
     crearMapa();
     cabeza=new Nodo(5, 5);
 
-    direction=Right;
-    gameover=false;
-
     spawnFood();
-    timer= new QTimer(this);
+    //timer= new QTimer(this);
 
-    connect(timer, &QTimer::timeout, this, &Nivel1::gameloop);
+    //connect(timer, &QTimer::timeout, this, &Nivel1::gameloop);
 
     timer->start(150); //aqui se modifica la rapidez del guano entre mas alto mas lento
 
-    retryButton= new QPushButton("Retry", this);
-    retryButton->setGeometry(width()/2-50, height()/2+40, 100, 40);
-    retryButton->setStyleSheet("QPushButton{"
-                               "background-color:#00aa00;"
-                               "color:white;"
-                               "font-size:18px;"
-                               "border-radius:10px;"
-                               "}"
-                               "QPushButton:hover{"
-                               "background-color:#00cc00;"
-                               "}"
-                               );
-    connect(retryButton, &QPushButton::clicked, this, &Nivel1::resetGame);
-    retryButton->hide();
-    setFocusPolicy(Qt::StrongFocus);
+    //connect(retryButton, &QPushButton::clicked, this, &Nivel1::resetGame);
+
 }
 
 void Nivel1::paintEvent(QPaintEvent *)

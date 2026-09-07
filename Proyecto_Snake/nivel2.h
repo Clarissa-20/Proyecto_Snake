@@ -1,7 +1,7 @@
 #ifndef NIVEL2_H
 #define NIVEL2_H
 
-#include <QObject>
+//#include <QObject>
 #include "nivel.h"
 
 class Nivel2 : public Nivel

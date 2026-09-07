@@ -9,7 +9,7 @@ Nivel::Nivel(QWidget *parent)
     //integracion de mapa prueba#1
     , mapa(nullptr)
     , timer(nullptr)
-    , cellsize(0)
+    //, cellsize(0)
     , rows(0)
     , cols(0)
     , gameover(false)
@@ -21,7 +21,35 @@ Nivel::Nivel(QWidget *parent)
     , puntuacion(0)
     , nivelGanado(false)
 {
+    ui= new Ui::GameWindow();
+    ui->setupUi(this);
 
+    setFixedSize(800,800);
+    setFocusPolicy(Qt::StrongFocus);
+
+    direction=Right;
+    gameover=false;
+
+    //spawnFood();
+    timer= new QTimer(this);
+
+    connect(timer, &QTimer::timeout, this, &Nivel::gameloop);
+
+    retryButton= new QPushButton("Retry", this);
+    retryButton->setGeometry(width()/2-50, height()/2+40, 100, 40);
+    retryButton->setStyleSheet("QPushButton{"
+                               "background-color:#00aa00;"
+                               "color:white;"
+                               "font-size:18px;"
+                               "border-radius:10px;"
+                               "}"
+                               "QPushButton:hover{"
+                               "background-color:#00cc00;"
+                               "}"
+                               );
+    connect(retryButton, &QPushButton::clicked, this, &Nivel::resetGame);
+    retryButton->hide();
+    setFocusPolicy(Qt::StrongFocus);
 }
 
 //destructor
@@ -416,45 +444,45 @@ void Nivel::keyPressEvent(QKeyEvent *event)
 {
     switch (event->key())
     {
-        case Qt::Key_Up:
+    case Qt::Key_Up:
+    {
+        if(direction!=Down)
         {
-            if(direction!=Down)
-            {
-                direction=Up;
-            }
-            break;
+            direction=Up;
         }
-        case Qt::Key_Down:
+        break;
+    }
+    case Qt::Key_Down:
+    {
+        if(direction!=Up)
         {
-            if(direction!=Up)
-            {
-                direction=Down;
-            }
-            break;
+            direction=Down;
         }
-        case Qt::Key_Left:
+        break;
+    }
+    case Qt::Key_Left:
+    {
+        if(direction!=Right)
         {
-            if(direction!=Right)
-            {
-                direction=Left;
-            }
-            break;
+            direction=Left;
         }
-        case Qt::Key_Right:
+        break;
+    }
+    case Qt::Key_Right:
+    {
+        if(direction!=Left)
         {
-            if(direction!=Left)
-            {
-                direction=Right;
-            }
-            break;
+            direction=Right;
         }
-        case Qt::Key_Space:
+        break;
+    }
+    case Qt::Key_Space:
+    {
+        if(retryButton->isVisible()==true)
         {
-            if(retryButton->isVisible()==true)
-            {
-                retryButton->click();
-            }
-            break;
+            retryButton->click();
         }
+        break;
+    }
     }
 }

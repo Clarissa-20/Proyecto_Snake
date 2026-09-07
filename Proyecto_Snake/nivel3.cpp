@@ -1,1576 +1,296 @@
-/*#include "nivel3.h"
-#include "ui_gamewindow.h"
-
-Nivel3::Nivel3(QWidget *parent)
-    : Nivel(parent)
-    , hayFrutaVelocidad(false)
-    , velocidadBase(VELOCIDAD_INICIAL)
-    , efectoDoradaActivo(false)
-    , generacionPartida(0)
-    , desplazamientoBloques(0)
-    , direccionBloques(1)  //1 se aleja del centro y -1 se acerca al centro
-    , contadorMovimientoBloques(0)
-{
-    ui= new Ui::GameWindow();
-    ui->setupUi(this);
-
-    setFixedSize(800,800);
-    setFocusPolicy(Qt::StrongFocus);
-
-    //cargamos aqui la img de fondo para el nivel 3
-    fondo.load(":/imagenes/nivel3_fondo.jpg");
-
-    //nuevo
-    cellsize=20;
-    marginX=100;
-    marginY=120;
-    cols=((width()-(2*marginX))/cellsize)-1;
-    rows=((height()-marginY-120)/cellsize);
-    crearMapa();
-    inicializarBloquesMovibles();
-    cabeza=new Nodo(5, 5);
-
-    direction=Right;
-    gameover=false;
-
-    spawnFood();
-    timer= new QTimer(this);
-
-    connect(timer, &QTimer::timeout, this, &Nivel3::gameloop);
-
-    timer->start(150); //aqui se modifica la rapidez del guano entre mas alto mas lento
-
-    retryButton= new QPushButton("Retry", this);
-    retryButton->setGeometry(width()/2-50, height()/2+40, 100, 40);
-    retryButton->setStyleSheet("QPushButton{"
-                               "background-color:#00aa00;"
-                               "color:white;"
-                               "font-size:18px;"
-                               "border-raduis:10px;"
-                               "}"
-                               "QPushButton:hover{"
-                               "background-color:#00cc00;"
-                               "}"
-                               );
-    connect(retryButton, &QPushButton::clicked, this, &Nivel3::resetGame);
-    retryButton->hide();
-    setFocusPolicy(Qt::StrongFocus);
-}
-
-void Nivel3::aumentarVelocidad()
-{
-    if(velocidadBase > VELOCIDAD_MINIMA)
-    {
-        velocidadBase -= 10;
-
-        if(efectoDoradaActivo==false)
-        {
-            timer->setInterval(velocidadBase);
-        }
-    }
-}
-
-void Nivel3::activarReduccionVelocidad()
-{
-    efectoDoradaActivo=true;
-    timer->setInterval(velocidadBase + 80); //el juego se vuelve más lento temporalmente
-
-    int generacionActual = generacionPartida;
-    QTimer::singleShot(5000, this, [this, generacionActual]()
-                       {
-                           if(generacionActual == generacionPartida)
-                           {
-                               restaurarVelocidadNormal();
-                           }
-                       });
-}
-
-void Nivel3::intentoFrutaVelocidad()
-{
-    int probabilidad = QRandomGenerator::global()->bounded(100);
-    if(probabilidad >= 30)
-    {
-        return;
-    }
-
-    int x=0;
-    int y=0;
-    bool posicionValida;
-    int intentos=0;
-
-    do
-    {
-        x= QRandomGenerator::global()->bounded(cols);
-        y= QRandomGenerator::global()->bounded(rows);
-        posicionValida=true;
-
-        //no debe salir sobre un muro
-        if(puntoEnBloqueMovil(x,y))
-        {
-            posicionValida=false;
-        }
-
-        //no debe salir en la misma celda que la manzana roja
-        if(posicionValida==true && hayComidaDorada==true && x==food.x() && y==food.y())
-        {
-            posicionValida=false;
-        }
-
-        //no debe salir sobre la serpiente
-        if(posicionValida==true)
-        {
-            Nodo* actual=cabeza;
-            while(actual!=nullptr)
-            {
-                if(actual->x==x && actual->y==y)
-                {
-                    posicionValida=false;
-                    break;
-                }
-                actual=actual->siguiente;
-            }
-        }
-
-        intentos++;
-    } while(posicionValida==false && intentos<100); //límite de intentos por seguridad
-
-    if(posicionValida==true)
-    {
-        frutaVelocidad= QPoint(x,y);
-        hayFrutaVelocidad=true;
-        frutaVelocidadBlanca=(QRandomGenerator::global()->bounded(100)<50);
-    }
-}
-
-void Nivel3::inicializarBloquesMovibles()
-{
-    centroFilaBloques=rows/2;
-    centroColumnaBloques=cols/2;
-    grosorBoqueMovil=2;
-    altoBloqueMovil=8;
-    maxDesplazamientoBloques=centroFilaBloques-altoBloqueMovil-1;
-    if(maxDesplazamientoBloques<0)
-    {
-        maxDesplazamientoBloques=0;
-    }
-    desplazamientoBloques=0;
-    direccionBloques=1;
-    contadorMovimientoBloques=0;
-}
-
-void Nivel3::actualizarBloquesMovibles()
-{
-    contadorMovimientoBloques++;
-    if(contadorMovimientoBloques<INTERVALO_MOVIMIENTO_BLOQUES)
-    {
-        return;
-    }
-    contadorMovimientoBloques=0;
-    desplazamientoBloques+=direccionBloques;
-    if(desplazamientoBloques>=maxDesplazamientoBloques)
-    {
-        desplazamientoBloques= maxDesplazamientoBloques;
-        direccionBloques=-1;
-    }
-    else if (desplazamientoBloques<=0)
-    {
-        desplazamientoBloques=0;
-        direccionBloques=1;
-    }
-}
-
-bool Nivel3::puntoEnBloqueMovil(int x, int y) const
-{
-    int columnaIzq= centroColumnaBloques-grosorBoqueMovil;
-    int columnaDer= centroColumnaBloques+grosorBoqueMovil;
-
-    if(x<columnaIzq || x>columnaDer)
-    {
-        return false;
-    }
-    int filaInfSup=centroFilaBloques-1-desplazamientoBloques;//bloque superior: su borde inferior toca el centro y se aleja hacia arriba
-    int filaSupInf=filaInfSup-(altoBloqueMovil-1);
-    if (y>=filaSupInf && y<=filaInfSup)
-    {
-        return true;
-    }
-
-    int filaSupInferior=centroFilaBloques+desplazamientoBloques;//bloque superior: su borde inferior toca el centro y se aleja hacia arriba
-    int filaInfInferior=filaSupInferior+(altoBloqueMovil-1);
-    if (y>=filaSupInferior && y<=filaInfInferior)
-    {
-        return true;
-    }
-    return false;
-}
-
-void Nivel3::moveSnake()
-{
-    //integración de nodo prueba #1
-    if(cabeza==nullptr)
-    {
-        return;
-    }
-    int newX= cabeza->x;
-    int newY= cabeza->y;
-
-    switch (direction)
-    {
-    case Up:
-    {
-        newY--;
-        break;
-    }
-    case Down:
-    {
-        newY++;
-        break;
-    }
-    case Right:
-    {
-        newX++;
-        break;
-    }
-    case Left:
-    {
-        newX--;
-        break;
-    }
-    }
-
-    //integración de nodo prueba #1
-
-    Nodo* nuevoNodo= new Nodo(newX, newY);
-    nuevoNodo->siguiente=cabeza;
-    cabeza= nuevoNodo;
-
-    //NIVEL 2: bandera para saber si la serpiente comió algo en este movimiento (roja o dorada)
-    bool comioAlgo=false;
-    //NIVEL 2: primero se revisa la manzana dorada (si está presente)
-    if(hayComidaDorada && newX==comidaDorada.x() && newY==comidaDorada.y())
-    {
-        puntuacion += 30; //NIVEL 2: puntos triples (10 x 3)
-        hayComidaDorada=false; //la dorada desaparece al comerla
-        activarReduccionVelocidad(); //NIVEL 2: efecto temporal de velocidad reducida
-        crecimientoExtra += 2; //NIVEL 2: este movimiento ya crece 1 (no se borra la cola); +2 para sumar 3 en total
-        comioAlgo=true;
-    }
-
-    //nivel 3 fruta especial ver si acelera o disminuye
-    if(hayFrutaVelocidad==true && newX==frutaVelocidad.x() && newY==frutaVelocidad.y())
-    {
-        hayFrutaVelocidad=false;
-        if(frutaVelocidadBlanca==true)
-        {
-            if((velocidadBase-CAMBIO_VELOCIDAD_FRUTA)>=VELOCIDAD_MINIMA)
-            {
-                velocidadBase-= CAMBIO_VELOCIDAD_FRUTA; //aumenta la velocidad
-            }
-        }
-        else
-        {
-            if((velocidadBase + CAMBIO_VELOCIDAD_FRUTA)<=VELOCIDAD_MAXIMA)
-            {
-                velocidadBase +=CAMBIO_VELOCIDAD_FRUTA; //disminuye la velocidad
-            }
-        }
-
-        if(efectoDoradaActivo==false)
-        {
-            timer->setInterval(velocidadBase);
-        }
-    }
-    //nivel 2
-    if(newX==food.x() && newY==food.y())
-    {
-        comioAlgo=true;
-        manzanasComidas++; //NIVEL 2
-        puntuacion += 10;
-        //nivel 3 crece el doble
-        crecimientoExtra+=1;
-
-        //NIVEL 2: si se come la roja, la dorada (si estaba en pantalla) desaparece también
-        hayComidaDorada=false;
-
-        //nivel 3 fruta especial se reinicia con cada fruta roja comida
-        hayFrutaVelocidad=false;
-
-        if(manzanasComidas >= MANZANAS_META)
-        {
-            //NIVEL 2: se completaron las 6 manzanas rojas -> se gana el nivel
-            nivelGanado=true;
-            gameover=true;
-            timer->stop();
-            retryButton->show();
-        }
-        else
-        {
-            //NIVEL 2: cada 2 manzanas rojas comidas, aumenta la velocidad
-            if(manzanasComidas % 2 == 0)
-            {
-                aumentarVelocidad();
-            }
-
-            spawnFood();
-            intentoComidaDorada(); //NIVEL 2: fruta dorada
-            intentoFrutaVelocidad(); //nivel 3 fruta especial
-        }
-    }
-
-    if(!comioAlgo)
-    {
-        //NIVEL 2: si queda crecimiento pendiente (de una dorada comida antes), la cola NO se recorta y ese crecimiento pendiente se va consumiendo un nodo por movimiento.
-        if(crecimientoExtra>0)
-        {
-            crecimientoExtra--;
-        }
-        else if(cabeza->siguiente !=nullptr)
-        {
-            Nodo* actual=cabeza;
-            while(actual->siguiente->siguiente != nullptr)
-            {
-                actual=actual->siguiente;
-            }
-            delete actual->siguiente;
-            actual->siguiente=nullptr;
-        }
-    }
-}
-
-void Nivel3::spawnFood()
-{
-    int x=0;
-    int y=0;
-    bool posicionValida;
-
-    //NIVEL 2: ahora se evita que la manzana roja aparezca sobre un muro o sobre la serpiente
-    do
-    {
-        x= QRandomGenerator::global()->bounded(cols);
-        y= QRandomGenerator::global()->bounded(rows);
-        posicionValida=true;
-
-        if(puntoEnBloqueMovil(x, y) ==true)
-        {
-            posicionValida=false;
-        }
-
-        if(posicionValida==true)
-        {
-            Nodo* actual=cabeza;
-            while(actual!=nullptr)
-            {
-                if(actual->x==x && actual->y==y)
-                {
-                    posicionValida=false;
-                    break;
-                }
-                actual=actual->siguiente;
-            }
-        }
-
-    } while(!posicionValida);
-
-    food= QPoint(x,y);
-}
-
-void Nivel3::checkCollision()
-{
-    //integración de nodo prueba #1
-    if(cabeza==nullptr)
-    {
-        return;
-    }
-
-    int cabezaX= cabeza->x;
-    int cabezaY= cabeza->y;
-
-    //NIVEL 2: los muros periféricos son mortales (colisión con el borde del mapa)
-    if(cabezaX<0 || cabezaY<0 || cabezaX>=cols || cabezaY>=rows)
-    {
-        gameover=true;
-        timer->stop();
-        retryButton->show();
-        return;
-    }
-
-    //NIVEL 2: colisión con los muros centrales (la cruz), leídos desde la matriz "mapa"
-    if(puntoEnBloqueMovil(cabezaX, cabezaY)==true)
-    {
-        gameover=true;
-        timer->stop();
-        retryButton->show();
-        return;
-    }
-
-    //nivel 3 colision nodo del gusano con bloque
-    Nodo* nodoCuerpo = cabeza->siguiente;
-    while(nodoCuerpo !=nullptr)
-    {
-        if(puntoEnBloqueMovil(nodoCuerpo->x, nodoCuerpo->y))
-        {
-            gameover=true;
-            timer->stop();
-            retryButton->show();
-            return;
-        }
-        nodoCuerpo=nodoCuerpo->siguiente;
-    }
-
-    Nodo* actual = cabeza->siguiente;
-    while(actual !=nullptr)
-    {
-        if(cabezaX==actual->x && cabezaY==actual->y)
-        {
-            gameover=true;
-            timer->stop();
-            retryButton->show();
-            return;
-        }
-        actual=actual->siguiente;
-    }
-}
-
-void Nivel3::paintEvent(QPaintEvent *)
-{
-    QPainter painter(this);
-
-    // Reemplaza el fillRect negro por esto para que dibuje la imagen de fondo:
-    if (!fondo.isNull()) {
-        painter.drawPixmap(0, 0, width(), height(), fondo);
-    } else {
-        // Por si la imagen llegara a fallar, se pinta de negro como respaldo
-        painter.fillRect(rect(), Qt::black);
-    }
-
-    //NIVEL 3: dibujar los bloques movibles
-    painter.setBrush(QColor(120,110,100));
-    painter.setPen(QPen(QColor(60,55,50), 2));
-    for(int i=0; i<rows; i++)
-    {
-        for(int j=0; j<cols; j++)
-        {
-            if(puntoEnBloqueMovil(j,i))
-            {
-                painter.drawRect(j*cellsize, i*cellsize, cellsize, cellsize);
-            }
-        }
-    }
-    Nodo* actual = cabeza;
-    bool esCabeza=true;
-    while (actual != nullptr)
-    {
-        if(esCabeza==true)
-        {
-            painter.setBrush(QColor(0, 255, 180));
-            esCabeza=false;
-        }
-        else
-        {
-            painter.setBrush(QColor(0, 180, 0));
-        }
-        painter.setPen(Qt::NoPen);
-        painter.drawRoundedRect(actual->x*cellsize, actual->y*cellsize, cellsize, cellsize, 5,5);
-        actual= actual->siguiente;
-    }
-
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(Qt::red);
-    painter.drawEllipse(food.x()*cellsize, food.y()*cellsize, cellsize, cellsize);
-
-    //NIVEL 2: dibujar la manzana dorada, si está en pantalla
-    if(hayComidaDorada==true)
-    {
-        painter.setBrush(QColor(255,215,0));
-        painter.drawEllipse(comidaDorada.x()*cellsize, comidaDorada.y()*cellsize, cellsize, cellsize);
-    }
-
-    //nivel 3: frutas especial
-    if(hayFrutaVelocidad==true)
-    {
-        painter.setPen(Qt::NoPen);
-        int frutax=frutaVelocidad.x()*cellsize;
-        int frutay=frutaVelocidad.y()*cellsize;
-        if(frutaVelocidadBlanca==true)
-        {
-            painter.setBrush(Qt::white);
-            painter.drawEllipse(frutax, frutay, cellsize, cellsize);
-        }
-        else
-        {
-            painter.setBrush(QColor(150,120,80));
-            painter.drawEllipse(frutax, frutay, cellsize, cellsize);
-            painter.setBrush(QColor(85,65,40));
-            painter.drawEllipse(frutax+3, frutay+3, cellsize, cellsize);
-            painter.drawEllipse(frutax+cellsize-9, frutay+cellsize-8, 4, 4);
-
-
-        }
-    }
-    //NIVEL 2: HUD con puntuación y progreso de manzanas rojas
-    painter.setPen(Qt::white);
-    painter.setFont(QFont("Arial", 12));
-    painter.drawText(10, 20, QString("Puntos: %1").arg(puntuacion));
-    painter.drawText(10, 40, QString("Manzanas: %1/%2").arg(manzanasComidas).arg(MANZANAS_META));
-
-    if(gameover==true)
-    {
-        painter.setPen(Qt::white);
-        painter.setFont(QFont("Arial", 24));
-        if(nivelGanado)
-        {
-            //NIVEL 2: mensaje de victoria al completar las 6 manzanas rojas
-            painter.drawText(rect(), Qt::AlignCenter, "¡NIVEL COMPLETADO!");
-        }
-        else
-        {
-            painter.drawText(rect(), Qt::AlignCenter, "GAME OVER");
-        }
-    }
-}
-
-void Nivel3::gameloop()
-{
-    if(gameover==true)
-    {
-        return;
-    }
-    //nivel 3 bloques movibles
-    actualizarBloquesMovibles();
-
-    moveSnake();
-    checkCollision();
-    update();
-}
-
-void Nivel3::resetGame()
-{
-    //integración de nodo prueba #1
-    limpiarSerpiente();
-    //integración de nodo prueba #1
-    cabeza = new Nodo(10, 10);
-
-    direction=Right;
-    gameover=false;
-
-    //NIVEL 2: reiniciar todo lo relacionado al nivel 2
-    manzanasComidas=0;
-    puntuacion=0;
-    nivelGanado=false;
-    hayComidaDorada=false;
-    crecimientoExtra=0; //NIVEL 2
-    velocidadBase=VELOCIDAD_INICIAL;
-    efectoDoradaActivo=false;
-    generacionPartida++; //invalida cualquier efecto temporal de la dorada que estuviera pendiente
-
-    //nivel 3 frutas especiales
-    hayFrutaVelocidad=false;
-    frutaVelocidadBlanca=true;
-    //nivel 3 reinicia bloques movibles
-    inicializarBloquesMovibles();
-
-    spawnFood();
-    retryButton->hide();
-    setFocusPolicy(Qt::StrongFocus);
-    setFocus();
-    timer->start(velocidadBase); //NIVEL 2: se reinicia con la velocidad base
-    update();
-}
-
-void Nivel3::restaurarVelocidadNormal()
-{
-    efectoDoradaActivo=false;
-    timer->setInterval(velocidadBase);
-}*/
-
-
-/*#include "nivel3.h"
-#include "ui_gamewindow.h"
-
-Nivel3::Nivel3(QWidget *parent)
-    : Nivel(parent)
-    , hayFrutaVelocidad(false)
-    , velocidadBase(VELOCIDAD_INICIAL)
-    , efectoDoradaActivo(false)
-    , generacionPartida(0)
-    , desplazamientoBloques(0)
-    , direccionBloques(1)  //1 se aleja del centro y -1 se acerca al centro
-    , contadorMovimientoBloques(0)
-{
-    ui= new Ui::GameWindow();
-    ui->setupUi(this);
-
-    setFixedSize(800,800);
-    setFocusPolicy(Qt::StrongFocus);
-
-    //Cargamos aquí la img de fondo para el nivel 3
-    fondo.load(":/imagenes/nivel3_fondo.jpg");
-
-    cellsize=20;
-    marginX=100;
-    marginY=120;
-    cols=((width()-(2*marginX))/cellsize);
-    rows=((height()-marginY-120)/cellsize);
-    crearMapa();
-    inicializarBloquesMovibles();
-
-    // Posición inicial segura fuera de los bloques móviles
-    cabeza=new Nodo(2, 2);
-
-    direction=Right;
-    gameover=false;
-
-    spawnFood();
-    timer= new QTimer(this);
-
-    connect(timer, &QTimer::timeout, this, &Nivel3::gameloop);
-
-    timer->start(150);
-
-    retryButton= new QPushButton("Retry", this);
-    retryButton->setGeometry(width()/2-50, height()/2+40, 100, 40);
-    retryButton->setStyleSheet("QPushButton{"
-                               "background-color:#00aa00;"
-                               "color:white;"
-                               "font-size:18px;"
-                               "border-radius:10px;"
-                               "}"
-                               "QPushButton:hover{"
-                               "background-color:#00cc00;"
-                               "}"
-                               );
-    connect(retryButton, &QPushButton::clicked, this, &Nivel3::resetGame);
-    retryButton->hide();
-    setFocusPolicy(Qt::StrongFocus);
-}
-
-void Nivel3::aumentarVelocidad()
-{
-    if(velocidadBase > VELOCIDAD_MINIMA)
-    {
-        velocidadBase -= 10;
-
-        if(efectoDoradaActivo==false)
-        {
-            timer->setInterval(velocidadBase);
-        }
-    }
-}
-
-void Nivel3::activarReduccionVelocidad()
-{
-    efectoDoradaActivo=true;
-    timer->setInterval(velocidadBase + 80);
-
-    int generacionActual = generacionPartida;
-    QTimer::singleShot(5000, this, [this, generacionActual]()
-                       {
-                           if(generacionActual == generacionPartida)
-                           {
-                               restaurarVelocidadNormal();
-                           }
-                       });
-}
-
-void Nivel3::intentoFrutaVelocidad()
-{
-    int probabilidad = QRandomGenerator::global()->bounded(100);
-    if(probabilidad >= 30)
-    {
-        return;
-    }
-
-    int x=0;
-    int y=0;
-    bool posicionValida;
-    int intentos=0;
-
-    do
-    {
-        x= QRandomGenerator::global()->bounded(cols);
-        y= QRandomGenerator::global()->bounded(rows);
-        posicionValida=true;
-
-        if(puntoEnBloqueMovil(x,y))
-        {
-            posicionValida=false;
-        }
-
-        if(posicionValida==true && hayComidaDorada==true && x==food.x() && y==food.y())
-        {
-            posicionValida=false;
-        }
-
-        if(posicionValida==true)
-        {
-            Nodo* actual=cabeza;
-            while(actual!=nullptr)
-            {
-                if(actual->x==x && actual->y==y)
-                {
-                    posicionValida=false;
-                    break;
-                }
-                actual=actual->siguiente;
-            }
-        }
-
-        intentos++;
-    } while(posicionValida==false && intentos<100);
-
-    if(posicionValida==true)
-    {
-        frutaVelocidad= QPoint(x,y);
-        hayFrutaVelocidad=true;
-        frutaVelocidadBlanca=(QRandomGenerator::global()->bounded(100)<50);
-    }
-}
-
-void Nivel3::inicializarBloquesMovibles()
-{
-    centroFilaBloques=rows/2;
-    centroColumnaBloques=cols/2;
-    grosorBoqueMovil=2;
-    altoBloqueMovil=8;
-    maxDesplazamientoBloques=centroFilaBloques-altoBloqueMovil-1;
-    if(maxDesplazamientoBloques<0)
-    {
-        maxDesplazamientoBloques=0;
-    }
-    desplazamientoBloques=0;
-    direccionBloques=1;
-    contadorMovimientoBloques=0;
-}
-
-void Nivel3::actualizarBloquesMovibles()
-{
-    contadorMovimientoBloques++;
-    if(contadorMovimientoBloques<INTERVALO_MOVIMIENTO_BLOQUES)
-    {
-        return;
-    }
-    contadorMovimientoBloques=0;
-    desplazamientoBloques+=direccionBloques;
-    if(desplazamientoBloques>=maxDesplazamientoBloques)
-    {
-        desplazamientoBloques= maxDesplazamientoBloques;
-        direccionBloques=-1;
-    }
-    else if (desplazamientoBloques<=0)
-    {
-        desplazamientoBloques=0;
-        direccionBloques=1;
-    }
-}
-
-bool Nivel3::puntoEnBloqueMovil(int x, int y) const
-{
-    int columnaIzq= centroColumnaBloques-grosorBoqueMovil;
-    int columnaDer= centroColumnaBloques+grosorBoqueMovil;
-
-    if(x<columnaIzq || x>columnaDer)
-    {
-        return false;
-    }
-    int filaInfSup=centroFilaBloques-1-desplazamientoBloques;
-    int filaSupInf=filaInfSup-(altoBloqueMovil-1);
-    if (y>=filaSupInf && y<=filaInfSup)
-    {
-        return true;
-    }
-
-    int filaSupInferior=centroFilaBloques+desplazamientoBloques;
-    int filaInfInferior=filaSupInferior+(altoBloqueMovil-1);
-    if (y>=filaSupInferior && y<=filaInfInferior)
-    {
-        return true;
-    }
-    return false;
-}
-
-void Nivel3::moveSnake()
-{
-    if(cabeza==nullptr)
-    {
-        return;
-    }
-    int newX= cabeza->x;
-    int newY= cabeza->y;
-
-    switch (direction)
-    {
-    case Up:
-        newY--;
-        break;
-    case Down:
-        newY++;
-        break;
-    case Right:
-        newX++;
-        break;
-    case Left:
-        newX--;
-        break;
-    }
-
-    // CORREGIDO: Validar límites ANTES de mover la serpiente para evitar que se pinte afuera
-    if(newX < 0 || newY < 0 || newX >= cols || newY >= rows)
-    {
-        gameover=true;
-        timer->stop();
-        retryButton->show();
-        return;
-    }
-
-    // CORREGIDO: Validar colisión de la nueva posición con bloques móviles antes de avanzar
-    if(puntoEnBloqueMovil(newX, newY))
-    {
-        gameover=true;
-        timer->stop();
-        retryButton->show();
-        return;
-    }
-
-    Nodo* nuevoNodo= new Nodo(newX, newY);
-    nuevoNodo->siguiente=cabeza;
-    cabeza= nuevoNodo;
-
-    bool comioAlgo=false;
-    if(hayComidaDorada && newX==comidaDorada.x() && newY==comidaDorada.y())
-    {
-        puntuacion += 30;
-        hayComidaDorada=false;
-        activarReduccionVelocidad();
-        crecimientoExtra += 2;
-        comioAlgo=true;
-    }
-
-    if(hayFrutaVelocidad==true && newX==frutaVelocidad.x() && newY==frutaVelocidad.y())
-    {
-        hayFrutaVelocidad=false;
-        if(frutaVelocidadBlanca==true)
-        {
-            if((velocidadBase-CAMBIO_VELOCIDAD_FRUTA)>=VELOCIDAD_MINIMA)
-            {
-                velocidadBase-= CAMBIO_VELOCIDAD_FRUTA;
-            }
-        }
-        else
-        {
-            if((velocidadBase + CAMBIO_VELOCIDAD_FRUTA)<=VELOCIDAD_MAXIMA)
-            {
-                velocidadBase +=CAMBIO_VELOCIDAD_FRUTA;
-            }
-        }
-
-        if(efectoDoradaActivo==false)
-        {
-            timer->setInterval(velocidadBase);
-        }
-    }
-
-    if(newX==food.x() && newY==food.y())
-    {
-        comioAlgo=true;
-        manzanasComidas++;
-        puntuacion += 10;
-        crecimientoExtra+=1;
-
-        hayComidaDorada=false;
-        hayFrutaVelocidad=false;
-
-        if(manzanasComidas >= MANZANAS_META)
-        {
-            nivelGanado=true;
-            gameover=true;
-            timer->stop();
-            retryButton->show();
-        }
-        else
-        {
-            if(manzanasComidas % 2 == 0)
-            {
-                aumentarVelocidad();
-            }
-
-            spawnFood();
-            intentoComidaDorada();
-            intentoFrutaVelocidad();
-        }
-    }
-
-    if(!comioAlgo)
-    {
-        if(crecimientoExtra>0)
-        {
-            crecimientoExtra--;
-        }
-        else if(cabeza->siguiente !=nullptr)
-        {
-            Nodo* actual=cabeza;
-            while(actual->siguiente->siguiente != nullptr)
-            {
-                actual=actual->siguiente;
-            }
-            delete actual->siguiente;
-            actual->siguiente=nullptr;
-        }
-    }
-}
-
-void Nivel3::spawnFood()
-{
-    int x=0;
-    int y=0;
-    bool posicionValida;
-
-    do
-    {
-        x= QRandomGenerator::global()->bounded(cols);
-        y= QRandomGenerator::global()->bounded(rows);
-        posicionValida=true;
-
-        if(puntoEnBloqueMovil(x, y) ==true)
-        {
-            posicionValida=false;
-        }
-
-        if(posicionValida==true)
-        {
-            Nodo* actual=cabeza;
-            while(actual!=nullptr)
-            {
-                if(actual->x==x && actual->y==y)
-                {
-                    posicionValida=false;
-                    break;
-                }
-                actual=actual->siguiente;
-            }
-        }
-
-    } while(!posicionValida);
-
-    food= QPoint(x,y);
-}
-
-void Nivel3::checkCollision()
-{
-    if(cabeza==nullptr)
-    {
-        return;
-    }
-
-    int cabezaX= cabeza->x;
-    int cabezaY= cabeza->y;
-
-    if(cabezaX<0 || cabezaY<0 || cabezaX>=cols || cabezaY>=rows)
-    {
-        gameover=true;
-        timer->stop();
-        retryButton->show();
-        return;
-    }
-
-    if(puntoEnBloqueMovil(cabezaX, cabezaY)==true)
-    {
-        gameover=true;
-        timer->stop();
-        retryButton->show();
-        return;
-    }
-
-    Nodo* nodoCuerpo = cabeza->siguiente;
-    while(nodoCuerpo !=nullptr)
-    {
-        if(puntoEnBloqueMovil(nodoCuerpo->x, nodoCuerpo->y))
-        {
-            gameover=true;
-            timer->stop();
-            retryButton->show();
-            return;
-        }
-        nodoCuerpo=nodoCuerpo->siguiente;
-    }
-
-    Nodo* actual = cabeza->siguiente;
-    while(actual !=nullptr)
-    {
-        if(cabezaX==actual->x && cabezaY==actual->y)
-        {
-            gameover=true;
-            timer->stop();
-            retryButton->show();
-            return;
-        }
-        actual=actual->siguiente;
-    }
-}
-
-void Nivel3::paintEvent(QPaintEvent *)
-{
-    QPainter painter(this);
-
-    if (!fondo.isNull()) {
-        painter.drawPixmap(0, 0, width(), height(), fondo);
-    } else {
-        painter.fillRect(rect(), Qt::black);
-    }
-
-    // Delimitar y dar fondo semitransparente al área jugable
-    painter.setBrush(QColor(0, 0, 0, 140)); // Color negro con transparencia (cambia el 140 para más o menos opacidad)
-    painter.setPen(QPen(QColor(120, 110, 100), 2)); // Un borde sutil alrededor de la zona de juego
-    painter.drawRect(marginX, marginY, cols * cellsize, rows * cellsize);
-
-    // CORREGIDO: Añadidos marginX y marginY para alinear los bloques móviles con el marco
-    painter.setBrush(QColor(120,110,100));
-    painter.setPen(QPen(QColor(60,55,50), 2));
-    for(int i=0; i<rows; i++)
-    {
-        for(int j=0; j<cols; j++)
-        {
-            if(puntoEnBloqueMovil(j,i))
-            {
-                int bloqueX = marginX + (j * cellsize);
-                int bloqueY = marginY + (i * cellsize);
-                painter.drawRect(bloqueX, bloqueY, cellsize, cellsize);
-            }
-        }
-    }
-
-    Nodo* actual = cabeza;
-    bool esCabeza=true;
-    while (actual != nullptr)
-    {
-        if(esCabeza==true)
-        {
-            painter.setBrush(QColor(0, 255, 180));
-            esCabeza=false;
-        }
-        else
-        {
-            painter.setBrush(QColor(0, 180, 0));
-        }
-        painter.setPen(Qt::NoPen);
-        int posX = marginX + (actual->x * cellsize);
-        int posY = marginY + (actual->y * cellsize);
-        painter.drawRoundedRect(posX, posY, cellsize, cellsize, 5, 5);
-        actual= actual->siguiente;
-    }
-
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(Qt::red);
-    int foodX = marginX + (food.x() * cellsize);
-    int foodY = marginY + (food.y() * cellsize);
-    painter.drawEllipse(foodX, foodY, cellsize, cellsize);
-
-    if(hayComidaDorada==true)
-    {
-        painter.setBrush(QColor(255,215,0));
-        int doradaX = marginX + (comidaDorada.x() * cellsize);
-        int doradaY = marginY + (comidaDorada.y() * cellsize);
-        painter.drawEllipse(doradaX, doradaY, cellsize, cellsize);
-    }
-
-    if(hayFrutaVelocidad==true)
-    {
-        painter.setPen(Qt::NoPen);
-        int frutax = marginX + (frutaVelocidad.x() * cellsize);
-        int frutay = marginY + (frutaVelocidad.y() * cellsize);
-        if(frutaVelocidadBlanca==true)
-        {
-            painter.setBrush(Qt::white);
-            painter.drawEllipse(frutax, frutay, cellsize, cellsize);
-        }
-        else
-        {
-            painter.setBrush(QColor(150,120,80));
-            painter.drawEllipse(frutax, frutay, cellsize, cellsize);
-            painter.setBrush(QColor(85,65,40));
-            painter.drawEllipse(frutax+3, frutay+3, cellsize, cellsize);
-            painter.drawEllipse(frutax+cellsize-9, frutay+cellsize-8, 4, 4);
-        }
-    }
-
-    painter.setPen(Qt::white);
-    painter.setFont(QFont("Arial", 12));
-    painter.drawText(10, 20, QString("Puntos: %1").arg(puntuacion));
-    painter.drawText(10, 40, QString("Manzanas: %1/%2").arg(manzanasComidas).arg(MANZANAS_META));
-
-    if(gameover==true)
-    {
-        painter.setPen(Qt::white);
-        painter.setFont(QFont("Arial", 24));
-        if(nivelGanado)
-        {
-            painter.drawText(rect(), Qt::AlignCenter, "¡NIVEL COMPLETADO!");
-        }
-        else
-        {
-            painter.drawText(rect(), Qt::AlignCenter, "GAME OVER");
-        }
-    }
-}
-
-void Nivel3::gameloop()
-{
-    if(gameover==true)
-    {
-        return;
-    }
-    actualizarBloquesMovibles();
-    moveSnake();
-    checkCollision();
-    update();
-}
-
-void Nivel3::resetGame()
-{
-    limpiarSerpiente();
-    cabeza = new Nodo(2, 2); // Posición segura inicial
-
-    direction=Right;
-    gameover=false;
-
-    manzanasComidas=0;
-    puntuacion=0;
-    nivelGanado=false;
-    hayComidaDorada=false;
-    crecimientoExtra=0;
-    velocidadBase=VELOCIDAD_INICIAL;
-    efectoDoradaActivo=false;
-    generacionPartida++;
-
-    hayFrutaVelocidad=false;
-    frutaVelocidadBlanca=true;
-    inicializarBloquesMovibles();
-
-    spawnFood();
-    retryButton->hide();
-    setFocusPolicy(Qt::StrongFocus);
-    setFocus();
-    timer->start(velocidadBase);
-    update();
-}
-
-void Nivel3::restaurarVelocidadNormal()
-{
-    efectoDoradaActivo=false;
-    timer->setInterval(velocidadBase);
-}*/
-
 #include "nivel3.h"
 #include "ui_gamewindow.h"
+#include <QPainter>
+#include <QRandomGenerator>
 
-Nivel3::Nivel3(QWidget *parent)
-    : Nivel(parent)
-    , hayFrutaVelocidad(false)
-    , velocidadBase(VELOCIDAD_INICIAL)
-    , efectoDoradaActivo(false)
-    , generacionPartida(0)
-    , desplazamientoBloques(0)
-    , direccionBloques(1)  //1 se aleja del centro y -1 se acerca al centro
-    , contadorMovimientoBloques(0)
+Nivel3::Nivel3(QWidget *parent) :
+    Nivel(parent),
+    hayFrutaVelocidad(false),
+    frutaVelocidadBlanca(true),
+    velocidadBase(VELOCIDAD_INICIAL),
+    efectoDoradaActivo(false),
+    generacionPartida(0),
+    desplazamientoBloques(0),
+    direccionBloques(1),
+    contadorMovimientoBloques(0)
 {
-    ui= new Ui::GameWindow();
-    ui->setupUi(this);
 
-    setFixedSize(800,800);
-    setFocusPolicy(Qt::StrongFocus);
-
-    //Cargamos aquí la img de fondo para el nivel 3
     fondo.load(":/imagenes/nivel3_fondo.jpg");
-
-    cellsize=20;
-    marginX=100;
-    marginY=120;
-
-    // CORREGIDO: Se quitó el -1 para que coincida exactamente con el ancho de la caja pintada
     cols = (width() - (2 * marginX)) / cellsize;
     rows = (height() - (2 * marginY)) / cellsize;
 
+    // USAR int** mapa (igual que Nivel 2)
     crearMapa();
     inicializarBloquesMovibles();
-
-    // Posición inicial segura fuera de los bloques móviles
-    cabeza=new Nodo(2, 2);
-
-    direction=Right;
-    gameover=false;
+    cabeza = new Nodo(2, 2);
 
     spawnFood();
-    timer= new QTimer(this);
-
-    connect(timer, &QTimer::timeout, this, &Nivel3::gameloop);
-
-    timer->start(150);
-
-    retryButton= new QPushButton("Retry", this);
-    retryButton->setGeometry(width()/2-50, height()/2+40, 100, 40);
-    retryButton->setStyleSheet("QPushButton{"
-                               "background-color:#00aa00;"
-                               "color:white;"
-                               "font-size:18px;"
-                               "border-radius:10px;"
-                               "}"
-                               "QPushButton:hover{"
-                               "background-color:#00cc00;"
-                               "}"
-                               );
-    connect(retryButton, &QPushButton::clicked, this, &Nivel3::resetGame);
-    retryButton->hide();
-    setFocusPolicy(Qt::StrongFocus);
+    timer->start(velocidadBase);
 }
 
-void Nivel3::aumentarVelocidad()
-{
-    if(velocidadBase > VELOCIDAD_MINIMA)
-    {
-        velocidadBase -= 10;
+void Nivel3::inicializarBloquesMovibles() {
+    centroFilaBloques = rows / 2;
+    centroColumnaBloques = cols / 2;
+    grosorBloqueMovil = 2;
+    altoBloqueMovil = 8;
+    maxDesplazamientoBloques = centroFilaBloques - altoBloqueMovil - 1;
+    if (maxDesplazamientoBloques < 0) maxDesplazamientoBloques = 0;
 
-        if(efectoDoradaActivo==false)
-        {
-            timer->setInterval(velocidadBase);
-        }
-    }
+    desplazamientoBloques = 0;
+    direccionBloques = 1;
+    contadorMovimientoBloques = 0;
+
+    // Dibujar bloques iniciales en mapa[][]
+    dibujarBloquesEnMapa();
 }
 
-void Nivel3::activarReduccionVelocidad()
-{
-    efectoDoradaActivo=true;
-    timer->setInterval(velocidadBase + 80);
-
-    int generacionActual = generacionPartida;
-    QTimer::singleShot(5000, this, [this, generacionActual]()
-                       {
-                           if(generacionActual == generacionPartida)
-                           {
-                               restaurarVelocidadNormal();
-                           }
-                       });
-}
-
-void Nivel3::intentoFrutaVelocidad()
-{
-    int probabilidad = QRandomGenerator::global()->bounded(100);
-    if(probabilidad >= 30)
-    {
-        return;
-    }
-
-    int x=0;
-    int y=0;
-    bool posicionValida;
-    int intentos=0;
-
-    do
-    {
-        x= QRandomGenerator::global()->bounded(cols);
-        y= QRandomGenerator::global()->bounded(rows);
-        posicionValida=true;
-
-        if(puntoEnBloqueMovil(x,y))
-        {
-            posicionValida=false;
-        }
-
-        if(posicionValida==true && hayComidaDorada==true && x==food.x() && y==food.y())
-        {
-            posicionValida=false;
-        }
-
-        if(posicionValida==true)
-        {
-            Nodo* actual=cabeza;
-            while(actual!=nullptr)
-            {
-                if(actual->x==x && actual->y==y)
-                {
-                    posicionValida=false;
-                    break;
-                }
-                actual=actual->siguiente;
+void Nivel3::limpiarMapa() {
+    if (mapa != nullptr) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                mapa[i][j] = 0;
             }
         }
-
-        intentos++;
-    } while(posicionValida==false && intentos<100);
-
-    if(posicionValida==true)
-    {
-        frutaVelocidad= QPoint(x,y);
-        hayFrutaVelocidad=true;
-        frutaVelocidadBlanca=(QRandomGenerator::global()->bounded(100)<50);
     }
 }
 
-void Nivel3::inicializarBloquesMovibles()
-{
-    centroFilaBloques=rows/2;
-    centroColumnaBloques=cols/2;
-    grosorBoqueMovil=2;
-    altoBloqueMovil=8;
-    maxDesplazamientoBloques=centroFilaBloques-altoBloqueMovil-1;
-    if(maxDesplazamientoBloques<0)
-    {
-        maxDesplazamientoBloques=0;
+void Nivel3::dibujarBloquesEnMapa() {
+    if (mapa == nullptr) return;
+
+    // Barra superior
+    for (int dy = 0; dy < altoBloqueMovil; dy++) {
+        for (int dx = -grosorBloqueMovil; dx <= grosorBloqueMovil; dx++) {
+            int x = centroColumnaBloques + dx;
+            int y = centroFilaBloques - 1 - desplazamientoBloques - dy;
+            if (x >= 0 && x < cols && y >= 0 && y < rows) {
+                mapa[y][x] = 1;
+            }
+        }
     }
-    desplazamientoBloques=0;
-    direccionBloques=1;
-    contadorMovimientoBloques=0;
+
+    // Barra inferior
+    for (int dy = 0; dy < altoBloqueMovil; dy++) {
+        for (int dx = -grosorBloqueMovil; dx <= grosorBloqueMovil; dx++) {
+            int x = centroColumnaBloques + dx;
+            int y = centroFilaBloques + desplazamientoBloques + dy;
+            if (x >= 0 && x < cols && y >= 0 && y < rows) {
+                mapa[y][x] = 1;
+            }
+        }
+    }
 }
 
-void Nivel3::actualizarBloquesMovibles()
-{
+void Nivel3::actualizarBloquesMovibles() {
     contadorMovimientoBloques++;
-    if(contadorMovimientoBloques<INTERVALO_MOVIMIENTO_BLOQUES)
-    {
-        return;
+    if (contadorMovimientoBloques < INTERVALO_MOVIMIENTO_BLOQUES) return;
+
+    contadorMovimientoBloques = 0;
+
+    // Mover bloques
+    desplazamientoBloques += direccionBloques;
+    if (desplazamientoBloques >= maxDesplazamientoBloques) {
+        desplazamientoBloques = maxDesplazamientoBloques;
+        direccionBloques = -1;
+    } else if (desplazamientoBloques <= 0) {
+        desplazamientoBloques = 0;
+        direccionBloques = 1;
     }
-    contadorMovimientoBloques=0;
-    desplazamientoBloques+=direccionBloques;
-    if(desplazamientoBloques>=maxDesplazamientoBloques)
-    {
-        desplazamientoBloques= maxDesplazamientoBloques;
-        direccionBloques=-1;
-    }
-    else if (desplazamientoBloques<=0)
-    {
-        desplazamientoBloques=0;
-        direccionBloques=1;
-    }
+
+    //  Limpiar mapa y redibujar bloques en nuevas posiciones
+    limpiarMapa();
+    dibujarBloquesEnMapa();
 }
 
-bool Nivel3::puntoEnBloqueMovil(int x, int y) const
-{
-    int columnaIzq= centroColumnaBloques-grosorBoqueMovil;
-    int columnaDer= centroColumnaBloques+grosorBoqueMovil;
-
-    if(x<columnaIzq || x>columnaDer)
-    {
-        return false;
-    }
-    int filaInfSup=centroFilaBloques-1-desplazamientoBloques;
-    int filaSupInf=filaInfSup-(altoBloqueMovil-1);
-    if (y>=filaSupInf && y<=filaInfSup)
-    {
-        return true;
-    }
-
-    int filaSupInferior=centroFilaBloques+desplazamientoBloques;
-    int filaInfInferior=filaSupInferior+(altoBloqueMovil-1);
-    if (y>=filaSupInferior && y<=filaInfInferior)
-    {
-        return true;
-    }
-    return false;
+bool Nivel3::puntoEnBloqueMovil(int x, int y) const {
+    if (mapa == nullptr) return false;
+    if (x < 0 || x >= cols || y < 0 || y >= rows) return false;
+    return mapa[y][x] == 1;
 }
 
-void Nivel3::moveSnake()
-{
-    if(cabeza==nullptr)
-    {
-        return;
-    }
-    int newX= cabeza->x;
-    int newY= cabeza->y;
+void Nivel3::gameloop() {
+    if (gameover) return;
 
-    switch (direction)
-    {
+    actualizarBloquesMovibles();
+    moveSnake();
+    checkCollision();
+    update();
+}
+
+void Nivel3::moveSnake() {
+    if (cabeza == nullptr) return;
+
+    int newX = cabeza->x;
+    int newY = cabeza->y;
+
+    switch (direction) {
     case Up:
+    {
         newY--;
         break;
+    }
     case Down:
+    {
         newY++;
         break;
+    }
     case Right:
+    {
         newX++;
         break;
+    }
     case Left:
+    {
         newX--;
         break;
+
+    }
     }
 
-    // CORREGIDO: Validar límites ANTES de mover la serpiente para evitar que se pinte afuera
-    if(newX < 0 || newY < 0 || newX >= cols || newY >= rows)
-    {
-        gameover=true;
+    // Validar límites
+    if (newX < 0 || newY < 0 || newX >= cols || newY >= rows) {
+        gameover = true;
         timer->stop();
         retryButton->show();
         return;
     }
 
-    // CORREGIDO: Validar colisión de la nueva posición con bloques móviles antes de avanzar
-    if(puntoEnBloqueMovil(newX, newY))
+    //  Validar colisión con bloques usando mapa[][]
+    if (puntoEnBloqueMovil(newX, newY))
     {
-        gameover=true;
+        gameover = true;
         timer->stop();
         retryButton->show();
         return;
     }
 
-    Nodo* nuevoNodo= new Nodo(newX, newY);
-    nuevoNodo->siguiente=cabeza;
-    cabeza= nuevoNodo;
+    Nodo* nuevoNodo = new Nodo(newX, newY);
+    nuevoNodo->siguiente = cabeza;
+    cabeza = nuevoNodo;
 
-    bool comioAlgo=false;
-    if(hayComidaDorada && newX==comidaDorada.x() && newY==comidaDorada.y())
+    bool comioAlgo = false;
+
+    if (hayComidaDorada && newX == comidaDorada.x() && newY == comidaDorada.y())
     {
         puntuacion += 30;
-        hayComidaDorada=false;
+        hayComidaDorada = false;
         activarReduccionVelocidad();
         crecimientoExtra += 2;
-        comioAlgo=true;
+        comioAlgo = true;
     }
 
-    if(hayFrutaVelocidad==true && newX==frutaVelocidad.x() && newY==frutaVelocidad.y())
+    if (hayFrutaVelocidad && newX == frutaVelocidad.x() && newY == frutaVelocidad.y())
     {
-        hayFrutaVelocidad=false;
-        if(frutaVelocidadBlanca==true)
+        hayFrutaVelocidad = false;
+        if (frutaVelocidadBlanca)
         {
-            if((velocidadBase-CAMBIO_VELOCIDAD_FRUTA)>=VELOCIDAD_MINIMA)
-            {
-                velocidadBase-= CAMBIO_VELOCIDAD_FRUTA;
-            }
+            if (velocidadBase - CAMBIO_VELOCIDAD_FRUTA >= VELOCIDAD_MINIMA)
+                velocidadBase -= CAMBIO_VELOCIDAD_FRUTA;
         }
         else
         {
-            if((velocidadBase + CAMBIO_VELOCIDAD_FRUTA)<=VELOCIDAD_MAXIMA)
-            {
-                velocidadBase +=CAMBIO_VELOCIDAD_FRUTA;
-            }
+            if (velocidadBase + CAMBIO_VELOCIDAD_FRUTA <= VELOCIDAD_MAXIMA)
+                velocidadBase += CAMBIO_VELOCIDAD_FRUTA;
         }
-
-        if(efectoDoradaActivo==false)
-        {
-            timer->setInterval(velocidadBase);
-        }
+        if (!efectoDoradaActivo) timer->setInterval(velocidadBase);
     }
 
-    if(newX==food.x() && newY==food.y())
+    if (newX == food.x() && newY == food.y())
     {
-        comioAlgo=true;
+        comioAlgo = true;
         manzanasComidas++;
         puntuacion += 10;
-        crecimientoExtra+=1;
+        crecimientoExtra += 1;
+        hayComidaDorada = false;
+        hayFrutaVelocidad = false;
 
-        hayComidaDorada=false;
-        hayFrutaVelocidad=false;
-
-        if(manzanasComidas >= MANZANAS_META)
+        if (manzanasComidas >= MANZANAS_META)
         {
-            nivelGanado=true;
-            gameover=true;
+            nivelGanado = true;
+            gameover = true;
             timer->stop();
             retryButton->show();
         }
         else
         {
-            if(manzanasComidas % 2 == 0)
-            {
-                aumentarVelocidad();
-            }
-
+            if (manzanasComidas % 2 == 0) aumentarVelocidad();
             spawnFood();
             intentoComidaDorada();
             intentoFrutaVelocidad();
         }
     }
 
-    if(!comioAlgo)
-    {
-        if(crecimientoExtra>0)
-        {
+    if (!comioAlgo) {
+        if (crecimientoExtra > 0) {
             crecimientoExtra--;
-        }
-        else if(cabeza->siguiente !=nullptr)
-        {
-            Nodo* actual=cabeza;
-            while(actual->siguiente->siguiente != nullptr)
-            {
-                actual=actual->siguiente;
+        } else if (cabeza->siguiente != nullptr) {
+            Nodo* actual = cabeza;
+            while (actual->siguiente->siguiente != nullptr) {
+                actual = actual->siguiente;
             }
             delete actual->siguiente;
-            actual->siguiente=nullptr;
+            actual->siguiente = nullptr;
         }
     }
 }
 
-void Nivel3::spawnFood()
-{
-    int x=0;
-    int y=0;
+void Nivel3::spawnFood() {
+    int x = 0, y = 0;
     bool posicionValida;
 
-    do
-    {
-        x= QRandomGenerator::global()->bounded(cols);
-        y= QRandomGenerator::global()->bounded(rows);
-        posicionValida=true;
+    do {
+        x = QRandomGenerator::global()->bounded(cols);
+        y = QRandomGenerator::global()->bounded(rows);
+        posicionValida = true;
 
-        if(puntoEnBloqueMovil(x, y) ==true)
-        {
-            posicionValida=false;
-        }
+        //  Validar con mapa[][]
+        if (puntoEnBloqueMovil(x, y)) posicionValida = false;
 
-        if(posicionValida==true)
-        {
-            Nodo* actual=cabeza;
-            while(actual!=nullptr)
-            {
-                if(actual->x==x && actual->y==y)
-                {
-                    posicionValida=false;
+        if (posicionValida) {
+            Nodo* actual = cabeza;
+            while (actual != nullptr) {
+                if (actual->x == x && actual->y == y) {
+                    posicionValida = false;
                     break;
                 }
-                actual=actual->siguiente;
+                actual = actual->siguiente;
             }
         }
+    } while (!posicionValida);
 
-    } while(!posicionValida);
-
-    food= QPoint(x,y);
+    food = QPoint(x, y);
 }
 
-void Nivel3::checkCollision()
-{
-    if(cabeza==nullptr)
-    {
-        return;
-    }
+void Nivel3::checkCollision() {
+    if (cabeza == nullptr) return;
 
-    int cabezaX= cabeza->x;
-    int cabezaY= cabeza->y;
+    int cabezaX = cabeza->x;
+    int cabezaY = cabeza->y;
 
-    if(cabezaX<0 || cabezaY<0 || cabezaX>=cols || cabezaY>=rows)
-    {
-        gameover=true;
+    if (cabezaX < 0 || cabezaY < 0 || cabezaX >= cols || cabezaY >= rows) {
+        gameover = true;
         timer->stop();
         retryButton->show();
         return;
     }
 
-    if(puntoEnBloqueMovil(cabezaX, cabezaY)==true)
-    {
-        gameover=true;
+    //  Colisión con bloques usando mapa[][]
+    if (puntoEnBloqueMovil(cabezaX, cabezaY)) {
+        gameover = true;
         timer->stop();
         retryButton->show();
         return;
     }
 
-    // CORREGIDO: Se eliminó la validación incorrecta del cuerpo contra los bloques móviles.
-    // Únicamente se evalúa la colisión de la cabeza contra su propio cuerpo:
+    // Colisión con su propio cuerpo
     Nodo* actual = cabeza->siguiente;
-    while(actual !=nullptr)
-    {
-        if(cabezaX==actual->x && cabezaY==actual->y)
-        {
-            gameover=true;
+    while (actual != nullptr) {
+        if (cabezaX == actual->x && cabezaY == actual->y) {
+            gameover = true;
             timer->stop();
             retryButton->show();
             return;
         }
-        actual=actual->siguiente;
+        actual = actual->siguiente;
     }
 }
 
@@ -1678,37 +398,26 @@ void Nivel3::paintEvent(QPaintEvent *)
     }
 }
 
-void Nivel3::gameloop()
-{
-    if(gameover==true)
-    {
-        return;
-    }
-    actualizarBloquesMovibles();
-    moveSnake();
-    checkCollision();
-    update();
-}
 
-void Nivel3::resetGame()
-{
+void Nivel3::resetGame() {
     limpiarSerpiente();
     cabeza = new Nodo(2, 2);
 
-    direction=Right;
-    gameover=false;
-
-    manzanasComidas=0;
-    puntuacion=0;
-    nivelGanado=false;
-    hayComidaDorada=false;
-    crecimientoExtra=0;
-    velocidadBase=VELOCIDAD_INICIAL;
-    efectoDoradaActivo=false;
+    direction = Right;
+    gameover = false;
+    manzanasComidas = 0;
+    puntuacion = 0;
+    nivelGanado = false;
+    hayComidaDorada = false;
+    crecimientoExtra = 0;
+    velocidadBase = VELOCIDAD_INICIAL;
+    efectoDoradaActivo = false;
     generacionPartida++;
+    hayFrutaVelocidad = false;
+    frutaVelocidadBlanca = true;
+    contadorMovimientoBloques = 0;
 
-    hayFrutaVelocidad=false;
-    frutaVelocidadBlanca=true;
+    //  Reinicializar bloques
     inicializarBloquesMovibles();
 
     spawnFood();
@@ -1719,8 +428,60 @@ void Nivel3::resetGame()
     update();
 }
 
-void Nivel3::restaurarVelocidadNormal()
-{
-    efectoDoradaActivo=false;
+void Nivel3::aumentarVelocidad() {
+    if (velocidadBase > VELOCIDAD_MINIMA) {
+        velocidadBase -= 10;
+        if (!efectoDoradaActivo) timer->setInterval(velocidadBase);
+    }
+}
+
+void Nivel3::activarReduccionVelocidad() {
+    efectoDoradaActivo = true;
+    timer->setInterval(velocidadBase + 80);
+    int generacionActual = generacionPartida;
+    QTimer::singleShot(5000, this, [this, generacionActual]() {
+        if (generacionActual == generacionPartida) restaurarVelocidadNormal();
+    });
+}
+
+void Nivel3::restaurarVelocidadNormal() {
+    efectoDoradaActivo = false;
     timer->setInterval(velocidadBase);
+}
+
+void Nivel3::intentoFrutaVelocidad() {
+    int probabilidad = QRandomGenerator::global()->bounded(100);
+    if (probabilidad >= 30) return;
+
+    int x = 0, y = 0;
+    bool posicionValida;
+    int intentos = 0;
+
+    do {
+        x = QRandomGenerator::global()->bounded(cols);
+        y = QRandomGenerator::global()->bounded(rows);
+        posicionValida = true;
+
+        if (puntoEnBloqueMovil(x, y)) posicionValida = false;
+        if (posicionValida && hayComidaDorada && x == comidaDorada.x() && y == comidaDorada.y())
+            posicionValida = false;
+
+        if (posicionValida) {
+            Nodo* actual = cabeza;
+            while (actual != nullptr) {
+                if (actual->x == x && actual->y == y) {
+                    posicionValida = false;
+                    break;
+                }
+                actual = actual->siguiente;
+            }
+        }
+        intentos++;
+    } while (!posicionValida && intentos < 100);
+
+    if (posicionValida) {
+        frutaVelocidad = QPoint(x, y);
+        hayFrutaVelocidad = true;
+        frutaVelocidadBlanca = (QRandomGenerator::global()->bounded(100) < 50);
+    }
 }
