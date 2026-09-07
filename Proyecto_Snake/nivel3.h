@@ -11,9 +11,12 @@ public:
 
 protected:
     QPoint frutaVelocidad;
-    bool hayFrutaVelocidad, frutaVelocidadBlanca;
+    bool hayFrutaVelocidad;
+    bool frutaVelocidadBlanca;
+    bool frutaVelocidadCafe;
 
-    int velocidadBase, generacionPartida;
+    int velocidadBase;
+    int generacionPartida;
     bool efectoDoradaActivo;
 
     int centroFilaBloques;
@@ -30,6 +33,11 @@ protected:
     static const int VELOCIDAD_MINIMA = 20;
     static const int VELOCIDAD_MAXIMA = 150;
     static const int CAMBIO_VELOCIDAD_FRUTA = 10;
+    //manzanas por tiempo
+    int cafesGeneradas;
+    int blancasGeneradas;
+    static const int CAFES_MAX_GENERADAS=6;
+    static const int BLANCAS_MAX_GENERADAS=4;
 
     void aumentarVelocidad();
     void activarReduccionVelocidad();
@@ -47,6 +55,12 @@ protected:
     void checkCollision() override;
     void paintEvent(QPaintEvent *event) override;
 
+    //manzanas por tiempo
+    int obtenerTiempoLimiteNivel() const override
+    {
+        return 120;
+    }
+    bool ejecutarCicloGeneracion() override;
 protected slots:
     void gameloop() override;
     void resetGame() override;

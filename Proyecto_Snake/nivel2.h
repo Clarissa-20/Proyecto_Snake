@@ -21,13 +21,16 @@ protected:
     //velocidad dinamica prueba #1
     void aumentarVelocidad();
     void activarReduccionVelocidad();
-
+    //manzanas por tiempo
+    void iniciarGeneracionPorTiempo();
 
     //sobreescritura de funciones de clase nivel
     void moveSnake() override;
     void spawnFood() override;
     void checkCollision() override;
     void paintEvent(QPaintEvent *) override;
+
+    void finalizarPorTiempo() override;
 protected slots:
     void resetGame() override;
     //velocidad dinamica prueba #1
