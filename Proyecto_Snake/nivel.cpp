@@ -20,6 +20,23 @@ Nivel::Nivel(QWidget *parent)
     , manzanasComidas(0)
     , puntuacion(0)
     , nivelGanado(false)
+    //manzanas por tiempo
+    , tiempoLimiteSegundos(0)
+    , tiempoRestanteSegundos(0)
+    , intervaloGeneracionMs(0)
+    , timerCronometro(nullptr)
+
+    , timerGeneracion(nullptr)
+    , tiempoTerminado(false)
+    , rojasGeneradas(0)
+    , rojasComidas(0)
+
+    , rojaActualComida(false)
+    , doradasGeneradas(0)
+    , doradasComidas(0)
+    , doradaActualComida(false)
+
+    , ganoPremio(false)
 {
     ui= new Ui::GameWindow();
     ui->setupUi(this);
@@ -36,7 +53,7 @@ Nivel::Nivel(QWidget *parent)
     connect(timer, &QTimer::timeout, this, &Nivel::gameloop);
 
     retryButton= new QPushButton("Retry", this);
-    retryButton->setGeometry(width()/2-50, height()/2+40, 100, 40);
+    retryButton->setGeometry(350, 440, 100, 40);
     retryButton->setStyleSheet("QPushButton{"
                                "background-color:#00aa00;"
                                "color:white;"
@@ -134,24 +151,32 @@ void Nivel::moveSnake()
     bool comioAlgo=false;
 
     //NIVEL 1: primero se revisa la manzana dorada (si está presente)
-    if(hayComidaDorada && newX==comidaDorada.x() && newY==comidaDorada.y())
+    if(hayComidaDorada==true && doradaActualComida==false && newX==comidaDorada.x() && newY==comidaDorada.y())
     {
-        puntuacion += 30; //NIVEL 1: puntos triples (10 x 3)
+        puntuacion += VALOR_DORADA; //NIVEL 1: puntos triples (10 x 3)
+        doradasComidas++;
+        doradaActualComida=true;
         hayComidaDorada=false; //la dorada desaparece al comerla
         crecimientoExtra += 2; //NIVEL 1: este movimiento ya crece 1 (no se borra la cola); +2 para sumar 3 en total
         comioAlgo=true;
     }
 
-    if(newX==food.x() && newY==food.y())
+    if(newX==food.x() && newY==food.y() && rojaActualComida==false)
     {
         comioAlgo=true;
-        manzanasComidas++; //NIVEL 1
-        puntuacion += 10;
-        //NIVEL 1: si se come la roja, la dorada (si estaba en pantalla) desaparece también
+        rojasComidas++;
+        rojaActualComida=true;
+
+        manzanasComidas= rojasComidas; //NIVEL 1
+        puntuacion += VALOR_ROJA;
+        avanzarCicloPorRojaComida();
+        /*//NIVEL 1: si se come la roja, la dorada (si estaba en pantalla) desaparece también
         hayComidaDorada=false;
 
-        if(manzanasComidas >= MANZANAS_META)
+        if(rojasComidas >= ROJAS_MAX_GENERADAS)
         {
+            finalizarPorManzanas();
+            /*
             //NIVEL 2: se completaron las 6 manzanas rojas -> se gana el nivel
             nivelGanado=true;
             gameover=true;
@@ -160,9 +185,10 @@ void Nivel::moveSnake()
         }
         else
         {
-            spawnFood();
+            avanzarCicloPorRojaComida();
+            /*spawnFood();
             intentoComidaDorada(); //NIVEL 1: probabilidad de que salga una dorada junto a la nueva roja
-        }
+        }*/
     }
     if(comioAlgo==false)
     {
@@ -186,8 +212,27 @@ void Nivel::moveSnake()
 
 void Nivel::spawnFood()
 {
-    int x= QRandomGenerator::global()->bounded(cols);
-    int y= QRandomGenerator::global()->bounded(rows);
+    int x=0;
+    int y=0;
+    bool posicionValida;
+    int intentos=0;
+    do
+    {
+        x= QRandomGenerator::global()->bounded(cols);
+        y= QRandomGenerator::global()->bounded(rows);
+        posicionValida=true;
+        Nodo* actual=cabeza;
+        while(actual!=nullptr)
+        {
+            if(actual->x==x && actual->y==y)
+            {
+                posicionValida=false;
+                break;
+            }
+            actual=actual->siguiente;
+        }
+        intentos++;
+    }while(posicionValida==false && intentos<100);
     food= QPoint(x,y);
 }
 
@@ -270,6 +315,10 @@ int Nivel::obtenerLongitudSerpiente()
 
 void Nivel::intentoComidaDorada()
 {
+    if(doradasGeneradas>=DORADAS_MAX_GENERADAS)
+    {
+        return;
+    }
     int probabilidad = QRandomGenerator::global()->bounded(100);
     if(probabilidad >= 40)
     {
@@ -321,7 +370,157 @@ void Nivel::intentoComidaDorada()
     {
         comidaDorada= QPoint(x,y);
         hayComidaDorada=true;
+        doradasGeneradas++;
+        doradaActualComida=false;
     }
+}
+
+void Nivel::iniciarSistemaDeManzanas()
+{
+    tiempoLimiteSegundos=obtenerTiempoLimiteNivel();
+    tiempoRestanteSegundos=tiempoLimiteSegundos;
+    intervaloGeneracionMs= INTERVALO_GENERACION_MS;
+
+    rojasGeneradas=0;
+    rojasComidas=0;
+    doradasGeneradas=0;
+    doradasComidas=0;
+
+    ganoPremio=false;
+    tiempoTerminado=false;
+    rojaActualComida=false;
+    doradaActualComida=false;
+
+    hayComidaDorada=false;
+    manzanasComidas=0;
+
+    if(timerCronometro==nullptr)
+    {
+        timerCronometro= new QTimer(this);
+        connect(timerCronometro, &QTimer::timeout, this, &Nivel::actualizarCronometro);
+    }
+    if(timerGeneracion==nullptr)
+    {
+        timerGeneracion= new QTimer(this);
+        connect(timerGeneracion, &QTimer::timeout, this, &Nivel::cicloGeneracion);
+    }
+    ejecutarCicloGeneracion();
+    timerGeneracion->start(intervaloGeneracionMs);
+    timerCronometro->start(1000);
+}
+
+bool Nivel::ejecutarCicloGeneracion()
+{
+    rojaActualComida=false;
+    //descarta la dorada del ciclo anterior
+    if(hayComidaDorada && doradaActualComida==false)
+    {
+        hayComidaDorada=false;
+    }
+    doradaActualComida=false;
+    spawnFood();
+    rojasGeneradas++;
+    intentoComidaDorada();
+    return true;
+    /*if(rojasGeneradas<ROJAS_MAX_GENERADAS)
+    {
+        spawnFood();
+        rojasGeneradas++;
+        intentoComidaDorada();
+        return true;
+    }
+    else
+    {
+        timerGeneracion->stop();
+        return false;
+    }*/
+
+}
+
+void Nivel::avanzarCicloPorRojaComida()
+{
+    bool huboNuevaRoja= ejecutarCicloGeneracion();
+    if(huboNuevaRoja==true && timerGeneracion!=nullptr)
+    {
+        timerGeneracion->start(intervaloGeneracionMs);
+    }
+}
+void Nivel::cicloGeneracion()
+{
+    if(tiempoTerminado==true || gameover==true)
+    {
+        return;
+    }
+    ejecutarCicloGeneracion();
+}
+
+void Nivel::actualizarCronometro()
+{
+    if(gameover==true)
+    {
+        timerCronometro->stop();
+        return;
+    }
+    tiempoRestanteSegundos--;
+    if(tiempoRestanteSegundos<=0)
+    {
+        tiempoRestanteSegundos=0;
+        finalizarPorTiempo();
+    }
+    update();
+}
+
+void Nivel::finalizarPorTiempo()
+{
+    tiempoTerminado=true;
+    if(timerGeneracion!=nullptr)
+    {
+        timerGeneracion->stop();
+    }
+    if(timerCronometro!=nullptr)
+    {
+        timerCronometro->stop();
+    }
+    timer->stop();
+    //descarta la dorada del ciclo anterior
+    if(hayComidaDorada && doradaActualComida==false)
+    {
+        hayComidaDorada=false;
+    }
+    ganoPremio=(doradasComidas>=DORADAS_MIN_PREMIO);
+    nivelGanado=(rojasComidas>=MANZANAS_META);
+    gameover=true;
+    retryButton->show();
+    update();
+}
+/*
+void Nivel::finalizarPorManzanas()
+{
+    if(timerGeneracion!=nullptr)
+    {
+        timerGeneracion->stop();
+    }
+    if(timerCronometro!=nullptr)
+    {
+        timerCronometro->stop();
+    }
+    timer->stop();
+    ganoPremio=(doradasComidas>=DORADAS_MIN_PREMIO);
+    nivelGanado=true;
+    gameover=true;
+    retryButton->show();
+    update();
+}*/
+QString Nivel::formatearTiempo(int segundos) const
+{
+    if(segundos<0)
+    {
+        segundos=0;
+    }
+    int m=segundos/60;
+    int s=segundos%60;
+    return QString("%1:%2").arg(m, 2, 10, QChar('0')).arg(s, 2, 10, QChar('0'));
+
 }
 
 void Nivel::gameloop()
@@ -346,12 +545,18 @@ void Nivel::resetGame()
     direction=Right;
     gameover=false;
 
-    //NIVEL 1: reiniciar todo lo relacionado al nivel 2
+    puntuacion=0;
+    nivelGanado=false;
+    crecimientoExtra=0;
+
+    iniciarSistemaDeManzanas();
+
+    /*//NIVEL 1: reiniciar todo lo relacionado al nivel 2
     manzanasComidas=0;
     puntuacion=0;
     nivelGanado=false;
     hayComidaDorada=false;
-    crecimientoExtra=0; //NIVEL 1
+    crecimientoExtra=0; //NIVEL 1*/
 
     spawnFood();
     retryButton->hide();
@@ -366,10 +571,13 @@ void Nivel::paintEvent(QPaintEvent *)
     QPainter painter(this);
 
     //nuevo: para dibujar la img del fondo
-    if(!fondo.isNull()){
+    if(!fondo.isNull())
+    {
         //dibuja y escala la imagen de fondo al tama;o de la pantalla
         painter.drawPixmap(rect(), fondo);
-    }else{
+    }
+    else
+    {
         //fondo negro por si no carga la img
         painter.fillRect(rect(), Qt::black);
     }
@@ -412,23 +620,43 @@ void Nivel::paintEvent(QPaintEvent *)
         painter.drawEllipse(comidaDorada.x()*cellsize, comidaDorada.y()*cellsize, cellsize, cellsize);
     }*/
 
-    if(hayComidaDorada){
+    if(hayComidaDorada==true)
+    {
         painter.setBrush(QColor(255, 215, 0));
         int doradaX=marginX+(comidaDorada.x()*cellsize);
         int doradaY=marginY+(comidaDorada.y()*cellsize);
         painter.drawEllipse(doradaX, doradaY, cellsize, cellsize);
     }
-
+    /*
     painter.setPen(Qt::white);
     painter.setFont(QFont("Arial", 12));
-    painter.drawText(10, 20, QString("Gemas: %1").arg(puntuacion));
+    painter.drawText(10, 20, QString("Puntos: %1").arg(puntuacion));
     painter.drawText(10, 40, QString("Manzanas: %1/%2").arg(manzanasComidas).arg(MANZANAS_META));
+    painter.drawText(10, 60, QString("Gemas: %1").arg(totalManzanasComidas()));
+    painter.drawText(10, 80, QString("Tiempo: %1").arg(formatearTiempo(tiempoRestanteSegundos)));
+*/
+    painter.setPen(Qt::white);
+    painter.setFont(QFont("Arial", 11, QFont::Bold));
+
+    // 1. CUADRO ROJO (Izquierda): Gemas arriba y Puntos abajo
+    QRect rectRojo(210, 40, 190, 60);
+    painter.drawText(rectRojo, Qt::AlignHCenter | Qt::AlignTop, QString("Gemas: %1").arg(totalManzanasComidas()));
+    painter.drawText(rectRojo, Qt::AlignHCenter | Qt::AlignBottom, QString("Puntos: %1").arg(puntuacion));
+
+    // 2. CUADRO AZUL (Centro): Manzanas Rojas arriba y Doradas abajo
+    QRect rectAzul(420, 40, 190, 60);
+    painter.drawText(rectAzul, Qt::AlignHCenter | Qt::AlignTop, QString("Rojas: %1").arg(manzanasComidas));
+    painter.drawText(rectAzul, Qt::AlignHCenter | Qt::AlignBottom, QString("Doradas: %1").arg(doradasComidas));
+
+    // 3. CUADRO AMARILLO (Derecha): Tiempo centrado
+    QRect rectAmarillo(630, 40, 190, 60);
+    painter.drawText(rectAmarillo, Qt::AlignCenter, QString("Tiempo: %1").arg(formatearTiempo(tiempoRestanteSegundos)));
 
     if(gameover==true)
     {
         painter.setPen(Qt::white);
         painter.setFont(QFont("Arial", 24));
-        if(nivelGanado)
+        if(nivelGanado==true)
         {
             //NIVEL 1: mensaje de victoria al completar las 6 manzanas rojas
             painter.drawText(rect(), Qt::AlignCenter, "¡NIVEL COMPLETADO!");
@@ -437,6 +665,9 @@ void Nivel::paintEvent(QPaintEvent *)
         {
             painter.drawText(rect(), Qt::AlignCenter, "GAME OVER");
         }
+        painter.setFont(QFont("Arial", 14));
+        painter.drawText(QRect(0, height()/2+20, width(), 30), Qt::AlignCenter,ganoPremio ? "¡Premio de manzanas doradas obtenido!" : "Premio de doradas no obtenido");
+
     }
 }
 
