@@ -2,7 +2,29 @@
     <qresource prefix="/new/prefix1"/>
     <qresource prefix="/">
         <file>imagenes/nivel1_fondo.png</file>
-        <file>imagenes/nivel2_fondo.jpg</file>
-        <file>imagenes/nivel3_fondo.jpg</file>
+        <file>imagenes/boton_play.png</file>
+        <file>imagenes/inicio_screen_fondo.jpg</file>
+        <file>imagenes/boton_entrar.png</file>
+        <file>imagenes/campo_datos1.png</file>
+        <file>imagenes/iniciar_sesion_boton.png</file>
+        <file>imagenes/login_fondo.jpg</file>
+        <file>imagenes/registrarse_boton.png</file>
+        <file>imagenes/crear_cuenta_fondo.png</file>
+        <file>imagenes/crear_cuenta_boton.png</file>
+        <file>imagenes/menu_principal_fondo.jpg</file>
+        <file>imagenes/boton_config.png</file>
+        <file>imagenes/boton_instrucciones.png</file>
+        <file>imagenes/boton_jugar.png</file>
+        <file>imagenes/boton_records.png</file>
+        <file>imagenes/boton_salir.png</file>
+        <file>imagenes/boton_tienda.png</file>
+        <file>imagenes/nivel2_fondo.png</file>
+        <file>imagenes/nivel3_fondo.png</file>
+        <file>imagenes/boton_pausa_nivel1_2.png</file>
+        <file>imagenes/boton_pausa_nivel3.png</file>
+        <file>imagenes/manzana_blanca.png</file>
+        <file>imagenes/manzana_dorada.png</file>
+        <file>imagenes/manzana_morada.png</file>
+        <file>imagenes/manzana_roja.png</file>
     </qresource>
 </RCC>

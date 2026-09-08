@@ -28,6 +28,11 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         nivel2.h nivel2.cpp
         nivel3.h nivel3.cpp
         recursos.qrc
+        mainwindow.h mainwindow.cpp
+        menuiniciowindow.h menuiniciowindow.cpp
+        loginwindow.h loginwindow.cpp
+        registerwindow.h registerwindow.cpp
+        mainmenuwindow.h mainmenuwindow.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Proyecto_Snake APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
