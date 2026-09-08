@@ -1,7 +1,5 @@
-#ifndef GAMEWINDOW_H
-#define GAMEWINDOW_H
-
-#include <QWidget>
+#ifndef NIVEL_H
+#define NIVEL_H
 
 //#include <QtCore>
 #include <QTimer>
