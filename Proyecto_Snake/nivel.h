@@ -96,6 +96,8 @@ protected:
 
     QPushButton *retryButton;
 
+    QPushButton *pausaBtn;
+    bool juegoPausado;
     // manzanas prueba#1
     QPoint comidaDorada;
 
@@ -160,6 +162,7 @@ protected slots:
     virtual void gameloop();
     virtual void resetGame();
 
+    void alternarPausa();
 protected:
     void paintEvent(QPaintEvent *) override;
     void keyPressEvent(QKeyEvent *event) override;

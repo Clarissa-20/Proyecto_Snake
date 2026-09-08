@@ -37,6 +37,10 @@ Nivel::Nivel(QWidget *parent)
     , doradaActualComida(false)
 
     , ganoPremio(false)
+
+    //btn pausa
+    , pausaBtn(nullptr)
+    , juegoPausado(false)
 {
     ui= new Ui::GameWindow();
     ui->setupUi(this);
@@ -65,6 +69,27 @@ Nivel::Nivel(QWidget *parent)
                                "}"
                                );
     connect(retryButton, &QPushButton::clicked, this, &Nivel::resetGame);
+
+    //pausa btn
+    pausaBtn= new QPushButton("Pausa", this);
+    pausaBtn->setGeometry(665, 10, 120, 50);
+    pausaBtn->setStyleSheet("QPushButton{"
+                            "background-color: transparent;"
+                            "color: #FFFFFF;"
+                            "font-family: 'Arial';"
+                            "font-size: 18px;"
+                            "font-weight: bold;"
+                            "border: none;"
+                            "}"
+                            "QPushButton:hover{"
+                            "color: #FFD700;"
+                            "}"
+                            "QPushButton:pressed{"
+                            "color: #888888;"
+                            "}"
+                            );
+    connect(pausaBtn, &QPushButton::clicked, this, &Nivel::alternarPausa);
+
     retryButton->hide();
     setFocusPolicy(Qt::StrongFocus);
 }
@@ -523,6 +548,44 @@ QString Nivel::formatearTiempo(int segundos) const
 
 }
 
+void Nivel::alternarPausa()
+{
+    if(gameover==true)
+    {
+        return;
+    }
+    juegoPausado=!juegoPausado;
+
+    if(juegoPausado==true)
+    {
+        timer->stop();
+        if(timerCronometro!=nullptr)
+        {
+            timerCronometro->stop();
+        }
+        if(timerGeneracion!=nullptr)
+        {
+            timerGeneracion->stop();
+        }
+        pausaBtn->setText("Reanudar");
+    }
+    else
+    {
+        timer->start();
+        if(timerCronometro!=nullptr)
+        {
+            timerCronometro->start();
+        }
+        if(timerCronometro!=nullptr)
+        {
+            timerGeneracion->start();
+        }
+        pausaBtn->setText("Pausa");
+        setFocus();
+    }
+    update();
+
+}
 void Nivel::gameloop()
 {
     if(gameover==true)
@@ -673,6 +736,10 @@ void Nivel::paintEvent(QPaintEvent *)
 
 void Nivel::keyPressEvent(QKeyEvent *event)
 {
+    if(juegoPausado==true)
+    {
+        return;
+    }
     switch (event->key())
     {
     case Qt::Key_Up:
