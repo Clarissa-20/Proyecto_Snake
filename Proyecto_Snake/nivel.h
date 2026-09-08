@@ -1,8 +1,6 @@
 #ifndef NIVEL_H
 #define NIVEL_H
 
-#include <QWidget>
-
 //#include <QtCore>
 #include <QTimer>
 #include <QPushButton>
