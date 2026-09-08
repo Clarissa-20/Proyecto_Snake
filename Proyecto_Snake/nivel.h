@@ -1,5 +1,5 @@
-#ifndef GAMEWINDOW_H
-#define GAMEWINDOW_H
+#ifndef NIVEL_H
+#define NIVEL_H
 
 #include <QWidget>
 
