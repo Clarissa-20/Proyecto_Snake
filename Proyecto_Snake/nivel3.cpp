@@ -18,7 +18,7 @@ Nivel3::Nivel3(QWidget *parent) :
     blancasGeneradas(0)
 {
 
-    fondo.load(":/imagenes/nivel3_fondo.jpg");
+    fondo.load(":/imagenes/nivel3_fondo.png");
     cols = (width() - (2 * marginX)) / cellsize;
     rows = (height() - (2 * marginY)) / cellsize;
 

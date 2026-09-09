@@ -9,7 +9,7 @@ Nivel2::Nivel2(QWidget *parent)
 {
 
     //Cargamos aquí la img de fondo para el nivel 2
-    fondo.load(":/imagenes/nivel2_fondo.jpg");
+    fondo.load(":/imagenes/nivel2_fondo.png");
 
     cols=((width()-(2*marginX))/cellsize);
     rows=((height()-marginY-120)/cellsize);
