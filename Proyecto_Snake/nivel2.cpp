@@ -461,7 +461,8 @@ void Nivel2::paintEvent(QPaintEvent *)
             {
                 int muroX = marginX + (j * cellsize);
                 int muroY = marginY + (i * cellsize);
-                painter.drawRect(muroX, muroY, cellsize, cellsize);
+                //painter.drawRect(muroX, muroY, cellsize, cellsize);
+                painter.drawPixmap(muroX, muroY, cellsize, cellsize, imgBloque);
             }
         }
     }
@@ -487,17 +488,24 @@ void Nivel2::paintEvent(QPaintEvent *)
     }
 
     painter.setPen(Qt::NoPen);
-    painter.setBrush(Qt::red);
+    /*painter.setBrush(Qt::red);
     int foodX=marginX+(food.x()*cellsize);
     int foodY=marginY+(food.y()*cellsize);
-    painter.drawEllipse(foodX, foodY, cellsize, cellsize);
+    painter.drawEllipse(foodX, foodY, cellsize, cellsize);*/
+    int foodX=marginX+(food.x()*cellsize);
+    int foodY=marginY+(food.y()*cellsize);
+    painter.drawPixmap(foodX, foodY, cellsize, cellsize, imgManzanaRoja);
+
 
     if(hayComidaDorada==true)
     {
-        painter.setBrush(QColor(255,215,0));
+        /*painter.setBrush(QColor(255,215,0));
         int doradaX=marginX+(comidaDorada.x()*cellsize);
         int doradaY=marginY+(comidaDorada.y()*cellsize);
-        painter.drawEllipse(doradaX, doradaY, cellsize, cellsize);
+        painter.drawEllipse(doradaX, doradaY, cellsize, cellsize);*/
+        int doradaX=marginX+(comidaDorada.x()*cellsize);
+        int doradaY=marginY+(comidaDorada.y()*cellsize);
+        painter.drawPixmap(doradaX, doradaY, cellsize, cellsize, imgManzanaDorada);
     }
     /*
     painter.setPen(Qt::white);
@@ -534,7 +542,7 @@ void Nivel2::paintEvent(QPaintEvent *)
     painter.drawText(rect2Top, Qt::AlignCenter, QString("Rojas: %1").arg(manzanasComidas));
     painter.drawText(rect2Bottom, Qt::AlignCenter, QString("Doradas: %1").arg(doradasComidas));
 
-    QRect rect3(494, 22, 140, 36);
+    QRect rect3(484, 22, 140, 36);
     painter.drawText(rect3, Qt::AlignCenter, QString("Tiempo: %1").arg(formatearTiempo(tiempoRestanteSegundos)));
 
     if(gameover==true)

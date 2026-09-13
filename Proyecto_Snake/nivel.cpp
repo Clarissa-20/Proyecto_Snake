@@ -46,6 +46,12 @@ Nivel::Nivel(QWidget *parent)
     ui->setupUi(this);
 
     setFixedSize(800,800);
+
+    imgManzanaRoja.load(":/imagenes/manzana_roja.png");
+    imgManzanaDorada.load(":/imagenes/manzana_dorada.png");
+    imgManzanaMorada.load(":/imagenes/manzana_morada.png");
+    imgManzanaBlanca.load(":/imagenes/manzana_blanca.png");
+    imgBloque.load(":/imagenes/bloque.png");
     setFocusPolicy(Qt::StrongFocus);
 
     direction=Right;
@@ -71,7 +77,7 @@ Nivel::Nivel(QWidget *parent)
     connect(retryButton, &QPushButton::clicked, this, &Nivel::resetGame);
 
     //pausa btn
-    pausaBtn= new QPushButton("Pausa", this);
+    /*pausaBtn= new QPushButton("Pausa", this);
     pausaBtn->setGeometry(665, 10, 120, 50);
     pausaBtn->setStyleSheet("QPushButton{"
                             "background-color: transparent;"
@@ -88,8 +94,22 @@ Nivel::Nivel(QWidget *parent)
                             "color: #888888;"
                             "}"
                             );
+    connect(pausaBtn, &QPushButton::clicked, this, &Nivel::alternarPausa);*/
+    pausaBtn = new QPushButton(this);
+    pausaBtn->setGeometry(656, 6, 140, 60);
+    pausaBtn->setStyleSheet(
+        "QPushButton {"
+        "   border-image: url(:/imagenes/boton_pausa_nivel1_2.png);"
+        "   border: none;"
+        "}"
+        "QPushButton:hover {"
+        "   opacity: 0.8;"
+        "}"
+        "QPushButton:pressed {"
+        "   border-image: url(:/imagenes/boton_pausa_nivel1_2.png);"
+        "}"
+        );
     connect(pausaBtn, &QPushButton::clicked, this, &Nivel::alternarPausa);
-
     retryButton->hide();
     setFocusPolicy(Qt::StrongFocus);
 }
@@ -567,7 +587,7 @@ void Nivel::alternarPausa()
         {
             timerGeneracion->stop();
         }
-        pausaBtn->setText("Reanudar");
+        //pausaBtn->setText("Reanudar");
     }
     else
     {
@@ -580,7 +600,7 @@ void Nivel::alternarPausa()
         {
             timerGeneracion->start();
         }
-        pausaBtn->setText("Pausa");
+        //pausaBtn->setText("Pausa");
         setFocus();
     }
     update();
@@ -671,10 +691,14 @@ void Nivel::paintEvent(QPaintEvent *)
     painter.setBrush(Qt::red);
     painter.drawEllipse(food.x()*cellsize, food.y()*cellsize, cellsize, cellsize);*/
 
-    painter.setBrush(Qt::red);
+    /*painter.setBrush(Qt::red);
     int foodX=marginX+(food.x()*cellsize);
     int foodY=marginY+(food.y()*cellsize);
-    painter.drawEllipse(foodX, foodY, cellsize, cellsize);
+    painter.drawEllipse(foodX, foodY, cellsize, cellsize);*/
+
+    int foodX=marginX+(food.x()*cellsize);
+    int foodY=marginY+(food.y()*cellsize);
+    painter.drawPixmap(foodX, foodY, cellsize, cellsize, imgManzanaRoja);
 
     //nivel 1
     /*if(hayComidaDorada==true)
@@ -685,10 +709,14 @@ void Nivel::paintEvent(QPaintEvent *)
 
     if(hayComidaDorada==true)
     {
-        painter.setBrush(QColor(255, 215, 0));
+        /*painter.setBrush(QColor(255, 215, 0));
         int doradaX=marginX+(comidaDorada.x()*cellsize);
         int doradaY=marginY+(comidaDorada.y()*cellsize);
-        painter.drawEllipse(doradaX, doradaY, cellsize, cellsize);
+        painter.drawEllipse(doradaX, doradaY, cellsize, cellsize);*/
+        int doradaX=marginX+(comidaDorada.x()*cellsize);
+        int doradaY=marginY+(comidaDorada.y()*cellsize);
+        painter.drawPixmap(doradaX, doradaY, cellsize, cellsize, imgManzanaDorada);
+
     }
     /*
     painter.setPen(Qt::white);

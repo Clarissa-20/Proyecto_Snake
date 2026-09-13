@@ -22,6 +22,22 @@ Nivel3::Nivel3(QWidget *parent) :
     cols = (width() - (2 * marginX)) / cellsize;
     rows = (height() - (2 * marginY)) / cellsize;
 
+
+    if (pausaBtn != nullptr) { //como obtiene la imagen de nivel.cpp, entonces aqui cambia la imagen
+        pausaBtn->setGeometry(642, 2, 160, 90);
+        pausaBtn->setStyleSheet(
+            "QPushButton {"
+            "   border-image: url(:/imagenes/boton_pausa_nivel3.png);"
+            "   border: none;"
+            "}"
+            "QPushButton:hover {"
+            "   opacity: 0.8;"
+            "}"
+            "QPushButton:pressed {"
+            "   border-image: url(:/imagenes/boton_pausa_nivel3.png);"
+            "}"
+            );
+    }
     // USAR int** mapa (igual que Nivel 2)
     crearMapa();
     inicializarBloquesMovibles();
@@ -401,7 +417,9 @@ void Nivel3::paintEvent(QPaintEvent *)
             {
                 int bloqueX = marginX + (j * cellsize);
                 int bloqueY = marginY + (i * cellsize);
-                painter.drawRect(bloqueX, bloqueY, cellsize, cellsize);
+                //painter.drawRect(bloqueX, bloqueY, cellsize, cellsize);
+                painter.drawPixmap(bloqueX, bloqueY, cellsize, cellsize, imgBloque);
+
             }
         }
     }
@@ -427,17 +445,24 @@ void Nivel3::paintEvent(QPaintEvent *)
     }
 
     painter.setPen(Qt::NoPen);
-    painter.setBrush(Qt::red);
+    /*painter.setBrush(Qt::red);
     int foodX = marginX + (food.x() * cellsize);
     int foodY = marginY + (food.y() * cellsize);
-    painter.drawEllipse(foodX, foodY, cellsize, cellsize);
+    painter.drawEllipse(foodX, foodY, cellsize, cellsize);*/
+    int foodX = marginX + (food.x() * cellsize);
+    int foodY = marginY + (food.y() * cellsize);
+    painter.drawPixmap(foodX, foodY, cellsize, cellsize, imgManzanaRoja);
+
 
     if(hayComidaDorada==true)
     {
-        painter.setBrush(QColor(255,215,0));
+        /*painter.setBrush(QColor(255,215,0));
         int doradaX = marginX + (comidaDorada.x() * cellsize);
         int doradaY = marginY + (comidaDorada.y() * cellsize);
-        painter.drawEllipse(doradaX, doradaY, cellsize, cellsize);
+        painter.drawEllipse(doradaX, doradaY, cellsize, cellsize);*/
+        int doradaX=marginX+(comidaDorada.x()*cellsize);
+        int doradaY=marginY+(comidaDorada.y()*cellsize);
+        painter.drawPixmap(doradaX, doradaY, cellsize, cellsize, imgManzanaDorada);
     }
 
     if(hayFrutaVelocidad==true)
@@ -447,16 +472,19 @@ void Nivel3::paintEvent(QPaintEvent *)
         int frutay = marginY + (frutaVelocidad.y() * cellsize);
         if(frutaVelocidadBlanca==true)
         {
-            painter.setBrush(Qt::white);
-            painter.drawEllipse(frutax, frutay, cellsize, cellsize);
+            /*painter.setBrush(Qt::white);
+            painter.drawEllipse(frutax, frutay, cellsize, cellsize);*/
+            painter.drawPixmap(frutax, frutay, cellsize, cellsize, imgManzanaBlanca);
+
         }
         else
         {
-            painter.setBrush(QColor(150,120,80));
+            /*painter.setBrush(QColor(150,120,80));
             painter.drawEllipse(frutax, frutay, cellsize, cellsize);
             painter.setBrush(QColor(85,65,40));
             painter.drawEllipse(frutax+3, frutay+3, cellsize, cellsize);
-            painter.drawEllipse(frutax+cellsize-9, frutay+cellsize-8, 4, 4);
+            painter.drawEllipse(frutax+cellsize-9, frutay+cellsize-8, 4, 4);*/
+            painter.drawPixmap(frutax, frutay, cellsize, cellsize, imgManzanaMorada);
         }
     }
     /*
@@ -481,20 +509,20 @@ void Nivel3::paintEvent(QPaintEvent *)
     painter.setPen(Qt::white);
     painter.setFont(QFont("Arial", 10, QFont::Bold));
 
-    int topY = 24;
-    int bottomY = 40;
+    int topY = 28;
+    int bottomY = 44;
 
-    QRect rect1Top(185, topY, 140, 18);
-    QRect rect1Bottom(185, bottomY, 140, 18);
+    QRect rect1Top(170, topY, 140, 18);
+    QRect rect1Bottom(170, bottomY, 140, 18);
     painter.drawText(rect1Top, Qt::AlignCenter, QString("Gemas: %1").arg(totalManzanasComidas()));
     painter.drawText(rect1Bottom, Qt::AlignCenter, QString("Puntos: %1").arg(puntuacion));
 
-    QRect rect2Top(335, topY, 140, 18);
-    QRect rect2Bottom(335, bottomY, 140, 18);
+    QRect rect2Top(330, topY, 140, 18);
+    QRect rect2Bottom(330, bottomY, 140, 18);
     painter.drawText(rect2Top, Qt::AlignCenter, QString("Rojas: %1").arg(manzanasComidas));
     painter.drawText(rect2Bottom, Qt::AlignCenter, QString("Doradas: %1").arg(doradasComidas));
 
-    QRect rect3(494, 22, 140, 36);
+    QRect rect3(486, 25, 140, 36);
     painter.drawText(rect3, Qt::AlignCenter, QString("Tiempo: %1").arg(formatearTiempo(tiempoRestanteSegundos)));
 
     if(gameover==true)

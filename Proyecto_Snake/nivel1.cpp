@@ -61,18 +61,24 @@ void Nivel1::paintEvent(QPaintEvent *)
     }
 
     painter.setPen(Qt::NoPen);
-    painter.setBrush(Qt::red);
+    /*painter.setBrush(Qt::red);
     int foodX = marginX + (food.x() * cellsize);
     int foodY = marginY + (food.y() * cellsize);
-    painter.drawEllipse(foodX, foodY, cellsize, cellsize);
+    painter.drawEllipse(foodX, foodY, cellsize, cellsize);*/
+    int foodX=marginX+(food.x()*cellsize);
+    int foodY=marginY+(food.y()*cellsize);
+    painter.drawPixmap(foodX, foodY, cellsize, cellsize, imgManzanaRoja);
 
 
     if(hayComidaDorada==true)
     {
-        painter.setBrush(QColor(255, 215, 0));
+        /*painter.setBrush(QColor(255, 215, 0));
         int doradaX= marginX+(comidaDorada.x()*cellsize);
         int doradaY= marginY+(comidaDorada.y()*cellsize);
-        painter.drawEllipse(doradaX, doradaY, cellsize, cellsize);
+        painter.drawEllipse(doradaX, doradaY, cellsize, cellsize);*/
+        int doradaX=marginX+(comidaDorada.x()*cellsize);
+        int doradaY=marginY+(comidaDorada.y()*cellsize);
+        painter.drawPixmap(doradaX, doradaY, cellsize, cellsize, imgManzanaDorada);
     }
     /*
     painter.setPen(Qt::white);

@@ -68,7 +68,11 @@ protected:
     Ui::GameWindow *ui;
 
     QPixmap fondo; //nuevo: variable para la img de fondo
-
+    QPixmap imgManzanaRoja;
+    QPixmap imgManzanaDorada;
+    QPixmap imgManzanaMorada;
+    QPixmap imgManzanaBlanca;
+    QPixmap imgBloque;
     int rows;
     int cols;
 

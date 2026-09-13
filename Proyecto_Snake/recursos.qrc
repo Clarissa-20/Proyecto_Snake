@@ -26,5 +26,6 @@
         <file>imagenes/manzana_dorada.png</file>
         <file>imagenes/manzana_morada.png</file>
         <file>imagenes/manzana_roja.png</file>
+        <file>imagenes/bloque.png</file>
     </qresource>
 </RCC>
