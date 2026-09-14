@@ -4,8 +4,21 @@
 #include "nivel3.h"
 int main(int argc, char *argv[])
 {
+     QApplication a(argc, argv);
+     Nivel3 w;
+     w.show();
+     return a.exec();
+ }
+
+/*#include <QApplication>
+#include "inicioscreen.h"
+
+int main(int argc, char *argv[])
+{
     QApplication a(argc, argv);
-    Nivel3 w;
+
+    InicioScreen w;
     w.show();
+
     return a.exec();
-}
+}*/

@@ -1,3 +1,15 @@
+// #ifndef MENUINICIO_H
+// #define MENUINICIO_H
+
+// class MenuInicio
+// {
+// public:
+//     MenuInicio();
+// };
+
+// #endif // MENUINICIO_H
+
+
 #ifndef MENUINICIO_H
 #define MENUINICIO_H
 
@@ -5,12 +17,12 @@
 #include <QPushButton>
 #include <QLabel>
 
-class MenuInicioWindow : public QMainWindow {
+class MenuInicio : public QMainWindow {
     Q_OBJECT
 
 public:
-    MenuInicioWindow(QWidget *parent = nullptr);
-    ~MenuInicioWindow();
+    MenuInicio(QWidget *parent = nullptr);
+    ~MenuInicio();
 
 private slots:
     void onIniciarSesionClicked();

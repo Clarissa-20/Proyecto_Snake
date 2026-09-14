@@ -22,10 +22,20 @@
         <file>imagenes/nivel3_fondo.png</file>
         <file>imagenes/boton_pausa_nivel1_2.png</file>
         <file>imagenes/boton_pausa_nivel3.png</file>
-        <file>imagenes/manzana_blanca.png</file>
-        <file>imagenes/manzana_dorada.png</file>
-        <file>imagenes/manzana_morada.png</file>
-        <file>imagenes/manzana_roja.png</file>
         <file>imagenes/bloque.png</file>
+        <file>imagenes/skin_predeterminada_cabeza_abajo.png</file>
+        <file>imagenes/skin_predeterminada_cabeza_arriba.png</file>
+        <file>imagenes/skin_predeterminada_cabeza_derecha.png</file>
+        <file>imagenes/skin_predeterminada_cabeza_izquierda.png</file>
+        <file>imagenes/skin_predeterminada_cola_horizontal_derecha.png</file>
+        <file>imagenes/skin_predeterminada_cola_horizontal_izquierda.png</file>
+        <file>imagenes/skin_predeterminada_cola_vertical_abajo.png</file>
+        <file>imagenes/skin_predeterminada_cola_vertical_arriba.png</file>
+        <file>imagenes/skin_predeterminada_cuerpo_horizontal.png</file>
+        <file>imagenes/skin_predeterminada_cuerpo_vertical.png</file>
+        <file>imagenes/skin_predeterminada_curva_abajo_derecha.png</file>
+        <file>imagenes/skin_predeterminada_curva_abajo_izquierda.png</file>
+        <file>imagenes/skin_predeterminada_curva_arriba_derecha.png</file>
+        <file>imagenes/skin_predeterminada_curva_arriba_izquierda.png</file>
     </qresource>
 </RCC>

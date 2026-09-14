@@ -1,16 +1,27 @@
-/*#ifndef MAINMENUWINDOW_H
-#define MAINMENUWINDOW_H
+// #ifndef MENUPRINCIPAL_H
+// #define MENUPRINCIPAL_H
+
+// class MenuPrincipal
+// {
+// public:
+//     MenuPrincipal();
+// };
+
+// #endif // MENUPRINCIPAL_H
+
+#ifndef MENUPRINCIPAL_H
+#define MENUPRINCIPAL_H
 
 #include <QMainWindow>
 #include <QPushButton>
 #include <QLabel>
 
-class MainMenuWindow : public QMainWindow {
+class MenuPrincipal : public QMainWindow {
     Q_OBJECT
 
 public:
-    MainMenuWindow(QWidget *parent = nullptr);
-    ~MainMenuWindow();
+    MenuPrincipal(QWidget *parent = nullptr);
+    ~MenuPrincipal();
 
 private slots:
     void onJugarClicked();
@@ -30,4 +41,4 @@ private:
     QPushButton *btnSalir;
 };
 
-#endif // MAINMENUWINDOW_H*/
+#endif // MENUPRINCIPAL_H

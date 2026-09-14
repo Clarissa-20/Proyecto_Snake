@@ -1,43 +1,48 @@
-#include "menuiniciowindow.h"
+#include "menuinicio.h"
+#include "login.h"
+#include "crearcuenta.h"
 #include <QPixmap>
 #include <QIcon>
 
-MenuInicioWindow::MenuInicioWindow(QWidget *parent)
+MenuInicio::MenuInicio(QWidget *parent)
     : QMainWindow(parent) {
 
     this->setFixedSize(800, 600);
-    this->setWindowTitle("Snake - El Templo Perdido");
+    this->setWindowTitle("Snake - Menú de Inicio");
 
     labelFondo = new QLabel(this);
     labelFondo->setGeometry(0, 0, 800, 600);
-    QPixmap pixmapFondo(":/recursos/inicio_scree_fondo.jpg");
+    QPixmap pixmapFondo(":/imagenes/inicio_screen_fondo.jpg");
     labelFondo->setPixmap(pixmapFondo.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
 
     btnIniciarSesion = new QPushButton(this);
     btnIniciarSesion->setGeometry(100, 420, 280, 55);
-    QPixmap pixmapBtn1(":/recursos/iniciar_sesion_boton.png");
+    QPixmap pixmapBtn1(":/imagenes/iniciar_sesion_boton.png");
     btnIniciarSesion->setIcon(QIcon(pixmapBtn1));
     btnIniciarSesion->setIconSize(btnIniciarSesion->size());
     btnIniciarSesion->setStyleSheet("QPushButton { border: none; background: transparent; }");
 
     btnRegistrarse = new QPushButton(this);
     btnRegistrarse->setGeometry(420, 420, 280, 55);
-    QPixmap pixmapBtn2(":/recursos/registrarse_boton.png");
+    QPixmap pixmapBtn2(":/imagenes/registrarse_boton.png");
     btnRegistrarse->setIcon(QIcon(pixmapBtn2));
     btnRegistrarse->setIconSize(btnRegistrarse->size());
     btnRegistrarse->setStyleSheet("QPushButton { border: none; background: transparent; }");
 
-    connect(btnIniciarSesion, &QPushButton::clicked, this, &MenuInicioWindow::onIniciarSesionClicked);
-    connect(btnRegistrarse, &QPushButton::clicked, this, &MenuInicioWindow::onRegistrarseClicked);
+    connect(btnIniciarSesion, &QPushButton::clicked, this, &MenuInicio::onIniciarSesionClicked);
+    connect(btnRegistrarse, &QPushButton::clicked, this, &MenuInicio::onRegistrarseClicked);
 }
 
-MenuInicioWindow::~MenuInicioWindow() {
+MenuInicio::~MenuInicio() {}
+
+void MenuInicio::onIniciarSesionClicked() {
+    Login *loginWin = new Login();
+    loginWin->show();
+    this->close();
 }
 
-void MenuInicioWindow::onIniciarSesionClicked() {
-    // Lógica para abrir la ventana de login o autenticación
-}
-
-void MenuInicioWindow::onRegistrarseClicked() {
-    // Lógica para abrir la ventana de registro de usuario
+void MenuInicio::onRegistrarseClicked() {
+    CrearCuenta *crearCuentaWin = new CrearCuenta();
+    crearCuentaWin->show();
+    this->close();
 }
