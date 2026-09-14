@@ -1,5 +1,7 @@
 #include "nivel.h"
 #include "ui_gamewindow.h"
+//#include <QGuiApplication>
+//#include <QScreen>
 
 Nivel::Nivel(QWidget *parent)
     : QWidget(parent)
@@ -40,12 +42,19 @@ Nivel::Nivel(QWidget *parent)
 
     //btn pausa
     , pausaBtn(nullptr)
+
     , juegoPausado(false)
+    , btnReaunudar(nullptr)
+    , btnSonido(nullptr)
+    , btnVolver(nullptr)
+    , sonidoActivado(true)
 {
     ui= new Ui::GameWindow();
     ui->setupUi(this);
 
     setFixedSize(800,800);
+
+    move(QGuiApplication::primaryScreen()->availableGeometry().center()-rect().center());
 
     imgManzanaRoja.load(":/imagenes/manzana_roja.png");
     imgManzanaDorada.load(":/imagenes/manzana_dorada.png");
@@ -59,42 +68,23 @@ Nivel::Nivel(QWidget *parent)
 
     //spawnFood();
     timer= new QTimer(this);
-
     connect(timer, &QTimer::timeout, this, &Nivel::gameloop);
 
-    retryButton= new QPushButton("Retry", this);
-    retryButton->setGeometry(350, 440, 100, 40);
-    retryButton->setStyleSheet("QPushButton{"
-                               "background-color:#00aa00;"
-                               "color:white;"
-                               "font-size:18px;"
-                               "border-radius:10px;"
+    retryButton= new QPushButton(this);
+    retryButton->setGeometry(330, 440, 150, 50);
+    retryButton->setStyleSheet("QPushButton {"
+                               "border-image: url(:/imagenes/btnReintentar.png);"
+                               "border: none;"
                                "}"
-                               "QPushButton:hover{"
-                               "background-color:#00cc00;"
+                               "QPushButton:hover {"
+                               "opacity: 0.8;"
+                               "}"
+                               "QPushButton:pressed {"
+                               "border-image: url(:/imagenes/btnReintentar.png);"
                                "}"
                                );
     connect(retryButton, &QPushButton::clicked, this, &Nivel::resetGame);
 
-    //pausa btn
-    /*pausaBtn= new QPushButton("Pausa", this);
-    pausaBtn->setGeometry(665, 10, 120, 50);
-    pausaBtn->setStyleSheet("QPushButton{"
-                            "background-color: transparent;"
-                            "color: #FFFFFF;"
-                            "font-family: 'Arial';"
-                            "font-size: 18px;"
-                            "font-weight: bold;"
-                            "border: none;"
-                            "}"
-                            "QPushButton:hover{"
-                            "color: #FFD700;"
-                            "}"
-                            "QPushButton:pressed{"
-                            "color: #888888;"
-                            "}"
-                            );
-    connect(pausaBtn, &QPushButton::clicked, this, &Nivel::alternarPausa);*/
     pausaBtn = new QPushButton(this);
     pausaBtn->setGeometry(656, 6, 140, 60);
     pausaBtn->setStyleSheet(
@@ -110,6 +100,50 @@ Nivel::Nivel(QWidget *parent)
         "}"
         );
     connect(pausaBtn, &QPushButton::clicked, this, &Nivel::alternarPausa);
+
+    btnReaunudar = new QPushButton(this);
+    btnReaunudar->setGeometry(330, 400, 150, 50);
+    btnReaunudar->setStyleSheet(
+        "QPushButton {"
+        "   border-image: url(:/imagenes/btnReanudar.png);"
+        "   border: none;"
+        "}"
+        "QPushButton:hover {"
+        "   opacity: 0.8;"
+        "}"
+        );
+    connect(btnReaunudar, &QPushButton::clicked, this, &Nivel::alternarPausa);
+
+    btnVolver = new QPushButton(this);
+    btnVolver->setGeometry(330, 500, 150, 50);
+    btnVolver->setStyleSheet(
+        "QPushButton {"
+        "   border-image: url(:/imagenes/btnVolverMenu.png);"
+        "   border: none;"
+        "}"
+        "QPushButton:hover {"
+        "   opacity: 0.8;"
+        "}"
+        );
+    connect(btnVolver, &QPushButton::clicked, this, &Nivel::volverAlMenu);
+
+    btnSonido = new QPushButton(this);
+    btnSonido->setGeometry(330, 450, 150, 50);
+    btnSonido->setStyleSheet(
+        "QPushButton {"
+        "   border-image: url(:/imagenes/btnConSonido.png);"
+        "   border: none;"
+        "}"
+        "QPushButton:hover {"
+        "   opacity: 0.8;"
+        "}"
+        );
+    connect(btnSonido, &QPushButton::clicked, this, &Nivel::alternarSonido);
+
+    btnReaunudar->hide();
+    btnVolver->hide();
+    btnSonido->hide();
+
     retryButton->hide();
     setFocusPolicy(Qt::StrongFocus);
 }
@@ -300,6 +334,8 @@ void Nivel::checkCollision()
             gameover=true;
             timer->stop();
             retryButton->show();
+            btnVolver->setGeometry(330, 490, 150,50);
+            btnVolver->show();
             return;
         }
         actual=actual->siguiente;
@@ -536,6 +572,8 @@ void Nivel::finalizarPorTiempo()
     nivelGanado=(rojasComidas>=MANZANAS_META);
     gameover=true;
     retryButton->show();
+    btnVolver->setGeometry(330, 490, 150,50);
+    btnVolver->show();
     update();
 }
 /*
@@ -588,6 +626,11 @@ void Nivel::alternarPausa()
             timerGeneracion->stop();
         }
         //pausaBtn->setText("Reanudar");
+
+        btnReaunudar->show();
+
+        btnVolver->show();
+        btnSonido->show();
     }
     else
     {
@@ -601,11 +644,62 @@ void Nivel::alternarPausa()
             timerGeneracion->start();
         }
         //pausaBtn->setText("Pausa");
+        btnReaunudar->hide();
+        btnVolver->hide();
+        btnSonido->hide();
+
         setFocus();
     }
     update();
 
 }
+
+void Nivel::alternarSonido()
+{
+    if(sonidoActivado==true)
+    {
+        btnSonido->setStyleSheet(
+            "QPushButton {"
+            "border-image: url(:/imagenes/btnSinSonido.png);"
+            "border: none;"
+            "}"
+            "QPushButton:hover {"
+            "opacity: 0.8;"
+            "}"
+            /*"QPushButton:pressed {"
+        "border-image: url(:/imagenes/btnConSonido.png);"
+        "}"*/
+            );
+        sonidoActivado=false;
+    }
+    else
+    {
+        btnSonido->setStyleSheet(
+            "QPushButton {"
+            "border-image: url(:/imagenes/btnConSonido.png);"
+            "border: none;"
+            "}"
+            "QPushButton:hover {"
+            "opacity: 0.8;"
+            "}"
+            /*"QPushButton:pressed {"
+        "border-image: url(:/imagenes/btnConSonido.png);"
+        "}"*/
+            );
+        sonidoActivado=true;
+
+    }
+}
+
+void Nivel::volverAlMenu()
+{
+    if(menuNiveles!=nullptr)
+    {
+        menuNiveles->show();
+    }
+    this->close();
+}
+
 void Nivel::gameloop()
 {
     if(gameover==true)
@@ -632,6 +726,12 @@ void Nivel::resetGame()
     nivelGanado=false;
     crecimientoExtra=0;
 
+    btnReaunudar->hide();
+    btnVolver->setGeometry(330, 500, 150, 50);
+    btnVolver->hide();
+    btnSonido->hide();
+    pausaBtn->show();
+    juegoPausado=false;
     iniciarSistemaDeManzanas();
 
     /*//NIVEL 1: reiniciar todo lo relacionado al nivel 2
@@ -743,6 +843,14 @@ void Nivel::paintEvent(QPaintEvent *)
     QRect rectAmarillo(630, 40, 190, 60);
     painter.drawText(rectAmarillo, Qt::AlignCenter, QString("Tiempo: %1").arg(formatearTiempo(tiempoRestanteSegundos)));
 
+    if(juegoPausado==true)
+    {
+        painter.fillRect(rect(), QColor(0,0,0,150));
+        painter.setPen(Qt::white);
+        painter.setFont(QFont("Arial", 26, QFont::Bold));
+        painter.drawText(QRect(0,250, width(), 60), Qt::AlignCenter, "PARTIDA PAUSADA");
+
+    }
     if(gameover==true)
     {
         painter.setPen(Qt::white);

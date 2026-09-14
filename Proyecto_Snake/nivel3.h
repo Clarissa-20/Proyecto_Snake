@@ -58,7 +58,7 @@ protected:
     //manzanas por tiempo
     int obtenerTiempoLimiteNivel() const override
     {
-        return 120;
+        return 100;
     }
     bool ejecutarCicloGeneracion() override;
 protected slots:

@@ -40,11 +40,15 @@ struct Nodo
 class Nivel : public QWidget
 {
     Q_OBJECT
-
+private:
+    QWidget *menuNiveles;
 public:
     explicit Nivel(QWidget *parent = nullptr);
     virtual ~Nivel() override; //PARA EVITAR FUGAS DE MEMORIA EL VIRTUAL
-
+    void setMenuNiveles(QWidget *menu)
+    {
+        menuNiveles=menu;
+    }
 public slots:
     void cicloGeneracion();
 
@@ -100,6 +104,12 @@ protected:
 
     QPushButton *pausaBtn;
     bool juegoPausado;
+
+    QPushButton *btnReaunudar;
+    QPushButton *btnVolver;
+    QPushButton *btnSonido;
+    bool sonidoActivado;
+
     // manzanas prueba#1
     QPoint comidaDorada;
 
@@ -165,6 +175,9 @@ protected slots:
     virtual void resetGame();
 
     void alternarPausa();
+    void alternarSonido();
+    void volverAlMenu();
+
 protected:
     void paintEvent(QPaintEvent *) override;
     void keyPressEvent(QKeyEvent *event) override;

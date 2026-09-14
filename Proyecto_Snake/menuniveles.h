@@ -22,7 +22,10 @@ private:
     QPushButton *btnNivel1;
     QPushButton *btnNivel2;
     QPushButton *btnNivel3;
+    QPushButton *btnVolver;
+    QPushButton *btnSonido;
 
+    bool sonidoActivado;
     Nivel1 *ventanaNivel1;
     Nivel2 *ventanaNivel2;
     Nivel3 *ventanaNivel3;
@@ -32,6 +35,8 @@ public slots:
     void abrirNivel1();
     void abrirNivel2();
     void abrirNivel3();
+    void alternarSonido();
+    void volverAlMenu();
 };
 
 #endif // MENUNIVELES_H

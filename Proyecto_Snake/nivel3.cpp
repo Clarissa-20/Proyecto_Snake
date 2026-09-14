@@ -213,6 +213,8 @@ void Nivel3::moveSnake() {
         gameover = true;
         timer->stop();
         retryButton->show();
+        btnVolver->setGeometry(330, 490, 150,50);
+        btnVolver->show();
         return;
     }
 
@@ -222,6 +224,8 @@ void Nivel3::moveSnake() {
         gameover = true;
         timer->stop();
         retryButton->show();
+        btnVolver->setGeometry(330, 490, 150,50);
+        btnVolver->show();
         return;
     }
 
@@ -362,6 +366,8 @@ void Nivel3::checkCollision() {
         gameover = true;
         timer->stop();
         retryButton->show();
+        btnVolver->setGeometry(330, 490, 150,50);
+        btnVolver->show();
         return;
     }
 
@@ -371,6 +377,8 @@ void Nivel3::checkCollision() {
         gameover = true;
         timer->stop();
         retryButton->show();
+        btnVolver->setGeometry(330, 490, 150,50);
+        btnVolver->show();
         return;
     }
 
@@ -383,6 +391,8 @@ void Nivel3::checkCollision() {
             gameover = true;
             timer->stop();
             retryButton->show();
+            btnVolver->setGeometry(330, 490, 150,50);
+            btnVolver->show();
             return;
         }
         actual = actual->siguiente;
@@ -525,8 +535,17 @@ void Nivel3::paintEvent(QPaintEvent *)
     QRect rect3(486, 25, 140, 36);
     painter.drawText(rect3, Qt::AlignCenter, QString("Tiempo: %1").arg(formatearTiempo(tiempoRestanteSegundos)));
 
+    if(juegoPausado==true)
+    {
+        painter.fillRect(rect(), QColor(0,0,0,150));
+        painter.setPen(Qt::white);
+        painter.setFont(QFont("Trebuchet MS", 24, QFont::Bold));
+        painter.drawText(QRect(0,330, width(), 60), Qt::AlignCenter, "PARTIDA PAUSADA");
+
+    }
     if(gameover==true)
     {
+        painter.fillRect(rect(), QColor(0,0,0,150));
         painter.setPen(Qt::white);
         painter.setFont(QFont("Trebuchet MS", 24, QFont::Bold));
         painter.drawText(QRect(0, height()/2-30, width(), 50), Qt::AlignHCenter, nivelGanado?"¡NIVEL COMPLETADO!":"GAME OVER");
@@ -556,6 +575,13 @@ void Nivel3::resetGame() {
     cafesGeneradas=0;
     blancasGeneradas=0;
 
+
+    btnReaunudar->hide();
+    btnVolver->setGeometry(330, 500, 150, 50);
+    btnVolver->hide();
+    btnSonido->hide();
+    pausaBtn->show();
+    juegoPausado=false;
     //  Reinicializar bloques
     inicializarBloquesMovibles();
 
