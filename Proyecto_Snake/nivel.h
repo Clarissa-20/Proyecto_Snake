@@ -77,6 +77,26 @@ protected:
     QPixmap imgManzanaMorada;
     QPixmap imgManzanaBlanca;
     QPixmap imgBloque;
+
+    //imagenes del cuerpo de la serpiente
+    QPixmap imgCabezaArriba;
+    QPixmap imgCabezaAbajo;
+    QPixmap imgCabezaIzquierda;
+    QPixmap imgCabezaDerecha;
+
+    QPixmap imgColaArriba;
+    QPixmap imgColaAbajo;
+    QPixmap imgColaIzquierda;
+    QPixmap imgColaDerecha;
+
+    QPixmap imgCuerpoHorizaontal;
+    QPixmap imgCuerpoVertical;
+
+    QPixmap imgCurvaArribaDerecha;
+    QPixmap imgCurvaArribaIzquierda;
+    QPixmap imgCurvaAbajoDerecha;
+    QPixmap imgCurvaAbajoIzquierda;
+
     int rows;
     int cols;
 
@@ -155,6 +175,12 @@ protected:
 
     //manzanas prueba#1
     void intentoComidaDorada();
+
+    //imagenes del cuerpo de la serpiente
+    void cargarSpritesGusano();
+    void dibujarGusano(QPainter &painter);
+    Direction direccionEntreNodos(Nodo *origen, Nodo *destino) const;
+    Direction opuesta(Direction d) const;
 
     //manzanas por tiempo
     virtual int obtenerTiempoLimiteNivel() const

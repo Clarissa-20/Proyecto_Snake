@@ -62,6 +62,8 @@ Nivel::Nivel(QWidget *parent)
     imgManzanaMorada.load(":/imagenes/manzana_morada.png");
     imgManzanaBlanca.load(":/imagenes/manzana_blanca.png");
     imgBloque.load(":/imagenes/bloque.png");
+
+    cargarSpritesGusano();
     setFocusPolicy(Qt::StrongFocus);
 
     direction=Right;
@@ -821,7 +823,7 @@ void Nivel::paintEvent(QPaintEvent *)
         painter.fillRect(rect(), Qt::black);
     }
 
-    Nodo* actual = cabeza;
+    /*Nodo* actual = cabeza;
     bool esCabeza=true;
     while (actual != nullptr)
     {
@@ -842,7 +844,8 @@ void Nivel::paintEvent(QPaintEvent *)
 
         painter.drawRoundedRect(posX, posY, cellsize, cellsize, 5, 5);
         actual= actual->siguiente;
-    }
+    }*/
+    dibujarGusano(painter);
     /*painter.setPen(Qt::NoPen);
     painter.setBrush(Qt::red);
     painter.drawEllipse(food.x()*cellsize, food.y()*cellsize, cellsize, cellsize);*/
@@ -976,3 +979,248 @@ void Nivel::keyPressEvent(QKeyEvent *event)
     }
     }
 }
+
+void Nivel::cargarSpritesGusano()
+{
+    imgCabezaArriba.load(":/imagenes/skin_predeterminada_cabeza_arriba.png");
+    imgCabezaAbajo.load(":/imagenes/skin_predeterminada_cabeza_abajo.png");
+    imgCabezaIzquierda.load(":/imagenes/skin_predeterminada_cabeza_izquierda.png");
+    imgCabezaDerecha.load(":/imagenes/skin_predeterminada_cabeza_derecha.png");
+
+    imgColaArriba.load(":/imagenes/skin_predeterminada_cola_vertical_arriba.png");
+    imgColaAbajo.load(":/imagenes/skin_predeterminada_cola_vertical_abajo.png");
+    imgColaIzquierda.load(":/imagenes/skin_predeterminada_cola_horizontal_izquierda.png");
+    imgColaDerecha.load(":/imagenes/skin_predeterminada_cola_horizontal_derecha.png");
+
+    imgCuerpoHorizaontal.load(":/imagenes/skin_predeterminada_cuerpo_horizontal.png");
+    imgCuerpoVertical.load(":/imagenes/skin_predeterminada_cuerpo_vertical.png");
+
+    imgCurvaArribaDerecha.load(":/imagenes/skin_predeterminada_curva_abajo_izquierda.png");
+    imgCurvaArribaIzquierda.load(":/imagenes/skin_predeterminada_curva_arriba_derecha.png");
+    imgCurvaAbajoDerecha.load(":/imagenes/skin_predeterminada_curva_arriba_izquierda.png");//
+    imgCurvaAbajoIzquierda.load(":/imagenes/skin_predeterminada_curva_abajo_derecha.png");//
+}
+
+
+
+
+
+void Nivel::dibujarGusano(QPainter &painter)
+{
+    if(cabeza==nullptr)
+    {
+        return;
+    }
+
+    if(cabeza->siguiente==nullptr)
+    {
+        const QPixmap *spriteCabeza= &imgCabezaDerecha;
+        switch(direction)
+        {
+        case Up:
+        {
+            spriteCabeza=&imgCabezaArriba;
+            break;
+        }
+        case Down:
+        {
+            spriteCabeza=&imgCabezaAbajo;
+            break;
+        }
+        case Left:
+        {
+            spriteCabeza=&imgCabezaIzquierda;
+            break;
+        }
+        case Right:
+        {
+            spriteCabeza=&imgCabezaDerecha;
+            break;
+        }
+        }
+
+        int posX=marginX+(cabeza->x*cellsize);
+        int posY=marginY+(cabeza->y*cellsize);
+        if(spriteCabeza->isNull()==false)
+        {
+            painter.drawPixmap(posX, posY, cellsize, cellsize, *spriteCabeza);
+        }
+        return;
+    }
+
+    Nodo *anterior=nullptr;
+    Nodo *actual=cabeza;
+
+    while(actual!=nullptr)
+    {
+        Nodo *siguiente= actual->siguiente;
+        int posX=marginX+(actual->x*cellsize);
+        int posY=marginY+(actual->y*cellsize);
+        const QPixmap *sprite=nullptr;
+
+        if(actual==cabeza)
+        {
+            switch(direction)
+            {
+            case Up:
+            {
+                sprite=&imgCabezaArriba;
+                break;
+            }
+            case Down:
+            {
+                sprite=&imgCabezaAbajo;
+                break;
+            }
+            case Left:
+            {
+                sprite=&imgCabezaIzquierda;
+                break;
+            }
+            case Right:
+            {
+                sprite=&imgCabezaDerecha;
+                break;
+            }
+            }
+        }
+        else if(siguiente==nullptr)
+        {
+            Direction dirCola= direccionEntreNodos(actual, anterior);
+            switch(dirCola)
+            {
+            case Up:
+            {
+                sprite=&imgColaArriba;
+                break;
+            }
+            case Down:
+            {
+                sprite=&imgColaAbajo;
+                break;
+            }
+            case Left:
+            {
+                sprite=&imgColaIzquierda;
+                break;
+            }
+            case Right:
+            {
+                sprite=&imgColaDerecha;
+                break;
+            }
+            }
+        }
+        else
+        {
+            Direction direccionEntrada= direccionEntreNodos(actual, anterior);
+            Direction direccionSalida= direccionEntreNodos(actual, siguiente);
+
+            bool entradaHorizontal=((direccionEntrada==Left) || (direccionEntrada==Right));
+            bool salidaHorizontal=((direccionSalida==Left) || (direccionSalida==Right));
+
+            if(entradaHorizontal==salidaHorizontal)
+            {
+                sprite= entradaHorizontal? &imgCuerpoHorizaontal: &imgCuerpoVertical;
+            }
+            else
+            {
+                //Direction ladoCabeza= opuesta(direccionEntrada);
+                //Direction ladoCola= direccionSalida;
+
+                bool tieneArriba=((direccionEntrada==Up) || (direccionSalida==Up));
+                bool tieneAbajo=((direccionEntrada==Down) || (direccionSalida==Down));
+                bool tieneIzquierda=((direccionEntrada==Left) || (direccionSalida==Left));
+                bool tieneDerecha=((direccionEntrada==Right) || (direccionSalida==Right));
+
+                if(tieneArriba==true && tieneDerecha==true)
+                {
+                    sprite=&imgCurvaArribaDerecha;
+                }
+                else if(tieneArriba==true && tieneIzquierda==true)
+                {
+                    sprite=&imgCurvaArribaIzquierda;
+                }
+                else if(tieneAbajo==true && tieneDerecha==true)
+                {
+                    sprite=&imgCurvaAbajoDerecha;
+                }
+                else //tiene abajo y a la izquierda
+                {
+                    sprite=&imgCurvaAbajoIzquierda;
+                }
+            }
+        }
+
+        if(sprite!=nullptr && sprite->isNull()==false)
+        {
+            painter.drawPixmap(posX, posY, cellsize, cellsize, *sprite);
+        }
+        anterior=actual;
+        actual=siguiente;
+    }
+}
+
+Nivel::Direction Nivel::direccionEntreNodos(Nodo *origen, Nodo *destino) const
+{
+    if(origen==nullptr || destino==nullptr)
+    {
+        return direction;
+    }
+
+    int direccionX= destino->x -origen->x;
+    int direccionY= destino->y-origen->y;
+
+    if(direccionX>1)
+    {
+        direccionX=-1;
+    }
+    else if(direccionX<-1)
+    {
+        direccionX=1;
+    }
+
+    if(direccionY>1)
+    {
+        direccionY=-1;
+    }
+    else if(direccionY<-1)
+    {
+        direccionY=1;
+    }
+
+    if(direccionX==1)
+    {
+        return Right;
+    }
+    if(direccionX==-1)
+    {
+        return Left;
+    }
+    if(direccionY==1)
+    {
+        return Down;
+    }
+    if(direccionY==-1)
+    {
+        return Up;
+    }
+    return direction;
+}
+
+Nivel::Direction Nivel::opuesta(Direction d) const
+{
+    switch(d)
+    {
+    case Up:
+        return Down;
+    case Down:
+        return Up;
+    case Left:
+        return Right;
+    case Right:
+        return Left;
+    }
+    return d;
+}
+

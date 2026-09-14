@@ -40,7 +40,7 @@ void Nivel1::paintEvent(QPaintEvent *)
     painter.setPen(QPen(QColor(120, 110, 100), 2));
     painter.drawRect(marginX, marginY, cols * cellsize, rows * cellsize);
 
-    Nodo* actual = cabeza;
+    /*Nodo* actual = cabeza;
     bool esCabeza=true;
     while (actual != nullptr)
     {
@@ -58,7 +58,9 @@ void Nivel1::paintEvent(QPaintEvent *)
         int posY = marginY + (actual->y * cellsize);
         painter.drawRoundedRect(posX, posY, cellsize, cellsize, 5, 5);
         actual= actual->siguiente;
-    }
+    }*/
+    dibujarGusano(painter);
+
 
     painter.setPen(Qt::NoPen);
     /*painter.setBrush(Qt::red);

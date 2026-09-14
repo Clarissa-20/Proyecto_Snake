@@ -479,7 +479,7 @@ void Nivel2::paintEvent(QPaintEvent *)
         }
     }
 
-    Nodo* actual = cabeza;
+    /*Nodo* actual = cabeza;
     bool esCabeza=true;
     while (actual != nullptr)
     {
@@ -497,7 +497,9 @@ void Nivel2::paintEvent(QPaintEvent *)
         int posY=marginY+(actual->y*cellsize);
         painter.drawRoundedRect(posX, posY, cellsize, cellsize, 5,5);
         actual= actual->siguiente;
-    }
+    }*/
+    dibujarGusano(painter);
+
 
     painter.setPen(Qt::NoPen);
     /*painter.setBrush(Qt::red);
