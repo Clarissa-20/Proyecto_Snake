@@ -577,9 +577,10 @@ void Nivel3::resetGame() {
 
 
     btnReaunudar->hide();
-    btnVolver->setGeometry(330, 500, 150, 50);
+    btnVolver->setGeometry(330, 550, 150, 50);
     btnVolver->hide();
     btnSonido->hide();
+    btnMusica->hide();
     pausaBtn->show();
     juegoPausado=false;
     //  Reinicializar bloques

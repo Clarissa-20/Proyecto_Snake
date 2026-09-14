@@ -108,8 +108,10 @@ protected:
     QPushButton *btnReaunudar;
     QPushButton *btnVolver;
     QPushButton *btnSonido;
-    bool sonidoActivado;
+    QPushButton *btnMusica;
 
+    bool sonidoActivado;
+    bool musicaActivada;
     // manzanas prueba#1
     QPoint comidaDorada;
 
@@ -177,7 +179,7 @@ protected slots:
     void alternarPausa();
     void alternarSonido();
     void volverAlMenu();
-
+    void alternarMusica();
 protected:
     void paintEvent(QPaintEvent *) override;
     void keyPressEvent(QKeyEvent *event) override;

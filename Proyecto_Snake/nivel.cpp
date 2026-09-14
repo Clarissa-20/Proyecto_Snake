@@ -48,6 +48,7 @@ Nivel::Nivel(QWidget *parent)
     , btnSonido(nullptr)
     , btnVolver(nullptr)
     , sonidoActivado(true)
+    , musicaActivada(true)
 {
     ui= new Ui::GameWindow();
     ui->setupUi(this);
@@ -114,18 +115,7 @@ Nivel::Nivel(QWidget *parent)
         );
     connect(btnReaunudar, &QPushButton::clicked, this, &Nivel::alternarPausa);
 
-    btnVolver = new QPushButton(this);
-    btnVolver->setGeometry(330, 500, 150, 50);
-    btnVolver->setStyleSheet(
-        "QPushButton {"
-        "   border-image: url(:/imagenes/btnVolverMenu.png);"
-        "   border: none;"
-        "}"
-        "QPushButton:hover {"
-        "   opacity: 0.8;"
-        "}"
-        );
-    connect(btnVolver, &QPushButton::clicked, this, &Nivel::volverAlMenu);
+
 
     btnSonido = new QPushButton(this);
     btnSonido->setGeometry(330, 450, 150, 50);
@@ -140,10 +130,36 @@ Nivel::Nivel(QWidget *parent)
         );
     connect(btnSonido, &QPushButton::clicked, this, &Nivel::alternarSonido);
 
+    btnMusica = new QPushButton(this);
+    btnMusica->setGeometry(330, 500, 150, 50);
+    btnMusica->setStyleSheet(
+        "QPushButton {"
+        "   border-image: url(:/imagenes/btnConMusica.png);"
+        "   border: none;"
+        "}"
+        "QPushButton:hover {"
+        "   opacity: 0.8;"
+        "}"
+        );
+    connect(btnMusica, &QPushButton::clicked, this, &Nivel::alternarMusica);
+
+    btnVolver = new QPushButton(this);
+    btnVolver->setGeometry(330, 550, 150, 50);
+    btnVolver->setStyleSheet(
+        "QPushButton {"
+        "   border-image: url(:/imagenes/btnVolverMenu.png);"
+        "   border: none;"
+        "}"
+        "QPushButton:hover {"
+        "   opacity: 0.8;"
+        "}"
+        );
+    connect(btnVolver, &QPushButton::clicked, this, &Nivel::volverAlMenu);
+
     btnReaunudar->hide();
     btnVolver->hide();
     btnSonido->hide();
-
+    btnMusica->hide();
     retryButton->hide();
     setFocusPolicy(Qt::StrongFocus);
 }
@@ -631,6 +647,7 @@ void Nivel::alternarPausa()
 
         btnVolver->show();
         btnSonido->show();
+        btnMusica->show();
     }
     else
     {
@@ -647,6 +664,7 @@ void Nivel::alternarPausa()
         btnReaunudar->hide();
         btnVolver->hide();
         btnSonido->hide();
+        btnMusica->hide();
 
         setFocus();
     }
@@ -700,6 +718,43 @@ void Nivel::volverAlMenu()
     this->close();
 }
 
+void Nivel::alternarMusica()
+{
+    if(musicaActivada==true)
+    {
+        btnMusica->setStyleSheet(
+            "QPushButton {"
+            "border-image: url(:/imagenes/btnSinMusica.png);"
+            "border: none;"
+            "}"
+            "QPushButton:hover {"
+            "opacity: 0.8;"
+            "}"
+            /*"QPushButton:pressed {"
+        "border-image: url(:/imagenes/btnConSonido.png);"
+        "}"*/
+            );
+        musicaActivada=false;
+    }
+    else
+    {
+        btnMusica->setStyleSheet(
+            "QPushButton {"
+            "border-image: url(:/imagenes/btnConMusica.png);"
+            "border: none;"
+            "}"
+            "QPushButton:hover {"
+            "opacity: 0.8;"
+            "}"
+            /*"QPushButton:pressed {"
+        "border-image: url(:/imagenes/btnConSonido.png);"
+        "}"*/
+            );
+        musicaActivada=true;
+
+    }
+}
+
 void Nivel::gameloop()
 {
     if(gameover==true)
@@ -727,9 +782,10 @@ void Nivel::resetGame()
     crecimientoExtra=0;
 
     btnReaunudar->hide();
-    btnVolver->setGeometry(330, 500, 150, 50);
+    btnVolver->setGeometry(330, 550, 150, 50);
     btnVolver->hide();
     btnSonido->hide();
+    btnMusica->hide();
     pausaBtn->show();
     juegoPausado=false;
     iniciarSistemaDeManzanas();
