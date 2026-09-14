@@ -37,5 +37,9 @@
         <file>imagenes/skin_predeterminada_curva_abajo_izquierda.png</file>
         <file>imagenes/skin_predeterminada_curva_arriba_derecha.png</file>
         <file>imagenes/skin_predeterminada_curva_arriba_izquierda.png</file>
+        <file>imagenes/manzana_roja.png</file>
+        <file>imagenes/manzana_blanca.png</file>
+        <file>imagenes/manzana_dorada.png</file>
+        <file>imagenes/manzana_morada.png</file>
     </qresource>
 </RCC>
