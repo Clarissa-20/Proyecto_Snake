@@ -34,6 +34,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         crearcuenta.h crearcuenta.cpp
         menuprincipal.h menuprincipal.cpp
         usermanager.h usermanager.cpp
+        menuniveles.h menuniveles.cpp
+        instruccionesnivel.h instruccionesnivel.cpp
 
 
 

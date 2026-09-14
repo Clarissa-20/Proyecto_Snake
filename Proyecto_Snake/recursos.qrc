@@ -41,5 +41,14 @@
         <file>imagenes/manzana_blanca.png</file>
         <file>imagenes/manzana_dorada.png</file>
         <file>imagenes/manzana_morada.png</file>
+        <file>imagenes/btnComenzarNivel.png</file>
+        <file>imagenes/btnVolverMenu.png</file>
+        <file>imagenes/instrucciones_nivel1.png</file>
+        <file>imagenes/instrucciones_nivel2.png</file>
+        <file>imagenes/instrucciones_nivel3.png</file>
+        <file>imagenes/mapaNiveles.png</file>
+        <file>imagenes/monoNivel1.png</file>
+        <file>imagenes/monoNivel2.png</file>
+        <file>imagenes/monoNivel3.png</file>
     </qresource>
 </RCC>
