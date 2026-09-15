@@ -129,5 +129,19 @@
         <file>sonidos/comio.wav</file>
         <file>sonidos/gano.wav</file>
         <file>sonidos/perdio.wav</file>
+        <file>imagenes/skin6_cabeza_abajo.png</file>
+        <file>imagenes/skin6_cabeza_arriba.png</file>
+        <file>imagenes/skin6_cabeza_derecha.png</file>
+        <file>imagenes/skin6_cabeza_izquierda.png</file>
+        <file>imagenes/skin6_cola_horizontal_derecha.png</file>
+        <file>imagenes/skin6_cola_horizontal_izquierda.png</file>
+        <file>imagenes/skin6_cola_vertical_abajo.png</file>
+        <file>imagenes/skin6_cola_vertical_arriba.png</file>
+        <file>imagenes/skin6_cuerpo_horizontal.png</file>
+        <file>imagenes/skin6_cuerpo_vertical.png</file>
+        <file>imagenes/skin6_curva_abajo_derecha.png</file>
+        <file>imagenes/skin6_curva_abajo_izquierda.png</file>
+        <file>imagenes/skin6_curva_arriba_derecha.png</file>
+        <file>imagenes/skin6_curva_arriba_izquierda.png</file>
     </qresource>
 </RCC>
