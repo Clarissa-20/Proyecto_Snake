@@ -36,6 +36,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         usermanager.h usermanager.cpp
         menuniveles.h menuniveles.cpp
         instruccionesnivel.h instruccionesnivel.cpp
+        ranking.h ranking.cpp
 
 
 

@@ -143,5 +143,7 @@
         <file>imagenes/skin6_curva_abajo_izquierda.png</file>
         <file>imagenes/skin6_curva_arriba_derecha.png</file>
         <file>imagenes/skin6_curva_arriba_izquierda.png</file>
+        <file>imagenes/fondoRanking.png</file>
+        <file>imagenes/marcosListas.png</file>
     </qresource>
 </RCC>
