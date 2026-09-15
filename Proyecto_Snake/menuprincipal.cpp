@@ -6,6 +6,7 @@
 #include <QIcon>
 #include <QCoreApplication>
 #include <QMessageBox>
+#include "ranking.h"
 
 MenuPrincipal::MenuPrincipal(QWidget *parent)
     : QMainWindow(parent) {
@@ -90,6 +91,10 @@ void MenuPrincipal::onTiendaClicked() {
 
 void MenuPrincipal::onRecordsClicked() {
     //vtn de récords
+    Ranking *ranking= new Ranking(this, nullptr);
+    ranking->setAttribute(Qt::WA_DeleteOnClose);
+    ranking->show();
+    this->hide();
 }
 
 void MenuPrincipal::onConfiguracionClicked() {

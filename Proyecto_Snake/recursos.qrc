@@ -152,5 +152,7 @@
         <file>imagenes/skin6_tienda.png</file>
         <file>imagenes/tienda_fondo.jpg</file>
         <file>imagenes/etiqueta_gemas.png</file>
+        <file>imagenes/fondoRanking.png</file>
+        <file>imagenes/marcosListas.png</file>
     </qresource>
 </RCC>
