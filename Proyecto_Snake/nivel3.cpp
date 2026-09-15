@@ -212,6 +212,11 @@ void Nivel3::moveSnake() {
     {
         gameover = true;
         timer->stop();
+        if (sonidoActivado==true)
+        {
+            sonidoPerdio->stop();
+            sonidoPerdio->play();
+        }
         retryButton->show();
         btnVolver->setGeometry(330, 490, 150,50);
         btnVolver->show();
@@ -223,6 +228,11 @@ void Nivel3::moveSnake() {
     {
         gameover = true;
         timer->stop();
+        if (sonidoActivado==true)
+        {
+            sonidoPerdio->stop();
+            sonidoPerdio->play();
+        }
         retryButton->show();
         btnVolver->setGeometry(330, 490, 150,50);
         btnVolver->show();
@@ -267,6 +277,11 @@ void Nivel3::moveSnake() {
         {
             timer->setInterval(velocidadBase);
         }
+        if(sonidoActivado==true)
+        {
+            sonidoComio->stop();
+            sonidoComio->play();
+        }
     }
 
     if (newX == food.x() && newY == food.y() && rojaActualComida==false)
@@ -299,8 +314,13 @@ void Nivel3::moveSnake() {
         }
         avanzarCicloPorRojaComida();
     }
-
-    if (comioAlgo==false) {
+    if(comioAlgo==true && sonidoActivado==true)
+    {
+        sonidoComio->stop();
+        sonidoComio->play();
+    }
+    if (comioAlgo==false)
+    {
         if (crecimientoExtra > 0)
         {
             crecimientoExtra--;
@@ -365,6 +385,11 @@ void Nivel3::checkCollision() {
     {
         gameover = true;
         timer->stop();
+        if (sonidoActivado==true)
+        {
+            sonidoPerdio->stop();
+            sonidoPerdio->play();
+        }
         retryButton->show();
         btnVolver->setGeometry(330, 490, 150,50);
         btnVolver->show();
@@ -376,6 +401,11 @@ void Nivel3::checkCollision() {
     {
         gameover = true;
         timer->stop();
+        if (sonidoActivado==true)
+        {
+            sonidoPerdio->stop();
+            sonidoPerdio->play();
+        }
         retryButton->show();
         btnVolver->setGeometry(330, 490, 150,50);
         btnVolver->show();
@@ -390,6 +420,11 @@ void Nivel3::checkCollision() {
         {
             gameover = true;
             timer->stop();
+            if (sonidoActivado==true)
+            {
+                sonidoPerdio->stop();
+                sonidoPerdio->play();
+            }
             retryButton->show();
             btnVolver->setGeometry(330, 490, 150,50);
             btnVolver->show();
@@ -412,7 +447,6 @@ void Nivel3::paintEvent(QPaintEvent *)
         painter.fillRect(rect(), Qt::black);
     }
 
-    // Delimitar y dar fondo semitransparente al área jugable
     painter.setBrush(QColor(0, 0, 0, 140));
     painter.setPen(QPen(QColor(120, 110, 100), 2));
     painter.drawRect(marginX, marginY, cols * cellsize, rows * cellsize);
@@ -427,7 +461,6 @@ void Nivel3::paintEvent(QPaintEvent *)
             {
                 int bloqueX = marginX + (j * cellsize);
                 int bloqueY = marginY + (i * cellsize);
-                //painter.drawRect(bloqueX, bloqueY, cellsize, cellsize);
                 painter.drawPixmap(bloqueX, bloqueY, cellsize, cellsize, imgBloque);
 
             }
@@ -454,7 +487,6 @@ void Nivel3::paintEvent(QPaintEvent *)
         actual= actual->siguiente;
     }*/
     dibujarGusano(painter);
-
 
     painter.setPen(Qt::NoPen);
     /*painter.setBrush(Qt::red);

@@ -77,6 +77,19 @@ void Nivel2::finalizarPorTiempo()
     gameover=true;
     tiempoTerminado=true;
     nivelGanado=(manzanasComidas>=MANZANAS_META);
+    if (sonidoActivado==true)
+    {
+        if (nivelGanado==true)
+        {
+            sonidoGano->stop();
+            sonidoGano->play();
+        }
+        else
+        {
+            sonidoPerdio->stop();
+            sonidoPerdio->play();
+        }
+    }
     ganoPremio=(doradasComidas>=DORADAS_MIN_PREMIO);
     retryButton->show();
     btnVolver->setGeometry(330, 490, 150,50);
@@ -256,6 +269,11 @@ void Nivel2::moveSnake()
     {
         gameover=true;
         timer->stop();
+        if (sonidoActivado==true)
+        {
+            sonidoPerdio->stop();
+            sonidoPerdio->play();
+        }
         if(timerGeneracion!=nullptr)
         {
             timerGeneracion->stop();
@@ -271,6 +289,11 @@ void Nivel2::moveSnake()
     {
         gameover=true;
         timer->stop();
+        if (sonidoActivado==true)
+        {
+            sonidoPerdio->stop();
+            sonidoPerdio->play();
+        }
         if(timerGeneracion!=nullptr)
         {
             timerGeneracion->stop();
@@ -331,7 +354,11 @@ void Nivel2::moveSnake()
 
         avanzarCicloPorRojaComida();
     }
-
+    if(comioAlgo==true && sonidoActivado==true)
+    {
+        sonidoComio->stop();
+        sonidoComio->play();
+    }
     if(comioAlgo==false)
     {
         if(crecimientoExtra>0)
@@ -400,6 +427,11 @@ void Nivel2::checkCollision()
     {
         gameover=true;
         timer->stop();
+        if (sonidoActivado==true)
+        {
+            sonidoPerdio->stop();
+            sonidoPerdio->play();
+        }
         if(timerGeneracion!=nullptr)
         {
             timerGeneracion->stop();
@@ -414,6 +446,11 @@ void Nivel2::checkCollision()
     {
         gameover=true;
         timer->stop();
+        if (sonidoActivado==true)
+        {
+            sonidoPerdio->stop();
+            sonidoPerdio->play();
+        }
         if(timerGeneracion!=nullptr)
         {
             timerGeneracion->stop();
@@ -431,6 +468,11 @@ void Nivel2::checkCollision()
         {
             gameover=true;
             timer->stop();
+            if (sonidoActivado==true)
+            {
+                sonidoPerdio->stop();
+                sonidoPerdio->play();
+            }
             if(timerGeneracion!=nullptr)
             {
                 timerGeneracion->stop();
@@ -462,7 +504,6 @@ void Nivel2::paintEvent(QPaintEvent *)
     painter.setPen(QPen(QColor(120, 110, 100), 2)); // Un borde sutil alrededor de la zona de juego
     painter.drawRect(marginX, marginY, cols * cellsize, rows * cellsize);
 
-    // CORREGIDO: Se agregaron marginX y marginY para que los muros coincidan con la cuadrícula visual
     painter.setBrush(QColor(120,110,100));
     painter.setPen(QPen(QColor(60,55,50), 2));
     for(int i=0; i<rows; i++)
@@ -473,7 +514,6 @@ void Nivel2::paintEvent(QPaintEvent *)
             {
                 int muroX = marginX + (j * cellsize);
                 int muroY = marginY + (i * cellsize);
-                //painter.drawRect(muroX, muroY, cellsize, cellsize);
                 painter.drawPixmap(muroX, muroY, cellsize, cellsize, imgBloque);
             }
         }
@@ -498,9 +538,8 @@ void Nivel2::paintEvent(QPaintEvent *)
         painter.drawRoundedRect(posX, posY, cellsize, cellsize, 5,5);
         actual= actual->siguiente;
     }*/
+
     dibujarGusano(painter);
-
-
     painter.setPen(Qt::NoPen);
     /*painter.setBrush(Qt::red);
     int foodX=marginX+(food.x()*cellsize);

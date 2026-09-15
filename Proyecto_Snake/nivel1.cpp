@@ -60,8 +60,6 @@ void Nivel1::paintEvent(QPaintEvent *)
         actual= actual->siguiente;
     }*/
     dibujarGusano(painter);
-
-
     painter.setPen(Qt::NoPen);
     /*painter.setBrush(Qt::red);
     int foodX = marginX + (food.x() * cellsize);

@@ -56,5 +56,8 @@
         <file>imagenes/btnSinMusica.png</file>
         <file>imagenes/btnSinSonido.png</file>
         <file>imagenes/btnVolverMenu.png</file>
+        <file>sonidos/comio.wav</file>
+        <file>sonidos/gano.wav</file>
+        <file>sonidos/perdio.wav</file>
     </qresource>
 </RCC>
