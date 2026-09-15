@@ -1,4 +1,4 @@
-#include <QApplication>
+/*#include <QApplication>
 //#include "nivel1.h"
 //#include "nivel2.h"
 //#include "nivel3.h"
@@ -11,9 +11,9 @@ int main(int argc, char *argv[])
     menuNiveles menu;
     menu.showFullScreen();
     return a.exec();
-}
+}*/
 
-/*#include <QApplication>
+#include <QApplication>
 #include "inicioscreen.h"
 
 int main(int argc, char *argv[])
@@ -24,4 +24,4 @@ int main(int argc, char *argv[])
     w.show();
 
     return a.exec();
-}*/
+}

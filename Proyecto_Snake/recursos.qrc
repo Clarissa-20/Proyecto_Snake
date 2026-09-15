@@ -143,5 +143,14 @@
         <file>imagenes/skin6_curva_abajo_izquierda.png</file>
         <file>imagenes/skin6_curva_arriba_derecha.png</file>
         <file>imagenes/skin6_curva_arriba_izquierda.png</file>
+        <file>imagenes/instrucciones_generales_fondo.png</file>
+        <file>imagenes/skin1_tienda.png</file>
+        <file>imagenes/skin2_tienda.png</file>
+        <file>imagenes/skin3_tienda.png</file>
+        <file>imagenes/skin4_tienda.png</file>
+        <file>imagenes/skin5_tienda.png</file>
+        <file>imagenes/skin6_tienda.png</file>
+        <file>imagenes/tienda_fondo.jpg</file>
+        <file>imagenes/etiqueta_gemas.png</file>
     </qresource>
 </RCC>

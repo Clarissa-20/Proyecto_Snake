@@ -1,4 +1,7 @@
 #include "menuprincipal.h"
+#include "instruccionesgenerales.h"
+#include "menuNiveles.h"
+#include "tienda.h"
 #include <QPixmap>
 #include <QIcon>
 #include <QCoreApplication>
@@ -68,15 +71,21 @@ MenuPrincipal::MenuPrincipal(QWidget *parent)
 MenuPrincipal::~MenuPrincipal() {}
 
 void MenuPrincipal::onJugarClicked() {
-    //vtn del mapa de los niveles
+    menuNiveles *niveles = new menuNiveles();
+    niveles->show();
+    this->close();
 }
 
 void MenuPrincipal::onInstruccionesClicked() {
-    //vtn de instrucciones
+    InstruccionesGenerales *instrucciones = new InstruccionesGenerales();
+    instrucciones->show();
+    this->close();
 }
 
 void MenuPrincipal::onTiendaClicked() {
-    //vtn de tienda
+    Tienda *tienda = new Tienda();
+    tienda->show();
+    this->close();
 }
 
 void MenuPrincipal::onRecordsClicked() {
