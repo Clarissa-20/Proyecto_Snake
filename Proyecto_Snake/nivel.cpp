@@ -1,5 +1,7 @@
 #include "nivel.h"
 #include "ui_gamewindow.h"
+#include <QDebug>
+#include <QFile>
 //#include <QGuiApplication>
 //#include <QScreen>
 
@@ -62,9 +64,10 @@ Nivel::Nivel(QWidget *parent)
     imgManzanaMorada.load(":/imagenes/manzana_morada.png");
     imgManzanaBlanca.load(":/imagenes/manzana_blanca.png");
     imgBloque.load(":/imagenes/bloque.png");
-
-    cargarSpritesGusano();
     setFocusPolicy(Qt::StrongFocus);
+
+    //imagenes del cuerpo de la serpiente
+    cargarSpritesGusano();
 
     direction=Right;
     gameover=false;
@@ -164,6 +167,40 @@ Nivel::Nivel(QWidget *parent)
     btnMusica->hide();
     retryButton->hide();
     setFocusPolicy(Qt::StrongFocus);
+
+    // Sonido
+    audioComio = new QAudioOutput(this);
+    sonidoComio = new QMediaPlayer(this);
+
+    sonidoComio->setAudioOutput(audioComio);
+    sonidoComio->setSource(
+        QUrl::fromLocalFile("sonidos/comio.wav")
+        );
+    audioComio->setVolume(1.0);
+
+    qDebug() << "Comio:" << sonidoComio->source();
+    qDebug() << "Estado:" << sonidoComio->mediaStatus();
+    qDebug() << "Existe recurso:" << QFile("qrc:/sonidos/comio.wav").exists();
+
+
+    audioGano = new QAudioOutput(this);
+    sonidoGano = new QMediaPlayer(this);
+
+    sonidoGano->setAudioOutput(audioGano);
+    sonidoGano->setSource(
+        QUrl::fromLocalFile("sonidos/gano.wav")
+        );
+    audioGano->setVolume(1.0);
+
+    audioPerdio = new QAudioOutput(this);
+    sonidoPerdio = new QMediaPlayer(this);
+
+    sonidoPerdio->setAudioOutput(audioPerdio);
+    sonidoPerdio->setSource(
+        QUrl::fromLocalFile("sonidos/perdio.wav")
+        );
+
+    audioPerdio->setVolume(1.0);
 }
 
 //destructor
@@ -287,6 +324,13 @@ void Nivel::moveSnake()
             intentoComidaDorada(); //NIVEL 1: probabilidad de que salga una dorada junto a la nueva roja
         }*/
     }
+
+    if(comioAlgo==true && sonidoActivado==true)
+    {
+        sonidoComio->stop();
+        sonidoComio->play();
+    }
+
     if(comioAlgo==false)
     {
         //NIVEL 1: si queda crecimiento pendiente (de una dorada comida antes), la cola NO se recorta y ese crecimiento pendiente se va consumiendo un nodo por movimiento.
@@ -351,6 +395,11 @@ void Nivel::checkCollision()
         {
             gameover=true;
             timer->stop();
+            if (sonidoActivado==true)
+            {
+                sonidoPerdio->stop();
+                sonidoPerdio->play();
+            }
             retryButton->show();
             btnVolver->setGeometry(330, 490, 150,50);
             btnVolver->show();
@@ -474,6 +523,246 @@ void Nivel::intentoComidaDorada()
     }
 }
 
+void Nivel::cargarSpritesGusano()
+{
+    imgCabezaArriba.load(":/imagenes/skin_predeterminada_cabeza_arriba.png");
+    imgCabezaAbajo.load(":/imagenes/skin_predeterminada_cabeza_abajo.png");
+    imgCabezaIzquierda.load(":/imagenes/skin_predeterminada_cabeza_izquierda.png");
+    imgCabezaDerecha.load(":/imagenes/skin_predeterminada_cabeza_derecha.png");
+
+    imgColaArriba.load(":/imagenes/skin_predeterminada_cola_vertical_arriba.png");
+    imgColaAbajo.load(":/imagenes/skin_predeterminada_cola_vertical_abajo.png");
+    imgColaIzquierda.load(":/imagenes/skin_predeterminada_cola_horizontal_izquierda.png");
+    imgColaDerecha.load(":/imagenes/skin_predeterminada_cola_horizontal_derecha.png");
+
+    imgCuerpoHorizaontal.load(":/imagenes/skin_predeterminada_cuerpo_horizontal.png");
+    imgCuerpoVertical.load(":/imagenes/skin_predeterminada_cuerpo_vertical.png");
+
+    imgCurvaArribaDerecha.load(":/imagenes/skin_predeterminada_curva_abajo_izquierda.png");
+    imgCurvaArribaIzquierda.load(":/imagenes/skin_predeterminada_curva_arriba_derecha.png");
+    imgCurvaAbajoDerecha.load(":/imagenes/skin_predeterminada_curva_arriba_izquierda.png");//
+    imgCurvaAbajoIzquierda.load(":/imagenes/skin_predeterminada_curva_abajo_derecha.png");//
+}
+
+void Nivel::dibujarGusano(QPainter &painter)
+{
+    if(cabeza==nullptr)
+    {
+        return;
+    }
+
+    if(cabeza->siguiente==nullptr)
+    {
+        const QPixmap *spriteCabeza= &imgCabezaDerecha;
+        switch(direction)
+        {
+        case Up:
+        {
+            spriteCabeza=&imgCabezaArriba;
+            break;
+        }
+        case Down:
+        {
+            spriteCabeza=&imgCabezaAbajo;
+            break;
+        }
+        case Left:
+        {
+            spriteCabeza=&imgCabezaIzquierda;
+            break;
+        }
+        case Right:
+        {
+            spriteCabeza=&imgCabezaDerecha;
+            break;
+        }
+        }
+
+        int posX=marginX+(cabeza->x*cellsize);
+        int posY=marginY+(cabeza->y*cellsize);
+        if(spriteCabeza->isNull()==false)
+        {
+            painter.drawPixmap(posX, posY, cellsize, cellsize, *spriteCabeza);
+        }
+        return;
+    }
+
+    Nodo *anterior=nullptr;
+    Nodo *actual=cabeza;
+
+    while(actual!=nullptr)
+    {
+        Nodo *siguiente= actual->siguiente;
+        int posX=marginX+(actual->x*cellsize);
+        int posY=marginY+(actual->y*cellsize);
+        const QPixmap *sprite=nullptr;
+
+        if(actual==cabeza)
+        {
+            switch(direction)
+            {
+            case Up:
+            {
+                sprite=&imgCabezaArriba;
+                break;
+            }
+            case Down:
+            {
+                sprite=&imgCabezaAbajo;
+                break;
+            }
+            case Left:
+            {
+                sprite=&imgCabezaIzquierda;
+                break;
+            }
+            case Right:
+            {
+                sprite=&imgCabezaDerecha;
+                break;
+            }
+            }
+        }
+        else if(siguiente==nullptr)
+        {
+            Direction dirCola= direccionEntreNodos(actual, anterior);
+            switch(dirCola)
+            {
+            case Up:
+            {
+                sprite=&imgColaArriba;
+                break;
+            }
+            case Down:
+            {
+                sprite=&imgColaAbajo;
+                break;
+            }
+            case Left:
+            {
+                sprite=&imgColaIzquierda;
+                break;
+            }
+            case Right:
+            {
+                sprite=&imgColaDerecha;
+                break;
+            }
+            }
+        }
+        else
+        {
+            Direction direccionEntrada= direccionEntreNodos(actual, anterior);
+            Direction direccionSalida= direccionEntreNodos(actual, siguiente);
+
+            bool entradaHorizontal=((direccionEntrada==Left) || (direccionEntrada==Right));
+            bool salidaHorizontal=((direccionSalida==Left) || (direccionSalida==Right));
+
+            if(entradaHorizontal==salidaHorizontal)
+            {
+                sprite= entradaHorizontal? &imgCuerpoHorizaontal: &imgCuerpoVertical;
+            }
+            else
+            {
+                //Direction ladoCabeza= opuesta(direccionEntrada);
+                //Direction ladoCola= direccionSalida;
+
+                bool tieneArriba=((direccionEntrada==Up) || (direccionSalida==Up));
+                bool tieneAbajo=((direccionEntrada==Down) || (direccionSalida==Down));
+                bool tieneIzquierda=((direccionEntrada==Left) || (direccionSalida==Left));
+                bool tieneDerecha=((direccionEntrada==Right) || (direccionSalida==Right));
+
+                if(tieneArriba==true && tieneDerecha==true)
+                {
+                    sprite=&imgCurvaArribaDerecha;
+                }
+                else if(tieneArriba==true && tieneIzquierda==true)
+                {
+                    sprite=&imgCurvaArribaIzquierda;
+                }
+                else if(tieneAbajo==true && tieneDerecha==true)
+                {
+                    sprite=&imgCurvaAbajoDerecha;
+                }
+                else //tiene abajo y a la izquierda
+                {
+                    sprite=&imgCurvaAbajoIzquierda;
+                }
+            }
+        }
+
+        if(sprite!=nullptr && sprite->isNull()==false)
+        {
+            painter.drawPixmap(posX, posY, cellsize, cellsize, *sprite);
+        }
+        anterior=actual;
+        actual=siguiente;
+    }
+}
+
+Nivel::Direction Nivel::opuesta(Direction d) const
+{
+    switch(d)
+    {
+    case Up:
+        return Down;
+    case Down:
+        return Up;
+    case Left:
+        return Right;
+    case Right:
+        return Left;
+    }
+    return d;
+}
+
+Nivel::Direction Nivel::direccionEntreNodos(Nodo *origen, Nodo *destino) const
+{
+    if(origen==nullptr || destino==nullptr)
+    {
+        return direction;
+    }
+
+    int direccionX= destino->x -origen->x;
+    int direccionY= destino->y-origen->y;
+
+    if(direccionX>1)
+    {
+        direccionX=-1;
+    }
+    else if(direccionX<-1)
+    {
+        direccionX=1;
+    }
+
+    if(direccionY>1)
+    {
+        direccionY=-1;
+    }
+    else if(direccionY<-1)
+    {
+        direccionY=1;
+    }
+
+    if(direccionX==1)
+    {
+        return Right;
+    }
+    if(direccionX==-1)
+    {
+        return Left;
+    }
+    if(direccionY==1)
+    {
+        return Down;
+    }
+    if(direccionY==-1)
+    {
+        return Up;
+    }
+    return direction;
+}
+
 void Nivel::iniciarSistemaDeManzanas()
 {
     tiempoLimiteSegundos=obtenerTiempoLimiteNivel();
@@ -588,6 +877,19 @@ void Nivel::finalizarPorTiempo()
     }
     ganoPremio=(doradasComidas>=DORADAS_MIN_PREMIO);
     nivelGanado=(rojasComidas>=MANZANAS_META);
+    if (sonidoActivado==true)
+    {
+        if (nivelGanado==true)
+        {
+            sonidoGano->stop();
+            sonidoGano->play();
+        }
+        else
+        {
+            sonidoPerdio->stop();
+            sonidoPerdio->play();
+        }
+    }
     gameover=true;
     retryButton->show();
     btnVolver->setGeometry(330, 490, 150,50);
@@ -823,6 +1125,7 @@ void Nivel::paintEvent(QPaintEvent *)
         painter.fillRect(rect(), Qt::black);
     }
 
+    dibujarGusano(painter);
     /*Nodo* actual = cabeza;
     bool esCabeza=true;
     while (actual != nullptr)
@@ -845,7 +1148,7 @@ void Nivel::paintEvent(QPaintEvent *)
         painter.drawRoundedRect(posX, posY, cellsize, cellsize, 5, 5);
         actual= actual->siguiente;
     }*/
-    dibujarGusano(painter);
+
     /*painter.setPen(Qt::NoPen);
     painter.setBrush(Qt::red);
     painter.drawEllipse(food.x()*cellsize, food.y()*cellsize, cellsize, cellsize);*/
@@ -979,248 +1282,3 @@ void Nivel::keyPressEvent(QKeyEvent *event)
     }
     }
 }
-
-void Nivel::cargarSpritesGusano()
-{
-    imgCabezaArriba.load(":/imagenes/skin_predeterminada_cabeza_arriba.png");
-    imgCabezaAbajo.load(":/imagenes/skin_predeterminada_cabeza_abajo.png");
-    imgCabezaIzquierda.load(":/imagenes/skin_predeterminada_cabeza_izquierda.png");
-    imgCabezaDerecha.load(":/imagenes/skin_predeterminada_cabeza_derecha.png");
-
-    imgColaArriba.load(":/imagenes/skin_predeterminada_cola_vertical_arriba.png");
-    imgColaAbajo.load(":/imagenes/skin_predeterminada_cola_vertical_abajo.png");
-    imgColaIzquierda.load(":/imagenes/skin_predeterminada_cola_horizontal_izquierda.png");
-    imgColaDerecha.load(":/imagenes/skin_predeterminada_cola_horizontal_derecha.png");
-
-    imgCuerpoHorizaontal.load(":/imagenes/skin_predeterminada_cuerpo_horizontal.png");
-    imgCuerpoVertical.load(":/imagenes/skin_predeterminada_cuerpo_vertical.png");
-
-    imgCurvaArribaDerecha.load(":/imagenes/skin_predeterminada_curva_abajo_izquierda.png");
-    imgCurvaArribaIzquierda.load(":/imagenes/skin_predeterminada_curva_arriba_derecha.png");
-    imgCurvaAbajoDerecha.load(":/imagenes/skin_predeterminada_curva_arriba_izquierda.png");//
-    imgCurvaAbajoIzquierda.load(":/imagenes/skin_predeterminada_curva_abajo_derecha.png");//
-}
-
-
-
-
-
-void Nivel::dibujarGusano(QPainter &painter)
-{
-    if(cabeza==nullptr)
-    {
-        return;
-    }
-
-    if(cabeza->siguiente==nullptr)
-    {
-        const QPixmap *spriteCabeza= &imgCabezaDerecha;
-        switch(direction)
-        {
-        case Up:
-        {
-            spriteCabeza=&imgCabezaArriba;
-            break;
-        }
-        case Down:
-        {
-            spriteCabeza=&imgCabezaAbajo;
-            break;
-        }
-        case Left:
-        {
-            spriteCabeza=&imgCabezaIzquierda;
-            break;
-        }
-        case Right:
-        {
-            spriteCabeza=&imgCabezaDerecha;
-            break;
-        }
-        }
-
-        int posX=marginX+(cabeza->x*cellsize);
-        int posY=marginY+(cabeza->y*cellsize);
-        if(spriteCabeza->isNull()==false)
-        {
-            painter.drawPixmap(posX, posY, cellsize, cellsize, *spriteCabeza);
-        }
-        return;
-    }
-
-    Nodo *anterior=nullptr;
-    Nodo *actual=cabeza;
-
-    while(actual!=nullptr)
-    {
-        Nodo *siguiente= actual->siguiente;
-        int posX=marginX+(actual->x*cellsize);
-        int posY=marginY+(actual->y*cellsize);
-        const QPixmap *sprite=nullptr;
-
-        if(actual==cabeza)
-        {
-            switch(direction)
-            {
-            case Up:
-            {
-                sprite=&imgCabezaArriba;
-                break;
-            }
-            case Down:
-            {
-                sprite=&imgCabezaAbajo;
-                break;
-            }
-            case Left:
-            {
-                sprite=&imgCabezaIzquierda;
-                break;
-            }
-            case Right:
-            {
-                sprite=&imgCabezaDerecha;
-                break;
-            }
-            }
-        }
-        else if(siguiente==nullptr)
-        {
-            Direction dirCola= direccionEntreNodos(actual, anterior);
-            switch(dirCola)
-            {
-            case Up:
-            {
-                sprite=&imgColaArriba;
-                break;
-            }
-            case Down:
-            {
-                sprite=&imgColaAbajo;
-                break;
-            }
-            case Left:
-            {
-                sprite=&imgColaIzquierda;
-                break;
-            }
-            case Right:
-            {
-                sprite=&imgColaDerecha;
-                break;
-            }
-            }
-        }
-        else
-        {
-            Direction direccionEntrada= direccionEntreNodos(actual, anterior);
-            Direction direccionSalida= direccionEntreNodos(actual, siguiente);
-
-            bool entradaHorizontal=((direccionEntrada==Left) || (direccionEntrada==Right));
-            bool salidaHorizontal=((direccionSalida==Left) || (direccionSalida==Right));
-
-            if(entradaHorizontal==salidaHorizontal)
-            {
-                sprite= entradaHorizontal? &imgCuerpoHorizaontal: &imgCuerpoVertical;
-            }
-            else
-            {
-                //Direction ladoCabeza= opuesta(direccionEntrada);
-                //Direction ladoCola= direccionSalida;
-
-                bool tieneArriba=((direccionEntrada==Up) || (direccionSalida==Up));
-                bool tieneAbajo=((direccionEntrada==Down) || (direccionSalida==Down));
-                bool tieneIzquierda=((direccionEntrada==Left) || (direccionSalida==Left));
-                bool tieneDerecha=((direccionEntrada==Right) || (direccionSalida==Right));
-
-                if(tieneArriba==true && tieneDerecha==true)
-                {
-                    sprite=&imgCurvaArribaDerecha;
-                }
-                else if(tieneArriba==true && tieneIzquierda==true)
-                {
-                    sprite=&imgCurvaArribaIzquierda;
-                }
-                else if(tieneAbajo==true && tieneDerecha==true)
-                {
-                    sprite=&imgCurvaAbajoDerecha;
-                }
-                else //tiene abajo y a la izquierda
-                {
-                    sprite=&imgCurvaAbajoIzquierda;
-                }
-            }
-        }
-
-        if(sprite!=nullptr && sprite->isNull()==false)
-        {
-            painter.drawPixmap(posX, posY, cellsize, cellsize, *sprite);
-        }
-        anterior=actual;
-        actual=siguiente;
-    }
-}
-
-Nivel::Direction Nivel::direccionEntreNodos(Nodo *origen, Nodo *destino) const
-{
-    if(origen==nullptr || destino==nullptr)
-    {
-        return direction;
-    }
-
-    int direccionX= destino->x -origen->x;
-    int direccionY= destino->y-origen->y;
-
-    if(direccionX>1)
-    {
-        direccionX=-1;
-    }
-    else if(direccionX<-1)
-    {
-        direccionX=1;
-    }
-
-    if(direccionY>1)
-    {
-        direccionY=-1;
-    }
-    else if(direccionY<-1)
-    {
-        direccionY=1;
-    }
-
-    if(direccionX==1)
-    {
-        return Right;
-    }
-    if(direccionX==-1)
-    {
-        return Left;
-    }
-    if(direccionY==1)
-    {
-        return Down;
-    }
-    if(direccionY==-1)
-    {
-        return Up;
-    }
-    return direction;
-}
-
-Nivel::Direction Nivel::opuesta(Direction d) const
-{
-    switch(d)
-    {
-    case Up:
-        return Down;
-    case Down:
-        return Up;
-    case Left:
-        return Right;
-    case Right:
-        return Left;
-    }
-    return d;
-}
-

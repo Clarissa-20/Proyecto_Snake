@@ -14,8 +14,12 @@
 //#include <QtGui>
 
 #include <QPixmap> //nuevo]a libreria para manejar las imagenes
-
 #include <QString>
+
+//sonido
+#include <QMediaPlayer>
+#include <QAudioOutput>
+#include <QUrl>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -97,6 +101,7 @@ protected:
     QPixmap imgCurvaAbajoDerecha;
     QPixmap imgCurvaAbajoIzquierda;
 
+
     int rows;
     int cols;
 
@@ -132,6 +137,17 @@ protected:
 
     bool sonidoActivado;
     bool musicaActivada;
+
+    //sonido
+    QMediaPlayer *sonidoComio;
+    QMediaPlayer *sonidoGano;
+    QMediaPlayer *sonidoPerdio;
+
+    QAudioOutput *audioComio;
+    QAudioOutput *audioGano;
+    QAudioOutput *audioPerdio;
+
+
     // manzanas prueba#1
     QPoint comidaDorada;
 

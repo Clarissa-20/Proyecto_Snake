@@ -126,5 +126,8 @@
         <file>imagenes/skin5_curva_abajo_izquierda.png</file>
         <file>imagenes/skin5_curva_arriba_derecha.png</file>
         <file>imagenes/skin5_curva_arriba_izquierda.png</file>
+        <file>sonidos/comio.wav</file>
+        <file>sonidos/gano.wav</file>
+        <file>sonidos/perdio.wav</file>
     </qresource>
 </RCC>
