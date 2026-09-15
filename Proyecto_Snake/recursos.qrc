@@ -33,10 +33,6 @@
         <file>imagenes/skin_predeterminada_cola_vertical_arriba.png</file>
         <file>imagenes/skin_predeterminada_cuerpo_horizontal.png</file>
         <file>imagenes/skin_predeterminada_cuerpo_vertical.png</file>
-        <file>imagenes/skin_predeterminada_curva_abajo_derecha.png</file>
-        <file>imagenes/skin_predeterminada_curva_abajo_izquierda.png</file>
-        <file>imagenes/skin_predeterminada_curva_arriba_derecha.png</file>
-        <file>imagenes/skin_predeterminada_curva_arriba_izquierda.png</file>
         <file>imagenes/manzana_roja.png</file>
         <file>imagenes/manzana_blanca.png</file>
         <file>imagenes/manzana_dorada.png</file>
@@ -56,5 +52,79 @@
         <file>imagenes/btnSinMusica.png</file>
         <file>imagenes/btnSinSonido.png</file>
         <file>imagenes/btnVolverMenu.png</file>
+        <file>imagenes/skin_predeterminada_curva_abajo_derecha.png</file>
+        <file>imagenes/skin_predeterminada_curva_abajo_izquierda.png</file>
+        <file>imagenes/skin_predeterminada_curva_arriba_derecha.png</file>
+        <file>imagenes/skin_predeterminada_curva_arriba_izquierda.png</file>
+        <file>imagenes/skin1_cabeza_abajo.png</file>
+        <file>imagenes/skin1_cabeza_arriba.png</file>
+        <file>imagenes/skin1_cabeza_derecha.png</file>
+        <file>imagenes/skin1_cabeza_izquierda.png</file>
+        <file>imagenes/skin1_cola_horizontal_derecha.png</file>
+        <file>imagenes/skin1_cola_horizontal_izquierda.png</file>
+        <file>imagenes/skin1_cola_vertical_abajo.png</file>
+        <file>imagenes/skin1_cola_vertical_arriba.png</file>
+        <file>imagenes/skin1_cuerpo_horizontal.png</file>
+        <file>imagenes/skin1_cuerpo_vertical.png</file>
+        <file>imagenes/skin1_curva_abajo_derecha.png</file>
+        <file>imagenes/skin1_curva_abajo_izquierda.png</file>
+        <file>imagenes/skin1_curva_arriba_derecha.png</file>
+        <file>imagenes/skin1_curva_arriba_izquierda.png</file>
+        <file>imagenes/skin2_cabeza_abajo.png</file>
+        <file>imagenes/skin2_cabeza_arriba.png</file>
+        <file>imagenes/skin2_cabeza_derecha.png</file>
+        <file>imagenes/skin2_cabeza_izquierda.png</file>
+        <file>imagenes/skin2_cola_horizontal_derecha.png</file>
+        <file>imagenes/skin2_cola_horizontal_izquierda.png</file>
+        <file>imagenes/skin2_cola_vertical_abajo.png</file>
+        <file>imagenes/skin2_cola_vertical_arriba.png</file>
+        <file>imagenes/skin2_cuerpo_horizontal.png</file>
+        <file>imagenes/skin2_cuerpo_vertical.png</file>
+        <file>imagenes/skin2_curva_abajo_derecha.png</file>
+        <file>imagenes/skin2_curva_abajo_izquierda.png</file>
+        <file>imagenes/skin2_curva_arriba_derecha.png</file>
+        <file>imagenes/skin2_curva_arriba_izquierda.png</file>
+        <file>imagenes/skin3_cabeza_abajo.png</file>
+        <file>imagenes/skin3_cabeza_arriba.png</file>
+        <file>imagenes/skin3_cabeza_derecha.png</file>
+        <file>imagenes/skin3_cabeza_izquierda.png</file>
+        <file>imagenes/skin3_cola_horizontal_derecha.png</file>
+        <file>imagenes/skin3_cola_horizontal_izquierda.png</file>
+        <file>imagenes/skin3_cola_vertical_abajo.png</file>
+        <file>imagenes/skin3_cola_vertical_arriba.png</file>
+        <file>imagenes/skin3_cuerpo_horizontal.png</file>
+        <file>imagenes/skin3_cuerpo_vertical.png</file>
+        <file>imagenes/skin3_curva_abajo_derecha.png</file>
+        <file>imagenes/skin3_curva_abajo_izquierda.png</file>
+        <file>imagenes/skin3_curva_arriba_derecha.png</file>
+        <file>imagenes/skin3_curva_arriba_izquierda.png</file>
+        <file>imagenes/skin4_cabeza_abajo.png</file>
+        <file>imagenes/skin4_cabeza_arriba.png</file>
+        <file>imagenes/skin4_cabeza_derecha.png</file>
+        <file>imagenes/skin4_cabeza_izquierda.png</file>
+        <file>imagenes/skin4_cola_horizontal_derecha.png</file>
+        <file>imagenes/skin4_cola_horizontal_izquierda.png</file>
+        <file>imagenes/skin4_cola_vertical_abajo.png</file>
+        <file>imagenes/skin4_cola_vertical_arriba.png</file>
+        <file>imagenes/skin4_cuerpo_horizontal.png</file>
+        <file>imagenes/skin4_cuerpo_verical.png</file>
+        <file>imagenes/skin4_curva_abajo_derecha.png</file>
+        <file>imagenes/skin4_curva_abajo_izquierda.png</file>
+        <file>imagenes/skin4_curva_arriba_derecha.png</file>
+        <file>imagenes/skin4_curva_arriba_izquierda.png</file>
+        <file>imagenes/skin5_cabeza_abajo.png</file>
+        <file>imagenes/skin5_cabeza_arriba.png</file>
+        <file>imagenes/skin5_cabeza_derecha.png</file>
+        <file>imagenes/skin5_cabeza_izquierda.png</file>
+        <file>imagenes/skin5_cola_horizontal_derecha.png</file>
+        <file>imagenes/skin5_cola_horizontal_izquierda.png</file>
+        <file>imagenes/skin5_cola_vertical_abajo.png</file>
+        <file>imagenes/skin5_cola_vertical_arriba.png</file>
+        <file>imagenes/skin5_cuerpo_horizontal.png</file>
+        <file>imagenes/skin5_cuerpo_vertical.png</file>
+        <file>imagenes/skin5_curva_abajo_derecha.png</file>
+        <file>imagenes/skin5_curva_abajo_izquierda.png</file>
+        <file>imagenes/skin5_curva_arriba_derecha.png</file>
+        <file>imagenes/skin5_curva_arriba_izquierda.png</file>
     </qresource>
 </RCC>
