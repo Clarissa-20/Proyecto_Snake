@@ -120,6 +120,7 @@ void Nivel1::paintEvent(QPaintEvent *)
     }
     if(gameover==true)
     {
+        painter.fillRect(rect(), QColor(0,0,0,150));
         painter.setPen(Qt::white);
         painter.setFont(QFont("Trebuchet MS", 24, QFont::Bold));
         if(nivelGanado)
