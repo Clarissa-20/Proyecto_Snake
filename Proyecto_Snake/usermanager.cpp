@@ -3,11 +3,9 @@
 #include <sstream>
 #include <QDir>
 
-//la carpeta global donde se almacenaran los archivos de cada usuario
 static const std::string CARPETA_GLOBAL = "usuarios_data";
 
 std::string UserManager::obtenerRutaArchivo(const std::string &username) {
-    //para asegurar que la carpeta global exista
     QDir().mkdir(QString::fromStdString(CARPETA_GLOBAL));
     return CARPETA_GLOBAL + "/" + username + ".txt";
 }
@@ -29,10 +27,10 @@ bool UserManager::registrarUsuario(const std::string &username, const std::strin
     nuevoUser.avatarId = avatarId;
     nuevoUser.nivelActual = 1;
     nuevoUser.completoJuego = false;
-    nuevoUser.skinsCompradas = {0};
+    nuevoUser.skinsCompradasStr = "0";
     nuevoUser.insignias = 0;
     nuevoUser.pedazosMapa = 0;
-    nuevoUser.gemas = 0;
+    nuevoUser.gemas = 1000;
     nuevoUser.puntosTotales = 0;
 
     return guardarProgresoUsuario(nuevoUser);
@@ -52,16 +50,24 @@ bool UserManager::cargarDatosUsuario(const std::string &username, Usuario &outUs
     if (!archivo.is_open()) return false;
 
     std::string linea;
-    //linea 1: credenciales y Avatar -> username,password,avatarId
+
+    //linea 1: Credenciales, Avatar y Skin Actual -> username, password, avatarId, skinActual
     if (std::getline(archivo, linea)) {
         std::stringstream ss(linea);
         std::getline(ss, outUsuario.username, ',');
         std::getline(ss, outUsuario.password, ',');
         std::string temp;
         if (std::getline(ss, temp, ',')) outUsuario.avatarId = std::stoi(temp);
+
+        //esto lee la skin actual si existe (compatible con archivos viejos y nuevos)
+        if (std::getline(ss, temp, ',')) {
+            outUsuario.skinActual = std::stoi(temp);
+        } else {
+            outUsuario.skinActual = 0; // Valor por defecto si el archivo es antiguo
+        }
     }
 
-    //linea 2: progreso del juego -> nivelActual,completoJuego,insignias,pedazosMapa,gemas,puntosTotales
+    //linea 2: Progreso del juego -> nivelActual, completoJuego, insignias, pedazosMapa, gemas, puntosTotales
     if (std::getline(archivo, linea)) {
         std::stringstream ss(linea);
         std::string temp;
@@ -73,16 +79,9 @@ bool UserManager::cargarDatosUsuario(const std::string &username, Usuario &outUs
         if (std::getline(ss, temp, ',')) outUsuario.puntosTotales = std::stoi(temp);
     }
 
-    //linea 3: skins compradas separadas por guiones o comas -> id1-id2-id3 y asi
+    //linea 3: Skins compradas como texto plano, ej: 0-1-3
     if (std::getline(archivo, linea)) {
-        outUsuario.skinsCompradas.clear();
-        std::stringstream ss(linea);
-        std::string skinIdStr;
-        while (std::getline(ss, skinIdStr, '-')) {
-            if (!skinIdStr.empty()) {
-                outUsuario.skinsCompradas.push_back(std::stoi(skinIdStr));
-            }
-        }
+        outUsuario.skinsCompradasStr = linea;
     }
 
     archivo.close();
@@ -91,13 +90,16 @@ bool UserManager::cargarDatosUsuario(const std::string &username, Usuario &outUs
 
 bool UserManager::guardarProgresoUsuario(const Usuario &usuario) {
     std::string ruta = obtenerRutaArchivo(usuario.username);
-    std::ofstream archivo(ruta, std::ios::trunc); //sobrescribe con el estado más actualizado
+    std::ofstream archivo(ruta, std::ios::trunc);
     if (!archivo.is_open()) return false;
 
-    //guardar credenciales y avatar
-    archivo << usuario.username << "," << usuario.password << "," << usuario.avatarId << "\n";
+    //guardar credenciales, avatar y skinActual - linea 1
+    archivo << usuario.username << ","
+            << usuario.password << ","
+            << usuario.avatarId << ","
+            << usuario.skinActual << "\n";
 
-    //guardando ek progreso
+    //guardar el progreso del juego - linea 2
     archivo << usuario.nivelActual << ","
             << (usuario.completoJuego ? "1" : "0") << ","
             << usuario.insignias << ","
@@ -105,14 +107,8 @@ bool UserManager::guardarProgresoUsuario(const Usuario &usuario) {
             << usuario.gemas << ","
             << usuario.puntosTotales << "\n";
 
-    //guardamos un vector de skins compradas separadas por un - (para terne orden)
-    for (size_t i = 0; i < usuario.skinsCompradas.size(); ++i) {
-        archivo << usuario.skinsCompradas[i];
-        if (i + 1 < usuario.skinsCompradas.size()) {
-            archivo << "-";
-        }
-    }
-    archivo << "\n";
+    //guardar string de skins compradas directamente - linea 3
+    archivo << usuario.skinsCompradasStr << "\n";
 
     archivo.close();
     return true;
