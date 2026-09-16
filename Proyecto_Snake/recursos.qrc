@@ -154,5 +154,8 @@
         <file>imagenes/etiqueta_gemas.png</file>
         <file>imagenes/fondoRanking.png</file>
         <file>imagenes/marcosListas.png</file>
+        <file>imagenes/btn_volver_pequeno.png</file>
+        <file>imagenes/icono_manualUsuario.png</file>
+        <file>imagenes/icono_miPerfil.png</file>
     </qresource>
 </RCC>

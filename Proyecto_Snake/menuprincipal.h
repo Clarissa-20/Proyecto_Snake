@@ -30,6 +30,8 @@ private slots:
     void onRecordsClicked();
     void onConfiguracionClicked();
     void onSalirClicked();
+    void miPerfil();
+    void verManualUsuario();
 
 private:
     QLabel *labelFondo;
@@ -39,6 +41,8 @@ private:
     QPushButton *btnRecords;
     QPushButton *btnConfiguracion;
     QPushButton *btnSalir;
+    QPushButton *iconoPerfil;
+    QPushButton *btnManualUsuario;
 };
 
 #endif // MENUPRINCIPAL_H

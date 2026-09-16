@@ -2,6 +2,7 @@
 #include "instruccionesgenerales.h"
 #include "menuNiveles.h"
 #include "tienda.h"
+#include "inicioscreen.h"
 #include <QPixmap>
 #include <QIcon>
 #include <QCoreApplication>
@@ -61,12 +62,40 @@ MenuPrincipal::MenuPrincipal(QWidget *parent)
     btnSalir->setIconSize(btnSalir->size());
     btnSalir->setStyleSheet("QPushButton { border: none; background: transparent; }");
 
+    iconoPerfil = new QPushButton(this);
+    iconoPerfil->setGeometry(710, 20, 80, 80);
+    iconoPerfil->setStyleSheet(
+        "QPushButton {"
+        "   border-image: url(:/imagenes/icono_miPerfil.png);"
+        "   border: none;"
+        "   background: transparent;"
+        "}"
+        "QPushButton:hover {"
+        "   filter: brightness(1.2);"
+        "}"
+        );
+
+    btnManualUsuario = new QPushButton(this);
+    btnManualUsuario->setGeometry(710, 510, 80, 80);
+    btnManualUsuario->setStyleSheet(
+        "QPushButton {"
+        "   border-image: url(:/imagenes/icono_manualUsuario.png);"
+        "   border: none;"
+        "   background: transparent;"
+        "}"
+        "QPushButton:hover {"
+        "   filter: brightness(1.2);"
+        "}"
+        );
+
     connect(btnJugar, &QPushButton::clicked, this, &MenuPrincipal::onJugarClicked);
     connect(btnInstrucciones, &QPushButton::clicked, this, &MenuPrincipal::onInstruccionesClicked);
     connect(btnTienda, &QPushButton::clicked, this, &MenuPrincipal::onTiendaClicked);
     connect(btnRecords, &QPushButton::clicked, this, &MenuPrincipal::onRecordsClicked);
     connect(btnConfiguracion, &QPushButton::clicked, this, &MenuPrincipal::onConfiguracionClicked);
     connect(btnSalir, &QPushButton::clicked, this, &MenuPrincipal::onSalirClicked);
+    connect(iconoPerfil, &QPushButton::clicked, this, &MenuPrincipal::miPerfil);
+    connect(btnManualUsuario, &QPushButton::clicked, this, &MenuPrincipal::verManualUsuario);
 }
 
 MenuPrincipal::~MenuPrincipal() {}
@@ -100,6 +129,16 @@ void MenuPrincipal::onConfiguracionClicked() {
     //vtn de configuración
 }
 
+void MenuPrincipal::miPerfil(){
+    //vtn de mi perfil
+}
+
+void MenuPrincipal::verManualUsuario(){
+    //vtn manual usuario
+}
+
 void MenuPrincipal::onSalirClicked() {
-    QCoreApplication::quit();
+    InicioScreen *inicio = new InicioScreen();
+    inicio->show();
+    this->close();
 }

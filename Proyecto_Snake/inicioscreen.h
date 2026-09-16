@@ -1,15 +1,3 @@
-// #ifndef INICIOSCREEN_H
-// #define INICIOSCREEN_H
-
-// class InicioScreen
-// {
-// public:
-//     InicioScreen();
-// };
-
-// #endif // INICIOSCREEN_H
-
-
 #ifndef INICIOSCREEN_H
 #define INICIOSCREEN_H
 
@@ -26,10 +14,12 @@ public:
 
 private slots:
     void onIniciarAventuraClicked();
+    void regresar();
 
 private:
     QLabel *labelFondo;
     QPushButton *btnIniciar;
+    QPushButton *btnRegresar;
 };
 
 #endif // INICIOSCREEN_H
