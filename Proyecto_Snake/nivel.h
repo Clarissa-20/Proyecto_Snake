@@ -188,7 +188,7 @@ protected:
     //integración de nodo prueba #1
     void limpiarSerpiente();
     int obtenerLongitudSerpiente();
-
+    void crearSerpienteInicial(int x, int y, Direction direccionInicial);
     //manzanas prueba#1
     void intentoComidaDorada();
 

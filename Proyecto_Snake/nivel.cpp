@@ -461,6 +461,41 @@ int Nivel::obtenerLongitudSerpiente()
     return longitud;
 }
 
+void Nivel::crearSerpienteInicial(int x, int y, Direction direccionInicial)
+{
+    cabeza= new Nodo(x, y);
+
+    int colaX=x;
+    int colaY=y;
+
+    switch (direccionInicial)
+    {
+        case Up:
+        {
+            colaY=y+1;
+            break;
+        }
+        case Down:
+        {
+            colaY=y-1;
+            break;
+        }
+        case Left:
+        {
+            colaX=x+1;
+            break;
+        }
+        case Right:
+        {
+            colaX=x-1;
+            break;
+        }
+    }
+
+    Nodo *cola= new Nodo(colaX, colaY);
+    cabeza->siguiente=cola;
+}
+
 void Nivel::intentoComidaDorada()
 {
     if(doradasGeneradas>=DORADAS_MAX_GENERADAS)
@@ -1076,7 +1111,7 @@ void Nivel::resetGame()
     //integración de nodo prueba #1
     limpiarSerpiente();
     //integración de nodo prueba #1
-    cabeza = new Nodo(10, 10);
+    crearSerpienteInicial(10,10,Right);
 
     direction=Right;
     gameover=false;
@@ -1227,7 +1262,7 @@ void Nivel::paintEvent(QPaintEvent *)
             painter.drawText(rect(), Qt::AlignCenter, "GAME OVER");
         }
         painter.setFont(QFont("Arial", 14));
-        painter.drawText(QRect(0, height()/2+20, width(), 30), Qt::AlignCenter,ganoPremio ? "¡Premio de manzanas doradas obtenido!" : "Premio de doradas no obtenido");
+        painter.drawText(QRect(0, height()/2+20, width(), 30), Qt::AlignCenter,ganoPremio ? "¡Ganó la insignia!" : "No ganó la insignia:(");
 
     }
 }

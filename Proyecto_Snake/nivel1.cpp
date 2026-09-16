@@ -12,7 +12,8 @@ Nivel1::Nivel1(QWidget *parent)
     cols=((width()-(2*marginX))/cellsize)-1;
     rows=((height()-marginY-120)/cellsize);
     crearMapa();
-    cabeza=new Nodo(5, 5);
+    crearSerpienteInicial(5,5,Right);
+
 
     iniciarSistemaDeManzanas();
     //timer= new QTimer(this);
@@ -121,10 +122,22 @@ void Nivel1::paintEvent(QPaintEvent *)
     {
         painter.setPen(Qt::white);
         painter.setFont(QFont("Trebuchet MS", 24, QFont::Bold));
-        painter.drawText(QRect(0, height()/2-30, width(), 50), Qt::AlignHCenter, nivelGanado?"¡NIVEL COMPLETADO!":"GAME OVER");
+        if(nivelGanado)
+        {
+            painter.drawText(QRect(0, height()/2-130, width(), 50), Qt::AlignHCenter, "¡NIVEL COMPLETADO!");
+            painter.setFont(QFont("Trebuchet MS", 14, QFont::Bold));
+            painter.drawText(QRect(0, height()/2-95, width(), 20), Qt::AlignCenter,QString("Puntaje: %1").arg(puntuacion));
+            painter.drawText(QRect(0, height()/2-72, width(), 20), Qt::AlignCenter,QString("Gemas: %1").arg(totalManzanasComidas()));
+            painter.drawText(QRect(0, height()/2-49, width(), 20), Qt::AlignCenter,QString("Manzanas rojas: %1").arg(manzanasComidas));
+            painter.drawText(QRect(0, height()/2-26, width(), 20), Qt::AlignCenter,QString("Manzanas doradas: %1").arg(doradasComidas));
+        }
+        else
+        {
+            painter.drawText(QRect(0, height()/2-35, width(), 50), Qt::AlignHCenter, "¡GAME OVER!");
+            painter.setFont(QFont("Trebuchet MS", 14, QFont::Bold));
+        }
 
-        painter.setFont(QFont("Trebuchet MS", 14, QFont::Bold));
-        painter.drawText(QRect(0, height()/2, width(), 30), Qt::AlignCenter,ganoPremio ? "¡Premio de manzanas doradas obtenido!" : "Premio de doradas no obtenido");
+        painter.drawText(QRect(0, height()/2, width(), 30), Qt::AlignCenter,ganoPremio ? "¡Ganó la insignia!" : "No ganó la insignia:(");
 
     }
 }
