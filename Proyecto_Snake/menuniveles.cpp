@@ -7,7 +7,8 @@ menuNiveles::menuNiveles(QWidget *parent)
     sonidoActivado(true),
     ventanaNivel1(nullptr),
     ventanaNivel2(nullptr),
-    ventanaNivel3(nullptr)
+    ventanaNivel3(nullptr),
+    menuPrincipal(nullptr)
 {
     setWindowTitle("Mapa de niveles");
     fondoMenu.load(":/imagenes/mapaNiveles.png");
@@ -97,6 +98,12 @@ menuNiveles::menuNiveles(QWidget *parent)
     connect(btnSonido, &QPushButton::clicked, this, &menuNiveles::alternarSonido);
     connect(btnVolver, &QPushButton::clicked, this, &menuNiveles::volverAlMenu);
 
+}
+
+menuNiveles::menuNiveles(QWidget *menu, bool desdeMenuPrincipal)
+    :menuNiveles(nullptr)
+{
+    menuPrincipal= menu;
 }
 
 void menuNiveles::paintEvent(QPaintEvent *event)
@@ -201,5 +208,9 @@ void menuNiveles::alternarSonido()
 
 void menuNiveles::volverAlMenu()
 {
+    if(menuPrincipal!=nullptr)
+    {
+        menuPrincipal->show();
+    }
     this->close();
 }

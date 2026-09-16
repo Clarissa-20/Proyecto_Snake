@@ -101,7 +101,7 @@ MenuPrincipal::MenuPrincipal(QWidget *parent)
 MenuPrincipal::~MenuPrincipal() {}
 
 void MenuPrincipal::onJugarClicked() {
-    menuNiveles *niveles = new menuNiveles();
+    menuNiveles *niveles = new menuNiveles(this, true);
     niveles->show();
     this->close();
 }
