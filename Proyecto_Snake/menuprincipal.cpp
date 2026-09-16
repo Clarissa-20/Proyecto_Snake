@@ -90,7 +90,6 @@ void MenuPrincipal::onTiendaClicked() {
 }
 
 void MenuPrincipal::onRecordsClicked() {
-    //vtn de récords
     Ranking *ranking= new Ranking(this, nullptr);
     ranking->setAttribute(Qt::WA_DeleteOnClose);
     ranking->show();
