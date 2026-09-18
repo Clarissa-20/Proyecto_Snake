@@ -1,5 +1,6 @@
 #include "nivel.h"
 #include "ui_gamewindow.h"
+#include "musicamanager.h"
 #include <QDebug>
 #include <QFile>
 //#include <QGuiApplication>
@@ -201,6 +202,8 @@ Nivel::Nivel(QWidget *parent)
         );
 
     audioPerdio->setVolume(1.0);
+
+    MusicaManger::instance().playMusicaNiveles();
 }
 
 //destructor

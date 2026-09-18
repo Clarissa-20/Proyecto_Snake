@@ -1,6 +1,7 @@
 #include "menuinicio.h"
 #include "login.h"
 #include "crearcuenta.h"
+#include "inicioscreen.h"
 #include <QPixmap>
 #include <QIcon>
 
@@ -29,8 +30,22 @@ MenuInicio::MenuInicio(QWidget *parent)
     btnRegistrarse->setIconSize(btnRegistrarse->size());
     btnRegistrarse->setStyleSheet("QPushButton { border: none; background: transparent; }");
 
+    btnRegresar = new QPushButton(this);
+    btnRegresar->setGeometry(20, 20, 80, 80);
+    btnRegresar->setStyleSheet(
+        "QPushButton {"
+        "   border-image: url(:/imagenes/btn_volver_pequeno.png);"
+        "   border: none;"
+        "   background: transparent;"
+        "}"
+        "QPushButton:hover {"
+        "   filter: brightness(1.2);"
+        "}"
+        );
+
     connect(btnIniciarSesion, &QPushButton::clicked, this, &MenuInicio::onIniciarSesionClicked);
     connect(btnRegistrarse, &QPushButton::clicked, this, &MenuInicio::onRegistrarseClicked);
+    connect(btnRegresar, &QPushButton::clicked, this, &MenuInicio::regresar);
 }
 
 MenuInicio::~MenuInicio() {}
@@ -44,5 +59,11 @@ void MenuInicio::onIniciarSesionClicked() {
 void MenuInicio::onRegistrarseClicked() {
     CrearCuenta *crearCuentaWin = new CrearCuenta();
     crearCuentaWin->show();
+    this->close();
+}
+
+void MenuInicio::regresar(){
+    InicioScreen *inicio = new InicioScreen();
+    inicio->show();
     this->close();
 }

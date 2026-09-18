@@ -1,5 +1,6 @@
 #include "inicioscreen.h"
 #include "menuinicio.h"
+#include "musicamanager.h"
 #include <QPixmap>
 
 InicioScreen::InicioScreen(QWidget *parent)
@@ -41,6 +42,8 @@ InicioScreen::InicioScreen(QWidget *parent)
 
     connect(btnIniciar, &QPushButton::clicked, this, &InicioScreen::onIniciarAventuraClicked);
     connect(btnRegresar, &QPushButton::clicked, this, &InicioScreen::regresar);
+
+    MusicaManger::instance().playMusicaJuego();
 }
 
 InicioScreen::~InicioScreen() {}
@@ -54,3 +57,4 @@ void InicioScreen::onIniciarAventuraClicked() {
 void InicioScreen::regresar(){
     this->close();
 }
+

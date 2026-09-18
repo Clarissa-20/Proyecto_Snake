@@ -1,15 +1,3 @@
-// #ifndef LOGIN_H
-// #define LOGIN_H
-
-// class Login
-// {
-// public:
-//     Login();
-// };
-
-// #endif // LOGIN_H
-
-
 #ifndef LOGIN_H
 #define LOGIN_H
 
@@ -28,6 +16,7 @@ public:
 private slots:
     void onEntrarClicked();
     void onRegistrarClicked();
+    void regresar();
 
 private:
     QLabel *labelFondo;
@@ -35,6 +24,7 @@ private:
     QLineEdit *txtContrasena;
     QPushButton *btnEntrar;
     QLabel *lblRegistrarse;
+    QPushButton *btnRegresar;
 };
 
 #endif // LOGIN_H

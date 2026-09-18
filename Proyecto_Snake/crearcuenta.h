@@ -1,14 +1,3 @@
-// #ifndef CREARCUENTA_H
-// #define CREARCUENTA_H
-
-// class CrearCuenta
-// {
-// public:
-//     CrearCuenta();
-// };
-
-// #endif // CREARCUENTA_H
-
 #ifndef CREARCUENTA_H
 #define CREARCUENTA_H
 
@@ -31,6 +20,7 @@ private slots:
     void onIniciarSesionClicked();
     void validarContrasena(const QString &texto);
     void seleccionarAvatar(int id);
+    void regresar();
 
 private:
     QLabel *labelFondo;
@@ -38,6 +28,7 @@ private:
     QLineEdit *txtContrasena;
     QPushButton *btnCrearCuenta;
     QLabel *lblLogin;
+    QPushButton *btnRegresar;
 
     // Requisitos de contraseña
     QLabel *lblReqLongitud;

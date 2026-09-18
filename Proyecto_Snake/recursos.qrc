@@ -157,5 +157,7 @@
         <file>imagenes/btn_volver_pequeno.png</file>
         <file>imagenes/icono_manualUsuario.png</file>
         <file>imagenes/icono_miPerfil.png</file>
+        <file>sonidos/Musica_Juego.wav</file>
+        <file>sonidos/Musica_Niveles.wav</file>
     </qresource>
 </RCC>

@@ -27,11 +27,13 @@ public:
 private slots:
     void onIniciarSesionClicked();
     void onRegistrarseClicked();
+    void regresar();
 
 private:
     QLabel *labelFondo;
     QPushButton *btnIniciarSesion;
     QPushButton *btnRegistrarse;
+    QPushButton *btnRegresar;
 };
 
 #endif // MENUINICIO_H

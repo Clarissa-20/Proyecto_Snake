@@ -2,6 +2,7 @@
 #include "login.h"
 #include "menuprincipal.h"
 #include "usermanager.h"
+#include "menuInicio.h"
 #include <QPixmap>
 #include <QIcon>
 #include <QMessageBox>
@@ -100,7 +101,22 @@ CrearCuenta::CrearCuenta(QWidget *parent)
     lblLogin->setText("<a href='login' style='color: #d4af37; text-decoration: none;'>¿Ya tienes una cuenta? Inicia sesion</a>");
     lblLogin->setAlignment(Qt::AlignCenter);
     lblLogin->setStyleSheet("font-family: 'Georgia'; font-size: 13px; background: transparent;");
+
+    btnRegresar = new QPushButton(this);
+    btnRegresar->setGeometry(20, 20, 80, 80);
+    btnRegresar->setStyleSheet(
+        "QPushButton {"
+        "   border-image: url(:/imagenes/btn_volver_pequeno.png);"
+        "   border: none;"
+        "   background: transparent;"
+        "}"
+        "QPushButton:hover {"
+        "   filter: brightness(1.2);"
+        "}"
+        );
+
     connect(lblLogin, &QLabel::linkActivated, this, &CrearCuenta::onIniciarSesionClicked);
+    connect(btnRegresar, &QPushButton::clicked, this, &CrearCuenta::regresar);
 }
 
 CrearCuenta::~CrearCuenta() {}
@@ -186,5 +202,11 @@ void CrearCuenta::onCrearCuentaClicked() {
 void CrearCuenta::onIniciarSesionClicked() {
     Login *loginWin = new Login();
     loginWin->show();
+    this->close();
+}
+
+void CrearCuenta::regresar(){
+    MenuInicio *inicio = new MenuInicio();
+    inicio->show();
     this->close();
 }

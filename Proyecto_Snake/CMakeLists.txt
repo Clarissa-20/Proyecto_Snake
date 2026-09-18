@@ -39,6 +39,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         instruccionesgenerales.h instruccionesgenerales.cpp
         tienda.h tienda.cpp
         ranking.h ranking.cpp
+        musicamanager.h musicamanager.cpp
 
 
 

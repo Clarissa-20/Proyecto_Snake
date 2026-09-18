@@ -56,11 +56,12 @@ MenuPrincipal::MenuPrincipal(QWidget *parent)
     btnConfiguracion->setIconSize(btnConfiguracion->size());
     btnConfiguracion->setStyleSheet("QPushButton { border: none; background: transparent; }");
 
-    btnSalir = new QPushButton(this);
-    btnSalir->setGeometry(posX, posYInicial + (separacionY * 5), anchoBtn, altoBtn);
-    btnSalir->setIcon(QIcon(":/imagenes/boton_salir.png"));
-    btnSalir->setIconSize(btnSalir->size());
-    btnSalir->setStyleSheet("QPushButton { border: none; background: transparent; }");
+    //NIVEL LIBRE
+    // btnSalir = new QPushButton(this);
+    // btnSalir->setGeometry(posX, posYInicial + (separacionY * 5), anchoBtn, altoBtn);
+    // btnSalir->setIcon(QIcon(":/imagenes/boton_salir.png"));
+    // btnSalir->setIconSize(btnSalir->size());
+    // btnSalir->setStyleSheet("QPushButton { border: none; background: transparent; }");
 
     iconoPerfil = new QPushButton(this);
     iconoPerfil->setGeometry(710, 20, 80, 80);
@@ -88,14 +89,28 @@ MenuPrincipal::MenuPrincipal(QWidget *parent)
         "}"
         );
 
+    btnRegresar = new QPushButton(this);
+    btnRegresar->setGeometry(20, 20, 80, 80);
+    btnRegresar->setStyleSheet(
+        "QPushButton {"
+        "   border-image: url(:/imagenes/btn_volver_pequeno.png);"
+        "   border: none;"
+        "   background: transparent;"
+        "}"
+        "QPushButton:hover {"
+        "   filter: brightness(1.2);"
+        "}"
+        );
+
     connect(btnJugar, &QPushButton::clicked, this, &MenuPrincipal::onJugarClicked);
     connect(btnInstrucciones, &QPushButton::clicked, this, &MenuPrincipal::onInstruccionesClicked);
     connect(btnTienda, &QPushButton::clicked, this, &MenuPrincipal::onTiendaClicked);
     connect(btnRecords, &QPushButton::clicked, this, &MenuPrincipal::onRecordsClicked);
     connect(btnConfiguracion, &QPushButton::clicked, this, &MenuPrincipal::onConfiguracionClicked);
-    connect(btnSalir, &QPushButton::clicked, this, &MenuPrincipal::onSalirClicked);
+    //connect(btnSalir, &QPushButton::clicked, this, &MenuPrincipal::onSalirClicked); NIVEL LIBRE
     connect(iconoPerfil, &QPushButton::clicked, this, &MenuPrincipal::miPerfil);
     connect(btnManualUsuario, &QPushButton::clicked, this, &MenuPrincipal::verManualUsuario);
+    connect(btnRegresar, &QPushButton::clicked, this, &MenuPrincipal::regresar);
 }
 
 MenuPrincipal::~MenuPrincipal() {}
@@ -137,8 +152,18 @@ void MenuPrincipal::verManualUsuario(){
     //vtn manual usuario
 }
 
-void MenuPrincipal::onSalirClicked() {
+//poner el boton de jugar modo libre
+//cambiar el boton de salir a la flecha
+
+void MenuPrincipal::nivelLibre(){
+
+}
+
+void MenuPrincipal::regresar() {
     InicioScreen *inicio = new InicioScreen();
     inicio->show();
     this->close();
 }
+
+
+//presentacion: mucho del manual de usuario, parte del dis;o, que se va a esperar, dinamica del juego como tal, vender el juego
