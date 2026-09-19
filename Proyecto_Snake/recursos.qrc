@@ -96,7 +96,6 @@
         <file>skins/skin4_cola_vertical_abajo.png</file>
         <file>skins/skin4_cola_vertical_arriba.png</file>
         <file>skins/skin4_cuerpo_horizontal.png</file>
-        <file>skins/skin4_cuerpo_verical.png</file>
         <file>skins/skin4_curva_abajo_derecha.png</file>
         <file>skins/skin4_curva_abajo_izquierda.png</file>
         <file>skins/skin4_curva_arriba_derecha.png</file>
@@ -163,5 +162,6 @@
         <file>btns/monoNivel3.png</file>
         <file>btns/monoNivel3Desactivado.png</file>
         <file>btns/registrarse_boton.png</file>
+        <file>skins/skin4_cuerpo_vertical.png</file>
     </qresource>
 </RCC>
