@@ -44,7 +44,7 @@ Login::Login(QWidget *parent)
 
     btnEntrar = new QPushButton(this);
     btnEntrar->setGeometry(265, 435, 270, 55);
-    QPixmap pixmapBtn(":/imagenes/boton_entrar.png");
+    QPixmap pixmapBtn(":/btns/boton_entrar.png");
     btnEntrar->setIcon(QIcon(pixmapBtn));
     btnEntrar->setIconSize(btnEntrar->size());
     btnEntrar->setStyleSheet("QPushButton { border: none; background: transparent; }");
@@ -59,7 +59,7 @@ Login::Login(QWidget *parent)
     btnRegresar->setGeometry(20, 20, 80, 80);
     btnRegresar->setStyleSheet(
         "QPushButton {"
-        "   border-image: url(:/imagenes/btn_volver_pequeno.png);"
+        "   border-image: url(:/btns/btn_volver_pequeno.png);"
         "   border: none;"
         "   background: transparent;"
         "}"

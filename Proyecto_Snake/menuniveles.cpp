@@ -32,56 +32,56 @@ menuNiveles::menuNiveles(QWidget *parent)
 
     btnNivel1->setStyleSheet(
         "QPushButton {"
-        "border-image: url(:/imagenes/monoNivel1.png);"
+        "border-image: url(:/btns/monoNivel1.png);"
         "border: none;"
         "}"
         "QPushButton:hover {"
         "opacity: 0.8;"
         "}"
         "QPushButton:pressed {"
-        "border-image: url(:/imagenes/monoNivel1.png);"
+        "border-image: url(:/btns/monoNivel1.png);"
         "}"
         );
     btnNivel2->setStyleSheet(
         "QPushButton {"
-        "border-image: url(:/imagenes/monoNivel2.png);"
+        "border-image: url(:/btns/monoNivel2.png);"
         "border: none;"
         "}"
         "QPushButton:hover {"
         "opacity: 0.8;"
         "}"
         "QPushButton:pressed {"
-        "border-image: url(:/imagenes/monoNivel2.png);"
+        "border-image: url(:/btns/monoNivel2.png);"
         "}"
         );
     btnNivel3->setStyleSheet(
         "QPushButton {"
-        "border-image: url(:/imagenes/monoNivel3.png);"
+        "border-image: url(:/btns/monoNivel3.png);"
         "border: none;"
         "}"
         "QPushButton:hover {"
         "opacity: 0.8;"
         "}"
         "QPushButton:pressed {"
-        "border-image: url(:/imagenes/monoNivel3.png);"
+        "border-image: url(:/btns/monoNivel3.png);"
         "}"
         );
     btnVolver->setStyleSheet(
         "QPushButton {"
-        "border-image: url(:/imagenes/btnVolverMenu.png);"
+        "border-image: url(:/btns/btnVolverMenu.png);"
         "border: none;"
         "}"
         "QPushButton:hover {"
         "opacity: 0.8;"
         "}"
         "QPushButton:pressed {"
-        "border-image: url(:/imagenes/btnVolverMenu.png);"
+        "border-image: url(:/btns/btnVolverMenu.png);"
         "}"
         );
 
     btnSonido->setStyleSheet(
         "QPushButton {"
-        "border-image: url(:/imagenes/btnConMusica.png);"
+        "border-image: url(:/btns/btnConMusica.png);"
         "border: none;"
         "}"
         "QPushButton:hover {"
@@ -175,7 +175,7 @@ void menuNiveles::alternarSonido()
     {
         btnSonido->setStyleSheet(
             "QPushButton {"
-            "border-image: url(:/imagenes/btnSinMusica.png);"
+            "border-image: url(:/btns/btnSinMusica.png);"
             "border: none;"
             "}"
             "QPushButton:hover {"
@@ -191,7 +191,7 @@ void menuNiveles::alternarSonido()
     {
         btnSonido->setStyleSheet(
             "QPushButton {"
-            "border-image: url(:/imagenes/btnConMusica.png);"
+            "border-image: url(:/btns/btnConMusica.png);"
             "border: none;"
             "}"
             "QPushButton:hover {"

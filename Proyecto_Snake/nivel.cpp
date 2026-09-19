@@ -80,14 +80,14 @@ Nivel::Nivel(QWidget *parent)
     retryButton= new QPushButton(this);
     retryButton->setGeometry(330, 440, 150, 50);
     retryButton->setStyleSheet("QPushButton {"
-                               "border-image: url(:/imagenes/btnReintentar.png);"
+                               "border-image: url(:/btns/btnReintentar.png);"
                                "border: none;"
                                "}"
                                "QPushButton:hover {"
                                "opacity: 0.8;"
                                "}"
                                "QPushButton:pressed {"
-                               "border-image: url(:/imagenes/btnReintentar.png);"
+                               "border-image: url(:/btns/btnReintentar.png);"
                                "}"
                                );
     connect(retryButton, &QPushButton::clicked, this, &Nivel::resetGame);
@@ -96,14 +96,14 @@ Nivel::Nivel(QWidget *parent)
     pausaBtn->setGeometry(656, 6, 140, 60);
     pausaBtn->setStyleSheet(
         "QPushButton {"
-        "   border-image: url(:/imagenes/boton_pausa_nivel1_2.png);"
+        "   border-image: url(:/btns/boton_pausa_nivel1_2.png);"
         "   border: none;"
         "}"
         "QPushButton:hover {"
         "   opacity: 0.8;"
         "}"
         "QPushButton:pressed {"
-        "   border-image: url(:/imagenes/boton_pausa_nivel1_2.png);"
+        "   border-image: url(:/btns/boton_pausa_nivel1_2.png);"
         "}"
         );
     connect(pausaBtn, &QPushButton::clicked, this, &Nivel::alternarPausa);
@@ -112,7 +112,7 @@ Nivel::Nivel(QWidget *parent)
     btnReaunudar->setGeometry(330, 400, 150, 50);
     btnReaunudar->setStyleSheet(
         "QPushButton {"
-        "   border-image: url(:/imagenes/btnReanudar.png);"
+        "   border-image: url(:/btns/btnReanudar.png);"
         "   border: none;"
         "}"
         "QPushButton:hover {"
@@ -127,7 +127,7 @@ Nivel::Nivel(QWidget *parent)
     btnSonido->setGeometry(330, 450, 150, 50);
     btnSonido->setStyleSheet(
         "QPushButton {"
-        "   border-image: url(:/imagenes/btnConSonido.png);"
+        "   border-image: url(:/btns/btnConSonido.png);"
         "   border: none;"
         "}"
         "QPushButton:hover {"
@@ -140,7 +140,7 @@ Nivel::Nivel(QWidget *parent)
     btnMusica->setGeometry(330, 500, 150, 50);
     btnMusica->setStyleSheet(
         "QPushButton {"
-        "   border-image: url(:/imagenes/btnConMusica.png);"
+        "   border-image: url(:/btns/btnConMusica.png);"
         "   border: none;"
         "}"
         "QPushButton:hover {"
@@ -153,7 +153,7 @@ Nivel::Nivel(QWidget *parent)
     btnVolver->setGeometry(330, 550, 150, 50);
     btnVolver->setStyleSheet(
         "QPushButton {"
-        "   border-image: url(:/imagenes/btnVolverMenu.png);"
+        "   border-image: url(:/btns/btnVolverMenu.png);"
         "   border: none;"
         "}"
         "QPushButton:hover {"
@@ -563,23 +563,23 @@ void Nivel::intentoComidaDorada()
 
 void Nivel::cargarSpritesGusano()
 {
-    imgCabezaArriba.load(":/imagenes/skin_predeterminada_cabeza_arriba.png");
-    imgCabezaAbajo.load(":/imagenes/skin_predeterminada_cabeza_abajo.png");
-    imgCabezaIzquierda.load(":/imagenes/skin_predeterminada_cabeza_izquierda.png");
-    imgCabezaDerecha.load(":/imagenes/skin_predeterminada_cabeza_derecha.png");
+    imgCabezaArriba.load(":/skins/skin_predeterminada_cabeza_arriba.png");
+    imgCabezaAbajo.load(":/skins/skin_predeterminada_cabeza_abajo.png");
+    imgCabezaIzquierda.load(":/skins/skin_predeterminada_cabeza_izquierda.png");
+    imgCabezaDerecha.load(":/skins/skin_predeterminada_cabeza_derecha.png");
 
-    imgColaArriba.load(":/imagenes/skin_predeterminada_cola_vertical_arriba.png");
-    imgColaAbajo.load(":/imagenes/skin_predeterminada_cola_vertical_abajo.png");
-    imgColaIzquierda.load(":/imagenes/skin_predeterminada_cola_horizontal_izquierda.png");
-    imgColaDerecha.load(":/imagenes/skin_predeterminada_cola_horizontal_derecha.png");
+    imgColaArriba.load(":/skins/skin_predeterminada_cola_vertical_arriba.png");
+    imgColaAbajo.load(":/skins/skin_predeterminada_cola_vertical_abajo.png");
+    imgColaIzquierda.load(":/skins/skin_predeterminada_cola_horizontal_izquierda.png");
+    imgColaDerecha.load(":/skins/skin_predeterminada_cola_horizontal_derecha.png");
 
-    imgCuerpoHorizaontal.load(":/imagenes/skin_predeterminada_cuerpo_horizontal.png");
-    imgCuerpoVertical.load(":/imagenes/skin_predeterminada_cuerpo_vertical.png");
+    imgCuerpoHorizaontal.load(":/skins/skin_predeterminada_cuerpo_horizontal.png");
+    imgCuerpoVertical.load(":/skins/skin_predeterminada_cuerpo_vertical.png");
 
-    imgCurvaArribaDerecha.load(":/imagenes/skin_predeterminada_curva_abajo_izquierda.png");
-    imgCurvaArribaIzquierda.load(":/imagenes/skin_predeterminada_curva_arriba_derecha.png");
-    imgCurvaAbajoDerecha.load(":/imagenes/skin_predeterminada_curva_arriba_izquierda.png");//
-    imgCurvaAbajoIzquierda.load(":/imagenes/skin_predeterminada_curva_abajo_derecha.png");//
+    imgCurvaArribaDerecha.load(":/skins/skin_predeterminada_curva_abajo_izquierda.png");
+    imgCurvaArribaIzquierda.load(":/skins/skin_predeterminada_curva_arriba_derecha.png");
+    imgCurvaAbajoDerecha.load(":/skins/skin_predeterminada_curva_arriba_izquierda.png");//
+    imgCurvaAbajoIzquierda.load(":/skins/skin_predeterminada_curva_abajo_derecha.png");//
 }
 
 void Nivel::dibujarGusano(QPainter &painter)
@@ -1147,128 +1147,7 @@ void Nivel::resetGame()
     update();
 }
 
-void Nivel::paintEvent(QPaintEvent *)
-{
-    QPainter painter(this);
 
-    //nuevo: para dibujar la img del fondo
-    if(!fondo.isNull())
-    {
-        //dibuja y escala la imagen de fondo al tama;o de la pantalla
-        painter.drawPixmap(rect(), fondo);
-    }
-    else
-    {
-        //fondo negro por si no carga la img
-        painter.fillRect(rect(), Qt::black);
-    }
-
-    dibujarGusano(painter);
-    /*Nodo* actual = cabeza;
-    bool esCabeza=true;
-    while (actual != nullptr)
-    {
-        if(esCabeza==true)
-        {
-            painter.setBrush(QColor(0, 255, 180));
-            esCabeza=false;
-        }
-        else
-        {
-            painter.setBrush(QColor(0, 180, 0));
-        }
-        painter.setPen(Qt::NoPen);
-
-        //nuevo: aplicar margen en x - y
-        int posX=marginX+(actual->x*cellsize);
-        int posY=marginY+(actual->y*cellsize);
-
-        painter.drawRoundedRect(posX, posY, cellsize, cellsize, 5, 5);
-        actual= actual->siguiente;
-    }*/
-
-    /*painter.setPen(Qt::NoPen);
-    painter.setBrush(Qt::red);
-    painter.drawEllipse(food.x()*cellsize, food.y()*cellsize, cellsize, cellsize);*/
-
-    /*painter.setBrush(Qt::red);
-    int foodX=marginX+(food.x()*cellsize);
-    int foodY=marginY+(food.y()*cellsize);
-    painter.drawEllipse(foodX, foodY, cellsize, cellsize);*/
-
-    int foodX=marginX+(food.x()*cellsize);
-    int foodY=marginY+(food.y()*cellsize);
-    painter.drawPixmap(foodX, foodY, cellsize, cellsize, imgManzanaRoja);
-
-    //nivel 1
-    /*if(hayComidaDorada==true)
-    {
-        painter.setBrush(QColor(255,215,0));
-        painter.drawEllipse(comidaDorada.x()*cellsize, comidaDorada.y()*cellsize, cellsize, cellsize);
-    }*/
-
-    if(hayComidaDorada==true)
-    {
-        /*painter.setBrush(QColor(255, 215, 0));
-        int doradaX=marginX+(comidaDorada.x()*cellsize);
-        int doradaY=marginY+(comidaDorada.y()*cellsize);
-        painter.drawEllipse(doradaX, doradaY, cellsize, cellsize);*/
-        int doradaX=marginX+(comidaDorada.x()*cellsize);
-        int doradaY=marginY+(comidaDorada.y()*cellsize);
-        painter.drawPixmap(doradaX, doradaY, cellsize, cellsize, imgManzanaDorada);
-
-    }
-    /*
-    painter.setPen(Qt::white);
-    painter.setFont(QFont("Arial", 12));
-    painter.drawText(10, 20, QString("Puntos: %1").arg(puntuacion));
-    painter.drawText(10, 40, QString("Manzanas: %1/%2").arg(manzanasComidas).arg(MANZANAS_META));
-    painter.drawText(10, 60, QString("Gemas: %1").arg(totalManzanasComidas()));
-    painter.drawText(10, 80, QString("Tiempo: %1").arg(formatearTiempo(tiempoRestanteSegundos)));
-*/
-    painter.setPen(Qt::white);
-    painter.setFont(QFont("Arial", 11, QFont::Bold));
-
-    // 1. CUADRO ROJO (Izquierda): Gemas arriba y Puntos abajo
-    QRect rectRojo(210, 40, 190, 60);
-    painter.drawText(rectRojo, Qt::AlignHCenter | Qt::AlignTop, QString("Gemas: %1").arg(totalManzanasComidas()));
-    painter.drawText(rectRojo, Qt::AlignHCenter | Qt::AlignBottom, QString("Puntos: %1").arg(puntuacion));
-
-    // 2. CUADRO AZUL (Centro): Manzanas Rojas arriba y Doradas abajo
-    QRect rectAzul(420, 40, 190, 60);
-    painter.drawText(rectAzul, Qt::AlignHCenter | Qt::AlignTop, QString("Rojas: %1").arg(manzanasComidas));
-    painter.drawText(rectAzul, Qt::AlignHCenter | Qt::AlignBottom, QString("Doradas: %1").arg(doradasComidas));
-
-    // 3. CUADRO AMARILLO (Derecha): Tiempo centrado
-    QRect rectAmarillo(630, 40, 190, 60);
-    painter.drawText(rectAmarillo, Qt::AlignCenter, QString("Tiempo: %1").arg(formatearTiempo(tiempoRestanteSegundos)));
-
-    if(juegoPausado==true)
-    {
-        painter.fillRect(rect(), QColor(0,0,0,150));
-        painter.setPen(Qt::white);
-        painter.setFont(QFont("Arial", 26, QFont::Bold));
-        painter.drawText(QRect(0,250, width(), 60), Qt::AlignCenter, "PARTIDA PAUSADA");
-
-    }
-    if(gameover==true)
-    {
-        painter.setPen(Qt::white);
-        painter.setFont(QFont("Arial", 24));
-        if(nivelGanado==true)
-        {
-            //NIVEL 1: mensaje de victoria al completar las 6 manzanas rojas
-            painter.drawText(rect(), Qt::AlignCenter, "¡NIVEL COMPLETADO!");
-        }
-        else
-        {
-            painter.drawText(rect(), Qt::AlignCenter, "GAME OVER");
-        }
-        painter.setFont(QFont("Arial", 14));
-        painter.drawText(QRect(0, height()/2+20, width(), 30), Qt::AlignCenter,ganoPremio ? "¡Ganó la insignia!" : "No ganó la insignia:(");
-
-    }
-}
 
 void Nivel::keyPressEvent(QKeyEvent *event)
 {

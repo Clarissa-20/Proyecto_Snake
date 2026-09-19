@@ -2,37 +2,14 @@
     <qresource prefix="/new/prefix1"/>
     <qresource prefix="/">
         <file>imagenes/nivel1_fondo.png</file>
-        <file>imagenes/boton_play.png</file>
         <file>imagenes/inicio_screen_fondo.jpg</file>
-        <file>imagenes/boton_entrar.png</file>
         <file>imagenes/campo_datos1.png</file>
-        <file>imagenes/iniciar_sesion_boton.png</file>
         <file>imagenes/login_fondo.jpg</file>
-        <file>imagenes/registrarse_boton.png</file>
         <file>imagenes/crear_cuenta_fondo.png</file>
-        <file>imagenes/crear_cuenta_boton.png</file>
         <file>imagenes/menu_principal_fondo.jpg</file>
-        <file>imagenes/boton_config.png</file>
-        <file>imagenes/boton_instrucciones.png</file>
-        <file>imagenes/boton_jugar.png</file>
-        <file>imagenes/boton_records.png</file>
-        <file>imagenes/boton_salir.png</file>
-        <file>imagenes/boton_tienda.png</file>
         <file>imagenes/nivel2_fondo.png</file>
         <file>imagenes/nivel3_fondo.png</file>
-        <file>imagenes/boton_pausa_nivel1_2.png</file>
-        <file>imagenes/boton_pausa_nivel3.png</file>
         <file>imagenes/bloque.png</file>
-        <file>imagenes/skin_predeterminada_cabeza_abajo.png</file>
-        <file>imagenes/skin_predeterminada_cabeza_arriba.png</file>
-        <file>imagenes/skin_predeterminada_cabeza_derecha.png</file>
-        <file>imagenes/skin_predeterminada_cabeza_izquierda.png</file>
-        <file>imagenes/skin_predeterminada_cola_horizontal_derecha.png</file>
-        <file>imagenes/skin_predeterminada_cola_horizontal_izquierda.png</file>
-        <file>imagenes/skin_predeterminada_cola_vertical_abajo.png</file>
-        <file>imagenes/skin_predeterminada_cola_vertical_arriba.png</file>
-        <file>imagenes/skin_predeterminada_cuerpo_horizontal.png</file>
-        <file>imagenes/skin_predeterminada_cuerpo_vertical.png</file>
         <file>imagenes/manzana_roja.png</file>
         <file>imagenes/manzana_blanca.png</file>
         <file>imagenes/manzana_dorada.png</file>
@@ -41,123 +18,150 @@
         <file>imagenes/instrucciones_nivel2.png</file>
         <file>imagenes/instrucciones_nivel3.png</file>
         <file>imagenes/mapaNiveles.png</file>
-        <file>imagenes/monoNivel1.png</file>
-        <file>imagenes/monoNivel2.png</file>
-        <file>imagenes/monoNivel3.png</file>
-        <file>imagenes/btnComenzarNivel.png</file>
-        <file>imagenes/btnConMusica.png</file>
-        <file>imagenes/btnConSonido.png</file>
-        <file>imagenes/btnReanudar.png</file>
-        <file>imagenes/btnReintentar.png</file>
-        <file>imagenes/btnSinMusica.png</file>
-        <file>imagenes/btnSinSonido.png</file>
-        <file>imagenes/btnVolverMenu.png</file>
-        <file>imagenes/skin_predeterminada_curva_abajo_derecha.png</file>
-        <file>imagenes/skin_predeterminada_curva_abajo_izquierda.png</file>
-        <file>imagenes/skin_predeterminada_curva_arriba_derecha.png</file>
-        <file>imagenes/skin_predeterminada_curva_arriba_izquierda.png</file>
-        <file>imagenes/skin1_cabeza_abajo.png</file>
-        <file>imagenes/skin1_cabeza_arriba.png</file>
-        <file>imagenes/skin1_cabeza_derecha.png</file>
-        <file>imagenes/skin1_cabeza_izquierda.png</file>
-        <file>imagenes/skin1_cola_horizontal_derecha.png</file>
-        <file>imagenes/skin1_cola_horizontal_izquierda.png</file>
-        <file>imagenes/skin1_cola_vertical_abajo.png</file>
-        <file>imagenes/skin1_cola_vertical_arriba.png</file>
-        <file>imagenes/skin1_cuerpo_horizontal.png</file>
-        <file>imagenes/skin1_cuerpo_vertical.png</file>
-        <file>imagenes/skin1_curva_abajo_derecha.png</file>
-        <file>imagenes/skin1_curva_abajo_izquierda.png</file>
-        <file>imagenes/skin1_curva_arriba_derecha.png</file>
-        <file>imagenes/skin1_curva_arriba_izquierda.png</file>
-        <file>imagenes/skin2_cabeza_abajo.png</file>
-        <file>imagenes/skin2_cabeza_arriba.png</file>
-        <file>imagenes/skin2_cabeza_derecha.png</file>
-        <file>imagenes/skin2_cabeza_izquierda.png</file>
-        <file>imagenes/skin2_cola_horizontal_derecha.png</file>
-        <file>imagenes/skin2_cola_horizontal_izquierda.png</file>
-        <file>imagenes/skin2_cola_vertical_abajo.png</file>
-        <file>imagenes/skin2_cola_vertical_arriba.png</file>
-        <file>imagenes/skin2_cuerpo_horizontal.png</file>
-        <file>imagenes/skin2_cuerpo_vertical.png</file>
-        <file>imagenes/skin2_curva_abajo_derecha.png</file>
-        <file>imagenes/skin2_curva_abajo_izquierda.png</file>
-        <file>imagenes/skin2_curva_arriba_derecha.png</file>
-        <file>imagenes/skin2_curva_arriba_izquierda.png</file>
-        <file>imagenes/skin3_cabeza_abajo.png</file>
-        <file>imagenes/skin3_cabeza_arriba.png</file>
-        <file>imagenes/skin3_cabeza_derecha.png</file>
-        <file>imagenes/skin3_cabeza_izquierda.png</file>
-        <file>imagenes/skin3_cola_horizontal_derecha.png</file>
-        <file>imagenes/skin3_cola_horizontal_izquierda.png</file>
-        <file>imagenes/skin3_cola_vertical_abajo.png</file>
-        <file>imagenes/skin3_cola_vertical_arriba.png</file>
-        <file>imagenes/skin3_cuerpo_horizontal.png</file>
-        <file>imagenes/skin3_cuerpo_vertical.png</file>
-        <file>imagenes/skin3_curva_abajo_derecha.png</file>
-        <file>imagenes/skin3_curva_abajo_izquierda.png</file>
-        <file>imagenes/skin3_curva_arriba_derecha.png</file>
-        <file>imagenes/skin3_curva_arriba_izquierda.png</file>
-        <file>imagenes/skin4_cabeza_abajo.png</file>
-        <file>imagenes/skin4_cabeza_arriba.png</file>
-        <file>imagenes/skin4_cabeza_derecha.png</file>
-        <file>imagenes/skin4_cabeza_izquierda.png</file>
-        <file>imagenes/skin4_cola_horizontal_derecha.png</file>
-        <file>imagenes/skin4_cola_horizontal_izquierda.png</file>
-        <file>imagenes/skin4_cola_vertical_abajo.png</file>
-        <file>imagenes/skin4_cola_vertical_arriba.png</file>
-        <file>imagenes/skin4_cuerpo_horizontal.png</file>
-        <file>imagenes/skin4_cuerpo_verical.png</file>
-        <file>imagenes/skin4_curva_abajo_derecha.png</file>
-        <file>imagenes/skin4_curva_abajo_izquierda.png</file>
-        <file>imagenes/skin4_curva_arriba_derecha.png</file>
-        <file>imagenes/skin4_curva_arriba_izquierda.png</file>
-        <file>imagenes/skin5_cabeza_abajo.png</file>
-        <file>imagenes/skin5_cabeza_arriba.png</file>
-        <file>imagenes/skin5_cabeza_derecha.png</file>
-        <file>imagenes/skin5_cabeza_izquierda.png</file>
-        <file>imagenes/skin5_cola_horizontal_derecha.png</file>
-        <file>imagenes/skin5_cola_horizontal_izquierda.png</file>
-        <file>imagenes/skin5_cola_vertical_abajo.png</file>
-        <file>imagenes/skin5_cola_vertical_arriba.png</file>
-        <file>imagenes/skin5_cuerpo_horizontal.png</file>
-        <file>imagenes/skin5_cuerpo_vertical.png</file>
-        <file>imagenes/skin5_curva_abajo_derecha.png</file>
-        <file>imagenes/skin5_curva_abajo_izquierda.png</file>
-        <file>imagenes/skin5_curva_arriba_derecha.png</file>
-        <file>imagenes/skin5_curva_arriba_izquierda.png</file>
         <file>sonidos/comio.wav</file>
         <file>sonidos/gano.wav</file>
         <file>sonidos/perdio.wav</file>
-        <file>imagenes/skin6_cabeza_abajo.png</file>
-        <file>imagenes/skin6_cabeza_arriba.png</file>
-        <file>imagenes/skin6_cabeza_derecha.png</file>
-        <file>imagenes/skin6_cabeza_izquierda.png</file>
-        <file>imagenes/skin6_cola_horizontal_derecha.png</file>
-        <file>imagenes/skin6_cola_horizontal_izquierda.png</file>
-        <file>imagenes/skin6_cola_vertical_abajo.png</file>
-        <file>imagenes/skin6_cola_vertical_arriba.png</file>
-        <file>imagenes/skin6_cuerpo_horizontal.png</file>
-        <file>imagenes/skin6_cuerpo_vertical.png</file>
-        <file>imagenes/skin6_curva_abajo_derecha.png</file>
-        <file>imagenes/skin6_curva_abajo_izquierda.png</file>
-        <file>imagenes/skin6_curva_arriba_derecha.png</file>
-        <file>imagenes/skin6_curva_arriba_izquierda.png</file>
         <file>imagenes/instrucciones_generales_fondo.png</file>
-        <file>imagenes/skin1_tienda.png</file>
-        <file>imagenes/skin2_tienda.png</file>
-        <file>imagenes/skin3_tienda.png</file>
-        <file>imagenes/skin4_tienda.png</file>
-        <file>imagenes/skin5_tienda.png</file>
-        <file>imagenes/skin6_tienda.png</file>
         <file>imagenes/tienda_fondo.jpg</file>
         <file>imagenes/etiqueta_gemas.png</file>
         <file>imagenes/fondoRanking.png</file>
         <file>imagenes/marcosListas.png</file>
-        <file>imagenes/btn_volver_pequeno.png</file>
-        <file>imagenes/icono_manualUsuario.png</file>
-        <file>imagenes/icono_miPerfil.png</file>
         <file>sonidos/Musica_Juego.wav</file>
         <file>sonidos/Musica_Niveles.wav</file>
+        <file>skins/skin_predeterminada_cabeza_abajo.png</file>
+        <file>skins/skin_predeterminada_cabeza_arriba.png</file>
+        <file>skins/skin_predeterminada_cabeza_derecha.png</file>
+        <file>skins/skin_predeterminada_cabeza_izquierda.png</file>
+        <file>skins/skin_predeterminada_cola_horizontal_derecha.png</file>
+        <file>skins/skin_predeterminada_cola_horizontal_izquierda.png</file>
+        <file>skins/skin_predeterminada_cola_vertical_abajo.png</file>
+        <file>skins/skin_predeterminada_cola_vertical_arriba.png</file>
+        <file>skins/skin_predeterminada_cuerpo_horizontal.png</file>
+        <file>skins/skin_predeterminada_cuerpo_vertical.png</file>
+        <file>skins/skin_predeterminada_curva_abajo_derecha.png</file>
+        <file>skins/skin_predeterminada_curva_abajo_izquierda.png</file>
+        <file>skins/skin_predeterminada_curva_arriba_derecha.png</file>
+        <file>skins/skin_predeterminada_curva_arriba_izquierda.png</file>
+        <file>skins/skin1_cabeza_abajo.png</file>
+        <file>skins/skin1_cabeza_arriba.png</file>
+        <file>skins/skin1_cabeza_derecha.png</file>
+        <file>skins/skin1_cabeza_izquierda.png</file>
+        <file>skins/skin1_cola_horizontal_derecha.png</file>
+        <file>skins/skin1_cola_horizontal_izquierda.png</file>
+        <file>skins/skin1_cola_vertical_abajo.png</file>
+        <file>skins/skin1_cola_vertical_arriba.png</file>
+        <file>skins/skin1_cuerpo_horizontal.png</file>
+        <file>skins/skin1_cuerpo_vertical.png</file>
+        <file>skins/skin1_curva_abajo_derecha.png</file>
+        <file>skins/skin1_curva_abajo_izquierda.png</file>
+        <file>skins/skin1_curva_arriba_derecha.png</file>
+        <file>skins/skin1_curva_arriba_izquierda.png</file>
+        <file>skins/skin1_tienda.png</file>
+        <file>skins/skin2_cabeza_abajo.png</file>
+        <file>skins/skin2_cabeza_arriba.png</file>
+        <file>skins/skin2_cabeza_derecha.png</file>
+        <file>skins/skin2_cabeza_izquierda.png</file>
+        <file>skins/skin2_cola_horizontal_derecha.png</file>
+        <file>skins/skin2_cola_horizontal_izquierda.png</file>
+        <file>skins/skin2_cola_vertical_abajo.png</file>
+        <file>skins/skin2_cola_vertical_arriba.png</file>
+        <file>skins/skin2_cuerpo_horizontal.png</file>
+        <file>skins/skin2_cuerpo_vertical.png</file>
+        <file>skins/skin2_curva_abajo_derecha.png</file>
+        <file>skins/skin2_curva_abajo_izquierda.png</file>
+        <file>skins/skin2_curva_arriba_derecha.png</file>
+        <file>skins/skin2_curva_arriba_izquierda.png</file>
+        <file>skins/skin2_tienda.png</file>
+        <file>skins/skin3_cabeza_abajo.png</file>
+        <file>skins/skin3_cabeza_arriba.png</file>
+        <file>skins/skin3_cabeza_derecha.png</file>
+        <file>skins/skin3_cabeza_izquierda.png</file>
+        <file>skins/skin3_cola_horizontal_derecha.png</file>
+        <file>skins/skin3_cola_horizontal_izquierda.png</file>
+        <file>skins/skin3_cola_vertical_abajo.png</file>
+        <file>skins/skin3_cola_vertical_arriba.png</file>
+        <file>skins/skin3_cuerpo_horizontal.png</file>
+        <file>skins/skin3_cuerpo_vertical.png</file>
+        <file>skins/skin3_curva_abajo_derecha.png</file>
+        <file>skins/skin3_curva_abajo_izquierda.png</file>
+        <file>skins/skin3_curva_arriba_derecha.png</file>
+        <file>skins/skin3_curva_arriba_izquierda.png</file>
+        <file>skins/skin3_tienda.png</file>
+        <file>skins/skin4_cabeza_abajo.png</file>
+        <file>skins/skin4_cabeza_arriba.png</file>
+        <file>skins/skin4_cabeza_derecha.png</file>
+        <file>skins/skin4_cabeza_izquierda.png</file>
+        <file>skins/skin4_cola_horizontal_derecha.png</file>
+        <file>skins/skin4_cola_horizontal_izquierda.png</file>
+        <file>skins/skin4_cola_vertical_abajo.png</file>
+        <file>skins/skin4_cola_vertical_arriba.png</file>
+        <file>skins/skin4_cuerpo_horizontal.png</file>
+        <file>skins/skin4_cuerpo_verical.png</file>
+        <file>skins/skin4_curva_abajo_derecha.png</file>
+        <file>skins/skin4_curva_abajo_izquierda.png</file>
+        <file>skins/skin4_curva_arriba_derecha.png</file>
+        <file>skins/skin4_curva_arriba_izquierda.png</file>
+        <file>skins/skin4_tienda.png</file>
+        <file>skins/skin5_cabeza_abajo.png</file>
+        <file>skins/skin5_cabeza_arriba.png</file>
+        <file>skins/skin5_cabeza_derecha.png</file>
+        <file>skins/skin5_cabeza_izquierda.png</file>
+        <file>skins/skin5_cola_horizontal_derecha.png</file>
+        <file>skins/skin5_cola_horizontal_izquierda.png</file>
+        <file>skins/skin5_cola_vertical_abajo.png</file>
+        <file>skins/skin5_cola_vertical_arriba.png</file>
+        <file>skins/skin5_cuerpo_horizontal.png</file>
+        <file>skins/skin5_cuerpo_vertical.png</file>
+        <file>skins/skin5_curva_abajo_derecha.png</file>
+        <file>skins/skin5_curva_abajo_izquierda.png</file>
+        <file>skins/skin5_curva_arriba_derecha.png</file>
+        <file>skins/skin5_curva_arriba_izquierda.png</file>
+        <file>skins/skin5_tienda.png</file>
+        <file>skins/skin6_cabeza_abajo.png</file>
+        <file>skins/skin6_cabeza_arriba.png</file>
+        <file>skins/skin6_cabeza_derecha.png</file>
+        <file>skins/skin6_cabeza_izquierda.png</file>
+        <file>skins/skin6_cola_horizontal_derecha.png</file>
+        <file>skins/skin6_cola_horizontal_izquierda.png</file>
+        <file>skins/skin6_cola_vertical_abajo.png</file>
+        <file>skins/skin6_cola_vertical_arriba.png</file>
+        <file>skins/skin6_cuerpo_horizontal.png</file>
+        <file>skins/skin6_cuerpo_vertical.png</file>
+        <file>skins/skin6_curva_abajo_derecha.png</file>
+        <file>skins/skin6_curva_abajo_izquierda.png</file>
+        <file>skins/skin6_curva_arriba_derecha.png</file>
+        <file>skins/skin6_curva_arriba_izquierda.png</file>
+        <file>skins/skin6_tienda.png</file>
+        <file>btns/boton_config.png</file>
+        <file>btns/boton_entrar.png</file>
+        <file>btns/boton_instrucciones.png</file>
+        <file>btns/boton_jugar.png</file>
+        <file>btns/boton_pausa_nivel1_2.png</file>
+        <file>btns/boton_pausa_nivel3.png</file>
+        <file>btns/boton_play.png</file>
+        <file>btns/boton_records.png</file>
+        <file>btns/boton_salir.png</file>
+        <file>btns/boton_tienda.png</file>
+        <file>btns/btn_volver_pequeno.png</file>
+        <file>btns/btnComenzarNivel.png</file>
+        <file>btns/btnConMusica.png</file>
+        <file>btns/btnConSonido.png</file>
+        <file>btns/btnNuevaPartida.png</file>
+        <file>btns/btnReanudar.png</file>
+        <file>btns/btnReanudarPartida.png</file>
+        <file>btns/btnReintentar.png</file>
+        <file>btns/btnSinMusica.png</file>
+        <file>btns/btnSinSonido.png</file>
+        <file>btns/btnVolverMenu.png</file>
+        <file>btns/crear_cuenta_boton.png</file>
+        <file>btns/icono_manualUsuario.png</file>
+        <file>btns/icono_miPerfil.png</file>
+        <file>btns/iniciar_sesion_boton.png</file>
+        <file>btns/monoNivel1.png</file>
+        <file>btns/monoNivel2.png</file>
+        <file>btns/monoNivel2Desactivado.png</file>
+        <file>btns/monoNivel3.png</file>
+        <file>btns/monoNivel3Desactivado.png</file>
+        <file>btns/registrarse_boton.png</file>
     </qresource>
 </RCC>

@@ -18,7 +18,7 @@ Tienda::Tienda(QWidget *parent)
     btnVolver->setGeometry(50, 35, 180, 50);
     btnVolver->setStyleSheet(
         "QPushButton {"
-        "   border-image: url(:/imagenes/btnVolverMenu.png);"
+        "   border-image: url(:/btns/btnVolverMenu.png);"
         "   border: none;"
         "   background: transparent;"
         "}"
@@ -48,12 +48,12 @@ Tienda::Tienda(QWidget *parent)
     };
     int costosSkins[6] = { 250, 150, 300, 200, 100, 280 };
     QString rutasImagenes[6] = {
-        ":/imagenes/skin1_tienda.png",
-        ":/imagenes/skin2_tienda.png",
-        ":/imagenes/skin3_tienda.png",
-        ":/imagenes/skin4_tienda.png",
-        ":/imagenes/skin5_tienda.png",
-        ":/imagenes/skin6_tienda.png"
+        ":/skins/skin1_tienda.png",
+        ":/skins/skin2_tienda.png",
+        ":/skins/skin3_tienda.png",
+        ":/skins/skin4_tienda.png",
+        ":/skins/skin5_tienda.png",
+        ":/skins/skin6_tienda.png"
     };
 
     int baseX = 145;

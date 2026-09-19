@@ -28,31 +28,31 @@ MenuPrincipal::MenuPrincipal(QWidget *parent)
 
     btnJugar = new QPushButton(this);
     btnJugar->setGeometry(posX, posYInicial, anchoBtn, altoBtn);
-    btnJugar->setIcon(QIcon(":/imagenes/boton_jugar.png"));
+    btnJugar->setIcon(QIcon(":/btns/boton_jugar.png"));
     btnJugar->setIconSize(btnJugar->size());
     btnJugar->setStyleSheet("QPushButton { border: none; background: transparent; }");
 
     btnInstrucciones = new QPushButton(this);
     btnInstrucciones->setGeometry(posX, posYInicial + separacionY, anchoBtn, altoBtn);
-    btnInstrucciones->setIcon(QIcon(":/imagenes/boton_instrucciones.png"));
+    btnInstrucciones->setIcon(QIcon(":/btns/boton_instrucciones.png"));
     btnInstrucciones->setIconSize(btnInstrucciones->size());
     btnInstrucciones->setStyleSheet("QPushButton { border: none; background: transparent; }");
 
     btnTienda = new QPushButton(this);
     btnTienda->setGeometry(posX, posYInicial + (separacionY * 2), anchoBtn, altoBtn);
-    btnTienda->setIcon(QIcon(":/imagenes/boton_tienda.png"));
+    btnTienda->setIcon(QIcon(":/btns/boton_tienda.png"));
     btnTienda->setIconSize(btnTienda->size());
     btnTienda->setStyleSheet("QPushButton { border: none; background: transparent; }");
 
     btnRecords = new QPushButton(this);
     btnRecords->setGeometry(posX, posYInicial + (separacionY * 3), anchoBtn, altoBtn);
-    btnRecords->setIcon(QIcon(":/imagenes/boton_records.png"));
+    btnRecords->setIcon(QIcon(":/btns/boton_records.png"));
     btnRecords->setIconSize(btnRecords->size());
     btnRecords->setStyleSheet("QPushButton { border: none; background: transparent; }");
 
     btnConfiguracion = new QPushButton(this);
     btnConfiguracion->setGeometry(posX, posYInicial + (separacionY * 4), anchoBtn, altoBtn);
-    btnConfiguracion->setIcon(QIcon(":/imagenes/boton_config.png"));
+    btnConfiguracion->setIcon(QIcon(":/btns/boton_config.png"));
     btnConfiguracion->setIconSize(btnConfiguracion->size());
     btnConfiguracion->setStyleSheet("QPushButton { border: none; background: transparent; }");
 
@@ -67,7 +67,7 @@ MenuPrincipal::MenuPrincipal(QWidget *parent)
     iconoPerfil->setGeometry(710, 20, 80, 80);
     iconoPerfil->setStyleSheet(
         "QPushButton {"
-        "   border-image: url(:/imagenes/icono_miPerfil.png);"
+        "   border-image: url(:/btns/icono_miPerfil.png);"
         "   border: none;"
         "   background: transparent;"
         "}"
@@ -80,7 +80,7 @@ MenuPrincipal::MenuPrincipal(QWidget *parent)
     btnManualUsuario->setGeometry(710, 510, 80, 80);
     btnManualUsuario->setStyleSheet(
         "QPushButton {"
-        "   border-image: url(:/imagenes/icono_manualUsuario.png);"
+        "   border-image: url(:/btns/icono_manualUsuario.png);"
         "   border: none;"
         "   background: transparent;"
         "}"
@@ -93,7 +93,7 @@ MenuPrincipal::MenuPrincipal(QWidget *parent)
     btnRegresar->setGeometry(20, 20, 80, 80);
     btnRegresar->setStyleSheet(
         "QPushButton {"
-        "   border-image: url(:/imagenes/btn_volver_pequeno.png);"
+        "   border-image: url(:/btns/btn_volver_pequeno.png);"
         "   border: none;"
         "   background: transparent;"
         "}"

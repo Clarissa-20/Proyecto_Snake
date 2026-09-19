@@ -18,14 +18,14 @@ MenuInicio::MenuInicio(QWidget *parent)
 
     btnIniciarSesion = new QPushButton(this);
     btnIniciarSesion->setGeometry(100, 420, 280, 55);
-    QPixmap pixmapBtn1(":/imagenes/iniciar_sesion_boton.png");
+    QPixmap pixmapBtn1(":/btns/iniciar_sesion_boton.png");
     btnIniciarSesion->setIcon(QIcon(pixmapBtn1));
     btnIniciarSesion->setIconSize(btnIniciarSesion->size());
     btnIniciarSesion->setStyleSheet("QPushButton { border: none; background: transparent; }");
 
     btnRegistrarse = new QPushButton(this);
     btnRegistrarse->setGeometry(420, 420, 280, 55);
-    QPixmap pixmapBtn2(":/imagenes/registrarse_boton.png");
+    QPixmap pixmapBtn2(":/btns/registrarse_boton.png");
     btnRegistrarse->setIcon(QIcon(pixmapBtn2));
     btnRegistrarse->setIconSize(btnRegistrarse->size());
     btnRegistrarse->setStyleSheet("QPushButton { border: none; background: transparent; }");
@@ -34,7 +34,7 @@ MenuInicio::MenuInicio(QWidget *parent)
     btnRegresar->setGeometry(20, 20, 80, 80);
     btnRegresar->setStyleSheet(
         "QPushButton {"
-        "   border-image: url(:/imagenes/btn_volver_pequeno.png);"
+        "   border-image: url(:/btns/btn_volver_pequeno.png);"
         "   border: none;"
         "   background: transparent;"
         "}"

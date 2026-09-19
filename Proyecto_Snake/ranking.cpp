@@ -42,14 +42,14 @@ Ranking::Ranking(QWidget *menuPrincipal, QWidget *parent)
     btnVolver->setGeometry(30,10, 180,50);
     btnVolver->setStyleSheet(
         "QPushButton {"
-        "border-image: url(:/imagenes/btnVolverMenu.png);"
+        "border-image: url(:/btns/btnVolverMenu.png);"
         "border: none;"
         "}"
         "QPushButton:hover {"
         "opacity: 0.8;"
         "}"
         "QPushButton:pressed {"
-        "border-image: url(:/imagenes/btnVolverMenu.png);"
+        "border-image: url(:/btns/btnVolverMenu.png);"
         "}"
         );
     connect(btnVolver, &QPushButton::clicked, this, &Ranking::volverAlMenu);

@@ -18,7 +18,7 @@ InicioScreen::InicioScreen(QWidget *parent)
     btnIniciar->setGeometry(160, 250, 490, 200);
     btnIniciar->setStyleSheet(
         "QPushButton {"
-        "   border-image: url(:/imagenes/boton_play.png);"
+        "   border-image: url(:/btns/boton_play.png);"
         "   border: none;"
         "   background: transparent;"
         "}"
@@ -31,7 +31,7 @@ InicioScreen::InicioScreen(QWidget *parent)
     btnRegresar->setGeometry(20, 20, 80, 80);
     btnRegresar->setStyleSheet(
         "QPushButton {"
-        "   border-image: url(:/imagenes/btn_volver_pequeno.png);"
+        "   border-image: url(:/btns/btn_volver_pequeno.png);"
         "   border: none;"
         "   background: transparent;"
         "}"

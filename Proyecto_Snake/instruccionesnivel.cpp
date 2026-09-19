@@ -40,26 +40,26 @@ InstruccionesNivel::InstruccionesNivel(int nivel, menuNiveles *menuPadre, QWidge
 
     btnVolver->setStyleSheet(
         "QPushButton {"
-        "border-image: url(:/imagenes/btnVolverMenu.png);"
+        "border-image: url(:/btns/btnVolverMenu.png);"
         "border: none;"
         "}"
         "QPushButton:hover {"
         "opacity: 0.8;"
         "}"
         "QPushButton:pressed {"
-        "border-image: url(:/imagenes/btnVolverMenu.png);"
+        "border-image: url(:/btns/btnVolverMenu.png);"
         "}"
         );
     btnComenzar->setStyleSheet(
         "QPushButton {"
-        "border-image: url(:/imagenes/btnComenzarNivel.png);"
+        "border-image: url(:/btns/btnComenzarNivel.png);"
         "border: none;"
         "}"
         "QPushButton:hover {"
         "opacity: 0.8;"
         "}"
         "QPushButton:pressed {"
-        "border-image: url(:/imagenes/btnComenzarNivel.png);"
+        "border-image: url(:/btns/btnComenzarNivel.png);"
         "}"
         );
     connect(btnVolver, &QPushButton::clicked, this, &InstruccionesNivel::volverAlMenu);

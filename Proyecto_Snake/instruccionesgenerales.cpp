@@ -18,7 +18,7 @@ InstruccionesGenerales::InstruccionesGenerales(QWidget *parent)
 
     btnVolver->setStyleSheet(
         "QPushButton {"
-        "   border-image: url(:/imagenes/btnVolverMenu.png);"
+        "   border-image: url(:/btns/btnVolverMenu.png);"
         "   border: none;"
         "   background: transparent;"
         "}"
