@@ -12,6 +12,10 @@ public:
 
 protected:
     void paintEvent(QPaintEvent *event) override;
+    int numeroNivel() const override
+    {
+        return 1;
+    }
 };
 
 #endif // NIVEL1_H

@@ -61,6 +61,10 @@ protected:
         return 100;
     }
     bool ejecutarCicloGeneracion() override;
+    int numeroNivel() const override
+    {
+        return 3;
+    }
 protected slots:
     void gameloop() override;
     void resetGame() override;

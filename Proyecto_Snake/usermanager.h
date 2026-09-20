@@ -36,6 +36,9 @@ public:
     static bool verificarCredenciales(const std::string &username, const std::string &password);
     static bool cargarDatosUsuario(const std::string &username, Usuario &outUsuario);
     static bool guardarProgresoUsuario(const Usuario &usuario);
+
+    static std::string obtenerCarpetaUsuarios();
+
 };
 
 #endif // USERMANAGER_H

@@ -90,7 +90,7 @@ CrearCuenta::CrearCuenta(QWidget *parent)
 
     btnCrearCuenta = new QPushButton(this);
     btnCrearCuenta->setGeometry(270, 500, 260, 50);
-    QPixmap pixmapBtn(":/imagenes/crear_cuenta_boton.png");
+    QPixmap pixmapBtn(":/btns/crear_cuenta_boton.png");
     btnCrearCuenta->setIcon(QIcon(pixmapBtn));
     btnCrearCuenta->setIconSize(btnCrearCuenta->size());
     btnCrearCuenta->setStyleSheet("QPushButton { border: none; background: transparent; }");

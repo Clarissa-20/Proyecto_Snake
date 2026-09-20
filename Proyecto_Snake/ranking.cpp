@@ -3,7 +3,10 @@
 #include <QGuiApplication>
 #include <QScreen>
 #include <QHeaderView>
-
+#include <fstream>
+#include <QDir>
+#include <QDirIterator>
+#include "usermanager.h"
 
 Ranking::Ranking(QWidget *parent)
     : Ranking (nullptr, parent)
@@ -11,9 +14,10 @@ Ranking::Ranking(QWidget *parent)
 
 }
 
-Ranking::Ranking(QWidget *menuPrincipal, QWidget *parent)
+Ranking::Ranking(QWidget *menuPrincipal, QWidget *parent, const QString &usuario)
     : QWidget(parent),
-    menuPrincipal(menuPrincipal)
+    menuPrincipal(menuPrincipal),
+    usuarioActual(usuario)
 {
     setWindowTitle("Ranking");
     setFixedSize(980, 600);
@@ -140,50 +144,137 @@ void Ranking::configurarListaNiveles()
 
 void Ranking::cargarDatosGlobal()
 {
-    //datos prueba no reales
-    const int TOTAL_FILAS = 30;
+    listaGlobal->clearContents();
+    listaGlobal->setRowCount(0);
 
-    listaGlobal->setRowCount(TOTAL_FILAS);
-    for(int fila = 0; fila < TOTAL_FILAS; fila++)
+    QString carpeta= QString::fromStdString(UserManager::obtenerCarpetaUsuarios());
+
+    QDirIterator it(carpeta, QDir::Files);
+    while(it.hasNext())
     {
-        QString nombre = QString("Jugador%1").arg(fila + 1);
-        int puntos = 500 - (fila * 15); // puntaje descendente de ejemplo
+        it.next();
 
-        QTableWidgetItem *itemUsuario = new QTableWidgetItem(nombre);
-        QTableWidgetItem *itemPuntos = new QTableWidgetItem(QString::number(puntos));
+        QFileInfo info= it.fileInfo();
+        if(info.suffix()!="txt")
+        {
+            continue;
+        }
 
+        QString nombreUsuario= info.completeBaseName();
+
+        Usuario usuario;
+        if(UserManager::cargarDatosUsuario(nombreUsuario.toStdString(), usuario)==false)
+        {
+            continue;
+        }
+
+        int fila= listaGlobal->rowCount();
+        listaGlobal->insertRow(fila);
+
+        QTableWidgetItem *itemUsuario= new QTableWidgetItem(QString::fromStdString(usuario.username));
         itemUsuario->setTextAlignment(Qt::AlignCenter);
+
+        QTableWidgetItem *itemPuntos= new QTableWidgetItem();
+        itemPuntos->setData(Qt::DisplayRole, usuario.puntosTotales);
         itemPuntos->setTextAlignment(Qt::AlignCenter);
 
         listaGlobal->setItem(fila, 0, itemUsuario);
         listaGlobal->setItem(fila, 1, itemPuntos);
     }
+
+    int totalFilas= listaGlobal->rowCount();
+    for(int i=0; i<totalFilas-1; i++)
+    {
+        for(int j=0; j<totalFilas-1-i; j++)
+        {
+            int puntosActual= listaGlobal->item(j, 1)->data(Qt::DisplayRole).toInt();
+            int puntosSiguiente= listaGlobal->item(j+1, 1)->data(Qt::DisplayRole).toInt();
+
+            if(puntosActual<puntosSiguiente)
+            {
+                QTableWidgetItem *tempUsuario= listaGlobal->takeItem(j, 0);
+                QTableWidgetItem *tempPuntos= listaGlobal->takeItem(j, 1);
+
+                listaGlobal->setItem(j, 0, listaGlobal->takeItem(j+1, 0));
+                listaGlobal->setItem(j, 1, listaGlobal->takeItem(j+1, 1));
+
+                listaGlobal->setItem(j+1, 0, tempUsuario);
+                listaGlobal->setItem(j+1, 1, tempPuntos);
+            }
+        }
+    }
 }
 
 void Ranking::cargarDatosNiveles()
 {
-    //datos prueba no reales
-    const int TOTAL_FILAS = 30;
+    listaNiveles->clearContents();
+    listaNiveles->setRowCount(0);
 
-    listaNiveles->setRowCount(TOTAL_FILAS);
-    for(int fila = 0; fila < TOTAL_FILAS; fila++)
+    if(usuarioActual.isEmpty())
     {
-        QString nivel = QString("Nivel %1").arg(fila + 1);
-        int rojas = 10 - (fila % 10);   // valores de ejemplo
-        int doradas = 4 - (fila % 4);   // valores de ejemplo
-
-        QTableWidgetItem *itemNivel = new QTableWidgetItem(nivel);
-        QTableWidgetItem *itemRojas = new QTableWidgetItem(QString::number(rojas));
-        QTableWidgetItem *itemDoradas = new QTableWidgetItem(QString::number(doradas));
-
-        itemNivel->setTextAlignment(Qt::AlignCenter);
-        itemRojas->setTextAlignment(Qt::AlignCenter);
-        itemDoradas->setTextAlignment(Qt::AlignCenter);
-
-        listaNiveles->setItem(fila, 0, itemNivel);
-        listaNiveles->setItem(fila, 1, itemRojas);
-        listaNiveles->setItem(fila, 2, itemDoradas);
+        return;
     }
+
+    QString nombreArchivoQt= carpetaPartidaUsuarios()+"partidasCompletadas_"+usuarioActual+".txt";
+    std::string nombreArchivo= nombreArchivoQt.toStdString();
+
+    std::ifstream archivo(nombreArchivo);
+    if(archivo.is_open()==false)
+    {
+        return;
+    }
+
+    int totalGanadas=0;
+    int totalPerdidas=0;
+
+    int nivelLeido;
+    int rojasLeidas;
+    int doradasLeidas;
+    int ganoLeido;
+
+    while(archivo>>nivelLeido>>rojasLeidas>>doradasLeidas>>ganoLeido)
+    {
+        if(ganoLeido!=0)
+        {
+            totalGanadas++;
+        }
+        else
+        {
+            totalPerdidas++;
+        }
+    }
+    archivo.close();
+
+    int totalFilas= 1+totalGanadas+1+totalPerdidas;
+    listaNiveles->setRowCount(totalFilas);
+
+    agregarFilaEncabezado(0, "Completadas");
+    int filaEncabezadoPerdidas= 1+totalGanadas;
+    agregarFilaEncabezado(filaEncabezadoPerdidas, "Perdidas");
+
+    archivo.open(nombreArchivo);
+    if(archivo.is_open()==false)
+    {
+        return;
+    }
+
+    int filaGanada= 1;
+    int filaPerdida= filaEncabezadoPerdidas+1;
+
+    while(archivo>>nivelLeido>>rojasLeidas>>doradasLeidas>>ganoLeido)
+    {
+        if(ganoLeido!=0)
+        {
+            agregarFilaPartida(filaGanada, nivelLeido, rojasLeidas, doradasLeidas);
+            filaGanada++;
+        }
+        else
+        {
+            agregarFilaPartida(filaPerdida, nivelLeido, rojasLeidas, doradasLeidas);
+            filaPerdida++;
+        }
+    }
+    archivo.close();
 }
 
 void Ranking::volverAlMenu()
@@ -193,4 +284,44 @@ void Ranking::volverAlMenu()
         menuPrincipal->show();
     }
     this->close();
+}
+QString Ranking::carpetaPartidaUsuarios() const
+{
+    QString carpeta="PartidasUsuarios";
+    QDir dir;
+    if(dir.exists(carpeta)==false)
+    {
+        dir.mkpath(carpeta);
+    }
+    return carpeta+"/";
+}
+
+void Ranking::agregarFilaEncabezado(int fila, const QString &texto)
+{
+    QTableWidgetItem *itemEncabezado= new QTableWidgetItem(texto);
+    itemEncabezado->setTextAlignment(Qt::AlignCenter);
+
+    QFont fuente= itemEncabezado->font();
+    fuente.setBold(true);
+    itemEncabezado->setFont(fuente);
+    itemEncabezado->setBackground(QColor(80,55,38));
+    itemEncabezado->setForeground(Qt::white);
+
+    listaNiveles->setItem(fila, 0, itemEncabezado);
+    listaNiveles->setSpan(fila, 0, 1, 3);
+}
+
+void Ranking::agregarFilaPartida(int fila, int nivel, int rojas, int doradas)
+{
+    QTableWidgetItem *itemNivel= new QTableWidgetItem(QString("Nivel %1").arg(nivel));
+    QTableWidgetItem *itemRojas= new QTableWidgetItem(QString::number(rojas));
+    QTableWidgetItem *itemDoradas= new QTableWidgetItem(QString::number(doradas));
+
+    itemNivel->setTextAlignment(Qt::AlignCenter);
+    itemRojas->setTextAlignment(Qt::AlignCenter);
+    itemDoradas->setTextAlignment(Qt::AlignCenter);
+
+    listaNiveles->setItem(fila, 0, itemNivel);
+    listaNiveles->setItem(fila, 1, itemRojas);
+    listaNiveles->setItem(fila, 2, itemDoradas);
 }

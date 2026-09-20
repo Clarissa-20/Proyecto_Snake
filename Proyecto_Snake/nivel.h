@@ -21,6 +21,8 @@
 #include <QAudioOutput>
 #include <QUrl>
 
+#include <QDir>
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class GameWindow;
@@ -47,10 +49,12 @@ class Nivel : public QWidget
 private:
     QWidget *menuNiveles;
     bool usandoWASD = false; // false = flechas, true = WASD
-
+    QString usuarioActual;
 public:
     explicit Nivel(QWidget *parent = nullptr);
     virtual ~Nivel() override; //PARA EVITAR FUGAS DE MEMORIA EL VIRTUAL
+    void setUsuarioActual(const QString &usuario);
+
     void setMenuNiveles(QWidget *menu)
     {
         menuNiveles=menu;
@@ -58,6 +62,14 @@ public:
 
     void setUsarWASD(bool usar);
     bool getUsarWASD() const;
+
+    void guardarPartida();
+    bool cargarPartida();
+    void iniciarPartida();
+    virtual int numeroNivel() const
+    {
+        return 0;
+    }
 
 public slots:
     void cicloGeneracion();
@@ -141,6 +153,9 @@ protected:
     QPushButton *btnSonido;
     QPushButton *btnMusica;
 
+    QPushButton *btnReanudarPartida;
+    QPushButton *btnNuevaPartida;
+
     bool sonidoActivado;
     bool musicaActivada;
 
@@ -199,7 +214,7 @@ protected:
     void intentoComidaDorada();
 
     //imagenes del cuerpo de la serpiente
-    void cargarSpritesGusano();
+    void cargarSpritesGusano(int skinId);
     void dibujarGusano(QPainter &painter);
     Direction direccionEntreNodos(Nodo *origen, Nodo *destino) const;
     Direction opuesta(Direction d) const;
@@ -220,6 +235,8 @@ protected:
     }
     QString formatearTiempo(int segundos) const;
 
+    void dibujarEncabezadoPartidaPendiente(QPainter &painter);
+    void actualizarUsuarioTrasPartida();
 protected slots:
     virtual void gameloop();
     virtual void resetGame();
@@ -228,9 +245,18 @@ protected slots:
     void alternarSonido();
     void volverAlMenu();
     void alternarMusica();
+    void onReanudarPartidaClicked();
+    void onNuevaPartidaClicked();
 protected:
     void paintEvent(QPaintEvent *) override;
     void keyPressEvent(QKeyEvent *event) override;
 
+    QString nombreArchivoPartida() const;
+    bool existePartidaGuardada() const;
+    void eliminarPartidaGuardada();
+    void mostrarOpcionesPartidaGuardada();
+    void ocultarOpcionesPartidaGuardada();
+    QString carpetaPartidaUsuarios() const;
+    void guardarPartidaCompletada();
 };
 #endif // NIVEL_H

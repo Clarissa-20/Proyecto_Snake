@@ -5,6 +5,9 @@
 #include <QDebug>
 #include <QFile>
 #include <QPainter>
+#include "usermanager.h"
+#include <fstream>
+#include <cstdio>
 //#include <QGuiApplication>
 //#include <QScreen>
 
@@ -50,6 +53,7 @@ Nivel::Nivel(QWidget *parent)
     , sonidoActivado(true)
     , musicaActivada(true)
     , usandoWASD(false)
+    , menuNiveles(nullptr)
 {
     ui= new Ui::GameWindow();
     ui->setupUi(this);
@@ -66,7 +70,7 @@ Nivel::Nivel(QWidget *parent)
     setFocusPolicy(Qt::StrongFocus);
 
     //imagenes del cuerpo de la serpiente
-    cargarSpritesGusano();
+    //cargarSpritesGusano(0);
 
     direction=Right;
     gameover=false;
@@ -119,6 +123,33 @@ Nivel::Nivel(QWidget *parent)
         );
     connect(btnReaunudar, &QPushButton::clicked, this, &Nivel::alternarPausa);
 
+    btnReanudarPartida = new QPushButton(this);
+    btnReanudarPartida->setGeometry(325, 400, 150, 50);
+    btnReanudarPartida->setStyleSheet(
+        "QPushButton {"
+        "   border-image: url(:/btns/btnReanudarPartida.png);"
+        "   border: none;"
+        "}"
+        "QPushButton:hover {"
+        "   opacity: 0.8;"
+        "}"
+        );
+    connect(btnReanudarPartida, &QPushButton::clicked, this, &Nivel::onReanudarPartidaClicked);
+
+    btnNuevaPartida = new QPushButton(this);
+    btnNuevaPartida->setGeometry(325, 460, 150, 50);
+    btnNuevaPartida->setStyleSheet(
+        "QPushButton {"
+        "   border-image: url(:/btns/btnNuevaPartida.png);"
+        "   border: none;"
+        "}"
+        "QPushButton:hover {"
+        "   opacity: 0.8;"
+        "}"
+        );
+    connect(btnNuevaPartida, &QPushButton::clicked, this, &Nivel::onNuevaPartidaClicked);
+
+
     btnSonido = new QPushButton(this);
     btnSonido->setGeometry(330, 450, 150, 50);
     btnSonido->setStyleSheet(
@@ -163,6 +194,8 @@ Nivel::Nivel(QWidget *parent)
     btnSonido->hide();
     btnMusica->hide();
     retryButton->hide();
+    btnReanudarPartida->hide();
+    btnNuevaPartida->hide();
     setFocusPolicy(Qt::StrongFocus);
 
     // Sonido
@@ -363,6 +396,8 @@ void Nivel::checkCollision()
         if(cabezaX==actual->x && cabezaY==actual->y)
         {
             gameover=true;
+            guardarPartidaCompletada();
+            actualizarUsuarioTrasPartida();
             timer->stop();
             if (sonidoActivado==true)
             {
@@ -524,25 +559,65 @@ void Nivel::intentoComidaDorada()
     }
 }
 
-void Nivel::cargarSpritesGusano()
+void Nivel::cargarSpritesGusano(int skinId)
 {
-    imgCabezaArriba.load(":/skins/skin_predeterminada_cabeza_arriba.png");
-    imgCabezaAbajo.load(":/skins/skin_predeterminada_cabeza_abajo.png");
-    imgCabezaIzquierda.load(":/skins/skin_predeterminada_cabeza_izquierda.png");
-    imgCabezaDerecha.load(":/skins/skin_predeterminada_cabeza_derecha.png");
+    QString prefijo;
+    switch(skinId)
+    {
+        case 1:
+        {
+            prefijo="skin1";
+            break;
+        }
+        case 2:
+        {
+            prefijo="skin2";
+            break;
+        }
+        case 3:
+        {
+            prefijo="skin3";
+            break;
+        }
+        case 4:
+        {
+            prefijo="skin4";
+            break;
+        }
+        case 5:
+        {
+            prefijo="skin5";
+            break;
+        }
+        case 6:
+        {
+            prefijo="skin6";
+            break;
+        }
+        default:
+        {
+            prefijo="skin_predeterminada";
+            break;
+        }
+    }
 
-    imgColaArriba.load(":/skins/skin_predeterminada_cola_vertical_arriba.png");
-    imgColaAbajo.load(":/skins/skin_predeterminada_cola_vertical_abajo.png");
-    imgColaIzquierda.load(":/skins/skin_predeterminada_cola_horizontal_izquierda.png");
-    imgColaDerecha.load(":/skins/skin_predeterminada_cola_horizontal_derecha.png");
+    imgCabezaArriba.load(":/skins/"+prefijo+"_cabeza_arriba.png");
+    imgCabezaAbajo.load(":/skins/"+prefijo+"_cabeza_abajo.png");
+    imgCabezaIzquierda.load(":/skins/"+prefijo+"_cabeza_izquierda.png");
+    imgCabezaDerecha.load(":/skins/"+prefijo+"_cabeza_derecha.png");
 
-    imgCuerpoHorizaontal.load(":/skins/skin_predeterminada_cuerpo_horizontal.png");
-    imgCuerpoVertical.load(":/skins/skin_predeterminada_cuerpo_vertical.png");
+    imgColaArriba.load(":/skins/"+prefijo+"_cola_vertical_arriba.png");
+    imgColaAbajo.load(":/skins/"+prefijo+"_cola_vertical_abajo.png");
+    imgColaIzquierda.load(":/skins/"+prefijo+"_cola_horizontal_izquierda.png");
+    imgColaDerecha.load(":/skins/"+prefijo+"_cola_horizontal_derecha.png");
 
-    imgCurvaArribaDerecha.load(":/skins/skin_predeterminada_curva_abajo_izquierda.png");
-    imgCurvaArribaIzquierda.load(":/skins/skin_predeterminada_curva_arriba_derecha.png");
-    imgCurvaAbajoDerecha.load(":/skins/skin_predeterminada_curva_arriba_izquierda.png");
-    imgCurvaAbajoIzquierda.load(":/skins/skin_predeterminada_curva_abajo_derecha.png");
+    imgCuerpoHorizaontal.load(":/skins/"+prefijo+"_cuerpo_horizontal.png");
+    imgCuerpoVertical.load(":/skins/"+prefijo+"_cuerpo_vertical.png");
+
+    imgCurvaArribaDerecha.load(":/skins/"+prefijo+"_curva_abajo_izquierda.png");
+    imgCurvaArribaIzquierda.load(":/skins/"+prefijo+"_curva_arriba_derecha.png");
+    imgCurvaAbajoDerecha.load(":/skins/"+prefijo+"_curva_arriba_izquierda.png");
+    imgCurvaAbajoIzquierda.load(":/skins/"+prefijo+"_curva_abajo_derecha.png");
 }
 
 void Nivel::dibujarGusano(QPainter &painter)
@@ -875,6 +950,8 @@ void Nivel::finalizarPorTiempo()
         }
     }
     gameover=true;
+    guardarPartidaCompletada();
+    actualizarUsuarioTrasPartida();
     retryButton->show();
     btnVolver->setGeometry(330, 490, 150,50);
     btnVolver->show();
@@ -970,6 +1047,10 @@ void Nivel::alternarSonido()
 
 void Nivel::volverAlMenu()
 {
+    if(gameover == false)
+    {
+        guardarPartida();
+    }
     if(menuNiveles!=nullptr)
     {
         menuNiveles->show();
@@ -1084,3 +1165,353 @@ void Nivel::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
     dibujarGusano(painter);
 }
+
+void Nivel::setUsuarioActual(const QString &usuario)
+{
+    usuarioActual=usuario;
+
+    std::string nombreUsuario= usuario.toStdString();
+    Usuario datosUsuario;
+    if(UserManager::cargarDatosUsuario(nombreUsuario, datosUsuario)==true)
+    {
+        cargarSpritesGusano(datosUsuario.skinActual);
+    }
+}
+
+
+
+QString Nivel::nombreArchivoPartida() const
+{
+    return carpetaPartidaUsuarios()+"partida_" + usuarioActual + "_nivel" + QString::number(numeroNivel()) + ".txt";
+}
+
+void Nivel::guardarPartida()
+{
+    if(usuarioActual.isEmpty())
+    {
+        return;
+    }
+
+    QString nombreArchivoQt=nombreArchivoPartida();
+    std::string nombreArchivo= nombreArchivoQt.toStdString();
+    std::ofstream archivo(nombreArchivo, std::ios::out | std::ios::trunc);
+    if(archivo.is_open()==false)
+    {
+        return;
+    }
+    archivo<<rows<<"\n";
+    archivo<<cols<<"\n";
+    archivo<<static_cast<int>(direction)<<"\n";
+    archivo<<gameover<<"\n";
+    archivo<<juegoPausado<<"\n";
+    archivo<<nivelGanado<<"\n";
+    archivo<<crecimientoExtra<<"\n";
+    archivo<<puntuacion<<"\n";
+    archivo<<manzanasComidas<<"\n";
+    archivo<<food.x()<<"\n";
+    archivo<<food.y()<<"\n";
+    archivo<<rojaActualComida<<"\n";
+    archivo<<rojasGeneradas<<"\n";
+    archivo<<rojasComidas<<"\n";
+    archivo<<comidaDorada.x()<<"\n";
+    archivo<<comidaDorada.y()<<"\n";
+    archivo<<hayComidaDorada<<"\n";
+    archivo<<doradaActualComida<<"\n";
+    archivo<<doradasGeneradas<<"\n";
+    archivo<<doradasComidas<<"\n";
+    archivo<<tiempoLimiteSegundos<<"\n";
+    archivo<<tiempoRestanteSegundos<<"\n";
+    archivo<<intervaloGeneracionMs<<"\n";
+    archivo<<tiempoTerminado<<"\n";
+    archivo<<ganoPremio<<"\n";
+    int cantidadNodos=obtenerLongitudSerpiente();
+    archivo<<cantidadNodos<<"\n";
+    Nodo *actual=cabeza;
+    while(actual!=nullptr)
+    {
+        archivo<<actual->x<<"\n";
+        archivo<<actual->y<<"\n";
+        actual=actual->siguiente;
+    }
+    archivo.close();
+
+}
+
+bool Nivel::cargarPartida()
+{
+
+    if(usuarioActual.isEmpty())
+    {
+        return false;
+    }
+
+    QString nombreArchivoQt=nombreArchivoPartida();
+    std::string nombreArchivo= nombreArchivoQt.toStdString();
+    std::ifstream archivo(nombreArchivo);
+    if(archivo.is_open()==false)
+    {
+        return false;
+    }
+    archivo>>rows;
+    archivo>>cols;
+    int direccionGuardada;
+    archivo>>direccionGuardada;
+    direction=static_cast<Direction>(direccionGuardada);
+    int valorGameOver;
+    int valorJuegoPausado;
+    int valorNivelGanado;
+    archivo>>valorGameOver;
+    archivo>>valorJuegoPausado;
+    archivo>>valorNivelGanado;
+    archivo>>crecimientoExtra;
+
+    gameover=(valorGameOver!=0);
+    juegoPausado=(valorJuegoPausado!=0);
+    nivelGanado=(valorNivelGanado!=0);
+    archivo>>puntuacion;
+    archivo>>manzanasComidas;
+
+    int foodX;
+    int foodY;
+    int valorRojaActualComida;
+
+    archivo>>foodX;
+    archivo>>foodY;
+    food=QPoint(foodX, foodY);
+
+    archivo>>valorRojaActualComida;
+    archivo>>rojasGeneradas;
+    archivo>>rojasComidas;
+
+    rojaActualComida=(valorRojaActualComida!=0);
+
+    int doradaX;
+    int doradaY;
+    int valorHayComidaDorada;
+    int valorDoradaActualComida;
+
+    archivo>>doradaX;
+    archivo>>doradaY;
+    comidaDorada=QPoint(doradaX, doradaY);
+
+    archivo>>valorHayComidaDorada;
+    archivo>>valorDoradaActualComida;
+    archivo>>doradasGeneradas;
+    archivo>>doradasComidas;
+    hayComidaDorada=(valorHayComidaDorada!=0);
+    doradaActualComida=(valorDoradaActualComida!=0);
+
+    archivo>>tiempoLimiteSegundos;
+    archivo>>tiempoRestanteSegundos;
+    archivo>>intervaloGeneracionMs;
+
+    int valorTiempoTerminado;
+    archivo>>valorTiempoTerminado;
+    tiempoTerminado=(valorTiempoTerminado!=0);
+    int valorGanoPremio;
+    archivo>>valorGanoPremio;
+    ganoPremio=(valorGanoPremio!=0);
+
+    int cantidadNodos;
+    archivo>>cantidadNodos;
+    limpiarSerpiente();
+    Nodo *ultimo=nullptr;
+    for(int i=0; i<cantidadNodos; i++)
+    {
+        int x;
+        int y;
+        archivo>>x;
+        archivo>>y;
+        Nodo *nuevo= new Nodo(x, y);
+        if(cabeza==nullptr)
+        {
+            cabeza=nuevo;
+            ultimo=nuevo;
+        }
+        else
+        {
+            ultimo->siguiente=nuevo;
+            ultimo=nuevo;
+        }
+    }
+    archivo.close();
+    return true;
+}
+
+void Nivel::iniciarPartida()
+{
+    btnReanudarPartida->hide();
+    btnNuevaPartida->hide();
+
+    if(existePartidaGuardada()==true)
+    {
+        mostrarOpcionesPartidaGuardada();
+    }
+    else
+    {
+        resetGame();
+    }
+}
+
+bool Nivel::existePartidaGuardada() const
+{
+    if(usuarioActual.isEmpty())
+    {
+        return false;
+    }
+
+    std::string nombreArchivo = nombreArchivoPartida().toStdString();
+    std::ifstream archivo(nombreArchivo);
+    return archivo.is_open();
+}
+
+void Nivel::eliminarPartidaGuardada()
+{
+    std::string nombreArchivo = nombreArchivoPartida().toStdString();
+    std::remove(nombreArchivo.c_str());
+}
+
+void Nivel::mostrarOpcionesPartidaGuardada()
+{
+    pausaBtn->hide();
+    retryButton->hide();
+    btnReaunudar->hide();
+    btnVolver->hide();
+    btnSonido->hide();
+    btnMusica->hide();
+
+    btnReanudarPartida->show();
+    btnNuevaPartida->show();
+}
+
+void Nivel::ocultarOpcionesPartidaGuardada()
+{
+    btnReanudarPartida->hide();
+    btnNuevaPartida->hide();
+    pausaBtn->show();
+
+}
+
+QString Nivel::carpetaPartidaUsuarios() const
+{
+    QString carpeta="PartidasUsuarios";
+    QDir dir;
+    if(dir.exists(carpeta)==false)
+    {
+        dir.mkpath(carpeta);
+    }
+    return carpeta+"/";
+}
+
+void Nivel::guardarPartidaCompletada()
+{
+    if(usuarioActual.isEmpty())
+    {
+        return;
+    }
+    QString nombreArchivoQt=carpetaPartidaUsuarios()+"partidasCompletadas_"+usuarioActual+".txt";
+    std::string nombreArchivo= nombreArchivoQt.toStdString();
+    std::ofstream archivo(nombreArchivo, std::ios::out | std::ios::binary | std::ios::app);
+    if(archivo.is_open()==false)
+    {
+        return;
+    }
+
+    archivo<<numeroNivel()<<" "<<manzanasComidas<<" "<<doradasComidas<<" "<<nivelGanado<<"\n";
+    archivo.close();
+}
+
+void Nivel::dibujarEncabezadoPartidaPendiente(QPainter &painter)
+{
+    if(btnReanudarPartida->isVisible()==false)
+    {
+        return;
+    }
+
+    painter.fillRect(rect(), QColor(0,0,0,150));
+    painter.setPen(Qt::white);
+    painter.setFont(QFont("Trebuchet MS", 24, QFont::Bold));
+    painter.drawText(QRect(0, 300, width(), 40), Qt::AlignCenter, "Tienes una partida pendiente");
+
+    painter.setFont(QFont("Trebuchet MS", 13, QFont::Bold));
+    painter.drawText(QRect(0, 345, width(), 30), Qt::AlignCenter, "Elige si deseas continuar donde la dejaste o comenzar una nueva partida");
+}
+
+void Nivel::actualizarUsuarioTrasPartida()
+{
+    if(usuarioActual.isEmpty())
+    {
+        return;
+    }
+
+    if(nivelGanado==false)
+    {
+        return;
+    }
+    std::string nombreUsuario= usuarioActual.toStdString();
+    Usuario usuario;
+    if(UserManager::cargarDatosUsuario(nombreUsuario, usuario)==false)
+    {
+        return;
+    }
+    usuario.puntosTotales= usuario.puntosTotales+puntuacion;
+    usuario.gemas= usuario.gemas+totalManzanasComidas();
+
+    if(nivelGanado==true && numeroNivel()==usuario.nivelActual && usuario.nivelActual<3)
+    {
+        usuario.nivelActual= usuario.nivelActual+1;
+    }
+    else if(nivelGanado==true && numeroNivel()==3)
+    {
+        usuario.completoJuego=true;
+    }
+
+    UserManager::guardarProgresoUsuario(usuario);
+}
+
+void Nivel::onReanudarPartidaClicked()
+{
+    ocultarOpcionesPartidaGuardada();
+
+    if(cargarPartida()==true)
+    {
+        juegoPausado=false;
+
+        timer->start(150);
+        if(timerCronometro==nullptr)
+        {
+            timerCronometro= new QTimer(this);
+            connect(timerCronometro, &QTimer::timeout, this, &Nivel::actualizarCronometro);
+        }
+        if(timerGeneracion==nullptr)
+        {
+            timerGeneracion= new QTimer(this);
+            connect(timerGeneracion, &QTimer::timeout, this, &Nivel::cicloGeneracion);
+        }
+        if(tiempoTerminado==false && gameover==false)
+        {
+            if(timerCronometro!=nullptr)
+            {
+                timerCronometro->start(1000);
+            }
+            if(timerGeneracion!=nullptr)
+            {
+                timerGeneracion->start(intervaloGeneracionMs);
+            }
+        }
+        setFocus();
+        update();
+    }
+    else
+    {
+        resetGame();
+    }
+}
+
+void Nivel::onNuevaPartidaClicked()
+{
+    ocultarOpcionesPartidaGuardada();
+    eliminarPartidaGuardada();
+    resetGame();
+}
+

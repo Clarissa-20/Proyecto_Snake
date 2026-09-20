@@ -10,8 +10,10 @@
 #include <QMessageBox>
 #include "ranking.h"
 
-MenuPrincipal::MenuPrincipal(QWidget *parent)
-    : QMainWindow(parent) {
+MenuPrincipal::MenuPrincipal(QWidget *parent, const QString &usuario)
+    : QMainWindow(parent),
+    usuarioActual(usuario)
+{
 
     this->setFixedSize(800, 600);
     this->setWindowTitle("Snake - Menú Principal");
@@ -117,7 +119,7 @@ MenuPrincipal::MenuPrincipal(QWidget *parent)
 MenuPrincipal::~MenuPrincipal() {}
 
 void MenuPrincipal::onJugarClicked() {
-    menuNiveles *niveles = new menuNiveles(this, true);
+    menuNiveles *niveles = new menuNiveles(this, true, usuarioActual);
     niveles->show();
     this->close();
 }
@@ -135,7 +137,7 @@ void MenuPrincipal::onTiendaClicked() {
 }
 
 void MenuPrincipal::onRecordsClicked() {
-    Ranking *ranking= new Ranking(this, nullptr);
+    Ranking *ranking= new Ranking(this, nullptr, usuarioActual);
     ranking->setAttribute(Qt::WA_DeleteOnClose);
     ranking->show();
     this->close();

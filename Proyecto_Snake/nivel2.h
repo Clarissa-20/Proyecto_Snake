@@ -31,6 +31,10 @@ protected:
     void paintEvent(QPaintEvent *) override;
 
     void finalizarPorTiempo() override;
+    int numeroNivel() const override
+    {
+        return 2;
+    }
 protected slots:
     void resetGame() override;
     //velocidad dinamica prueba #1

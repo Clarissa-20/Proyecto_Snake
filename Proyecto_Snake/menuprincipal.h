@@ -9,7 +9,7 @@ class MenuPrincipal : public QMainWindow {
     Q_OBJECT
 
 public:
-    MenuPrincipal(QWidget *parent = nullptr);
+    MenuPrincipal(QWidget *parent = nullptr, const QString &usuario= "");
     ~MenuPrincipal();
 
 private slots:
@@ -35,6 +35,7 @@ private:
     QPushButton *iconoPerfil;
     QPushButton *btnManualUsuario;
     QPushButton *btnRegresar;
+    QString usuarioActual;
 };
 
 #endif // MENUPRINCIPAL_H

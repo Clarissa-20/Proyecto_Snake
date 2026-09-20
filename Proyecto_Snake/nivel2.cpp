@@ -17,16 +17,16 @@ Nivel2::Nivel2(QWidget *parent)
     generarMuros();
 
     // Cambiamos el inicio a una celda vacía fuera de la cruz de muros
-    crearSerpienteInicial(2,2,Right);
+    //crearSerpienteInicial(2,2,Right);
 
 
-    iniciarGeneracionPorTiempo();
+    //iniciarGeneracionPorTiempo();
     //spawnFood();
     //timer= new QTimer(this);
 
     //connect(timer, &QTimer::timeout, this, &Nivel2::gameloop);
 
-    timer->start(150);
+    //timer->start(150);
 
     //connect(retryButton, &QPushButton::clicked, this, &Nivel2::resetGame);
 
@@ -92,6 +92,8 @@ void Nivel2::finalizarPorTiempo()
         }
     }
     ganoPremio=(doradasComidas>=DORADAS_MIN_PREMIO);
+    guardarPartidaCompletada();
+    actualizarUsuarioTrasPartida();
     retryButton->show();
     btnVolver->setGeometry(330, 490, 150,50);
     btnVolver->show();
@@ -99,6 +101,16 @@ void Nivel2::finalizarPorTiempo()
 }
 void Nivel2::generarMuros()
 {
+    if(mapa!=nullptr)
+    {
+        for(int i=0; i<rows; i++)
+        {
+            for(int j=0; j<cols; j++)
+            {
+                mapa[i][j]=0;
+            }
+        }
+    }
     int centroFila = rows/2;
     int centroColumna = cols/2;
     int grosor = 2;
@@ -269,6 +281,8 @@ void Nivel2::moveSnake()
     if(newX < 0 || newY < 0 || newX >= cols || newY >= rows)
     {
         gameover=true;
+        guardarPartidaCompletada();
+        actualizarUsuarioTrasPartida();
         timer->stop();
         if (sonidoActivado==true)
         {
@@ -289,6 +303,8 @@ void Nivel2::moveSnake()
     if(mapa!=nullptr && mapa[newY][newX]==1)
     {
         gameover=true;
+        guardarPartidaCompletada();
+        actualizarUsuarioTrasPartida();
         timer->stop();
         if (sonidoActivado==true)
         {
@@ -427,6 +443,8 @@ void Nivel2::checkCollision()
     if(cabezaX<0 || cabezaY<0 || cabezaX>=cols || cabezaY>=rows)
     {
         gameover=true;
+        guardarPartidaCompletada();
+        actualizarUsuarioTrasPartida();
         timer->stop();
         if (sonidoActivado==true)
         {
@@ -446,6 +464,8 @@ void Nivel2::checkCollision()
     if(mapa!=nullptr && mapa[cabezaY][cabezaX]==1)
     {
         gameover=true;
+        guardarPartidaCompletada();
+        actualizarUsuarioTrasPartida();
         timer->stop();
         if (sonidoActivado==true)
         {
@@ -468,6 +488,8 @@ void Nivel2::checkCollision()
         if(cabezaX==actual->x && cabezaY==actual->y)
         {
             gameover=true;
+            guardarPartidaCompletada();
+            actualizarUsuarioTrasPartida();
             timer->stop();
             if (sonidoActivado==true)
             {
@@ -629,6 +651,7 @@ void Nivel2::paintEvent(QPaintEvent *)
         painter.drawText(QRect(0, height()/2, width(), 30), Qt::AlignCenter,ganoPremio ? "¡Ganó la insignia!" : "No ganó la insignia:(");
 
     }
+    dibujarEncabezadoPartidaPendiente(painter);
 }
 
 void Nivel2::resetGame()
@@ -657,6 +680,7 @@ void Nivel2::resetGame()
     btnMusica->hide();
     pausaBtn->show();
     juegoPausado=false;
+    generarMuros();
     iniciarGeneracionPorTiempo();
 
     retryButton->hide();

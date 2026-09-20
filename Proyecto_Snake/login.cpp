@@ -87,7 +87,7 @@ void Login::onEntrarClicked() {
     bool accesoConcedido = UserManager::verificarCredenciales(usuario.toStdString(), contrasena.toStdString());
 
     if (accesoConcedido) {
-        MenuPrincipal *menuPrincipal = new MenuPrincipal();
+        MenuPrincipal *menuPrincipal = new MenuPrincipal(nullptr, usuario);
         menuPrincipal->show();
         this->close();
     } else {

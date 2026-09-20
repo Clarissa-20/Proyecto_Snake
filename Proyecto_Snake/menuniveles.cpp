@@ -1,7 +1,7 @@
 #include "menuniveles.h"
 #include <QPainter>
 #include "instruccionesnivel.h"
-
+#include "usermanager.h"
 menuNiveles::menuNiveles(QWidget *parent)
     : QWidget(parent),
     sonidoActivado(true),
@@ -100,14 +100,32 @@ menuNiveles::menuNiveles(QWidget *parent)
 
 }
 
-menuNiveles::menuNiveles(QWidget *menu, bool desdeMenuPrincipal)
+menuNiveles::menuNiveles(QWidget *menu, bool desdeMenuPrincipal, const QString &usuario)
     :menuNiveles(nullptr)
 {
     menuPrincipal= menu;
+    usuarioActual=usuario;
+    Usuario datosUsuario;
+    if(UserManager::cargarDatosUsuario(usuario.toStdString(), datosUsuario)==true)
+    {
+        actualizarBotonesNiveles(datosUsuario.nivelActual);
+    }
+    else
+    {
+        actualizarBotonesNiveles(1);
+    }
 }
 
 void menuNiveles::paintEvent(QPaintEvent *event)
 {
+    if(usuarioActual.isEmpty()==false)
+    {
+        Usuario datosUsuarioActual;
+        if(UserManager::cargarDatosUsuario(usuarioActual.toStdString(), datosUsuarioActual)==true)
+        {
+            actualizarBotonesNiveles(datosUsuarioActual.nivelActual);
+        }
+    }
     QPainter painter(this);
 
     if(!fondoMenu.isNull())
@@ -134,6 +152,8 @@ void menuNiveles::abrirNivel1()
     {
         ventanaNivel1= new Nivel1();
         ventanaNivel1->setMenuNiveles(this);
+        ventanaNivel1->setUsuarioActual(usuarioActual);
+        ventanaNivel1->iniciarPartida();
         ventanaNivel1->setAttribute(Qt::WA_DeleteOnClose);
         connect(ventanaNivel1, &QObject::destroyed, this, [this]() {ventanaNivel1=nullptr;});
     }
@@ -147,6 +167,8 @@ void menuNiveles::abrirNivel2()
     {
         ventanaNivel2= new Nivel2();
         ventanaNivel2->setMenuNiveles(this);
+        ventanaNivel2->setUsuarioActual(usuarioActual);
+        ventanaNivel2->iniciarPartida();
         ventanaNivel2->setAttribute(Qt::WA_DeleteOnClose);
         connect(ventanaNivel2, &QObject::destroyed, this, [this]() {ventanaNivel2=nullptr;});
 
@@ -161,6 +183,8 @@ void menuNiveles::abrirNivel3()
     {
         ventanaNivel3= new Nivel3();
         ventanaNivel3->setMenuNiveles(this);
+        ventanaNivel3->setUsuarioActual(usuarioActual);
+        ventanaNivel3->iniciarPartida();
         ventanaNivel3->setAttribute(Qt::WA_DeleteOnClose);
         connect(ventanaNivel3, &QObject::destroyed, this, [this]() {ventanaNivel3=nullptr;});
 
@@ -214,3 +238,64 @@ void menuNiveles::volverAlMenu()
     }
     this->close();
 }
+
+void menuNiveles::actualizarBotonesNiveles(int nivelActual)
+{
+    btnNivel1->setEnabled(true);
+
+    bool nivel2Desbloqueado=(nivelActual>=2);
+    bool nivel3Desbloqueado=(nivelActual>=3);
+
+    btnNivel2->setEnabled(nivel2Desbloqueado);
+    if(nivel2Desbloqueado==true)
+    {
+        btnNivel2->setStyleSheet(
+            "QPushButton {"
+            "border-image: url(:/btns/monoNivel2.png);"
+            "border: none;"
+            "}"
+            "QPushButton:hover {"
+            "opacity: 0.8;"
+            "}"
+            "QPushButton:pressed {"
+            "border-image: url(:/btns/monoNivel2.png);"
+            "}"
+            );
+    }
+    else
+    {
+        btnNivel2->setStyleSheet(
+            "QPushButton {"
+            "border-image: url(:/btns/monoNivel2Desactivado.png);"
+            "border: none;"
+            "}"
+            );
+    }
+
+    btnNivel3->setEnabled(nivel3Desbloqueado);
+    if(nivel3Desbloqueado==true)
+    {
+        btnNivel3->setStyleSheet(
+            "QPushButton {"
+            "border-image: url(:/btns/monoNivel3.png);"
+            "border: none;"
+            "}"
+            "QPushButton:hover {"
+            "opacity: 0.8;"
+            "}"
+            "QPushButton:pressed {"
+            "border-image: url(:/btns/monoNivel3.png);"
+            "}"
+            );
+    }
+    else
+    {
+        btnNivel3->setStyleSheet(
+            "QPushButton {"
+            "border-image: url(:/btns/monoNivel3Desactivado.png);"
+            "border: none;"
+            "}"
+            );
+    }
+}
+

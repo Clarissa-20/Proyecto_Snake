@@ -130,3 +130,10 @@ bool UserManager::guardarProgresoUsuario(const Usuario &usuario) {
     archivo.close();
     return true;
 }
+
+std::string UserManager::obtenerCarpetaUsuarios()
+{
+    QDir().mkdir(QString::fromStdString(CARPETA_GLOBAL));
+    return CARPETA_GLOBAL;
+}
+

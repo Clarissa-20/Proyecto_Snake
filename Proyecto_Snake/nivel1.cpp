@@ -12,15 +12,15 @@ Nivel1::Nivel1(QWidget *parent)
     cols=((width()-(2*marginX))/cellsize)-1;
     rows=((height()-marginY-120)/cellsize);
     crearMapa();
-    crearSerpienteInicial(5,5,Right);
+    //crearSerpienteInicial(5,5,Right);
 
 
-    iniciarSistemaDeManzanas();
+    //iniciarSistemaDeManzanas();
     //timer= new QTimer(this);
 
     //connect(timer, &QTimer::timeout, this, &Nivel1::gameloop);
 
-    timer->start(150); //aqui se modifica la rapidez del guano entre mas alto mas lento
+    //timer->start(150); //aqui se modifica la rapidez del guano entre mas alto mas lento
 
     //connect(retryButton, &QPushButton::clicked, this, &Nivel1::resetGame);
 
@@ -141,4 +141,5 @@ void Nivel1::paintEvent(QPaintEvent *)
         painter.drawText(QRect(0, height()/2, width(), 30), Qt::AlignCenter,ganoPremio ? "¡Ganó la insignia!" : "No ganó la insignia:(");
 
     }
+    dibujarEncabezadoPartidaPendiente(painter);
 }

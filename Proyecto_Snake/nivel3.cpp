@@ -41,14 +41,14 @@ Nivel3::Nivel3(QWidget *parent) :
     // USAR int** mapa (igual que Nivel 2)
     crearMapa();
     inicializarBloquesMovibles();
-    crearSerpienteInicial(2,2,Right);
+    //crearSerpienteInicial(2,2,Right);
 
 
     //spawnFood();
     //manzanas por tiempo
-    iniciarSistemaDeManzanas();
+    //iniciarSistemaDeManzanas();
 
-    timer->start(velocidadBase);
+    //timer->start(velocidadBase);
 }
 //manzanas por tiempo
 bool Nivel3::ejecutarCicloGeneracion()
@@ -175,7 +175,8 @@ void Nivel3::gameloop() {
     update();
 }
 
-void Nivel3::moveSnake() {
+void Nivel3::moveSnake()
+{
     if (cabeza == nullptr)
     {
         return;
@@ -184,34 +185,37 @@ void Nivel3::moveSnake() {
     int newX = cabeza->x;
     int newY = cabeza->y;
 
-    switch (direction) {
-    case Up:
+    switch (direction)
     {
-        newY--;
-        break;
-    }
-    case Down:
-    {
-        newY++;
-        break;
-    }
-    case Right:
-    {
-        newX++;
-        break;
-    }
-    case Left:
-    {
-        newX--;
-        break;
+        case Up:
+        {
+            newY--;
+            break;
+        }
+        case Down:
+        {
+            newY++;
+            break;
+        }
+        case Right:
+        {
+            newX++;
+            break;
+        }
+        case Left:
+        {
+            newX--;
+            break;
 
-    }
+        }
     }
 
     // Validar límites
     if (newX < 0 || newY < 0 || newX >= cols || newY >= rows)
     {
         gameover = true;
+        guardarPartidaCompletada();
+        actualizarUsuarioTrasPartida();
         timer->stop();
         if (sonidoActivado==true)
         {
@@ -228,6 +232,8 @@ void Nivel3::moveSnake() {
     if (puntoEnBloqueMovil(newX, newY)==true)
     {
         gameover = true;
+        guardarPartidaCompletada();
+        actualizarUsuarioTrasPartida();
         timer->stop();
         if (sonidoActivado==true)
         {
@@ -385,6 +391,8 @@ void Nivel3::checkCollision() {
     if (cabezaX < 0 || cabezaY < 0 || cabezaX >= cols || cabezaY >= rows)
     {
         gameover = true;
+        guardarPartidaCompletada();
+        actualizarUsuarioTrasPartida();
         timer->stop();
         if (sonidoActivado==true)
         {
@@ -401,6 +409,8 @@ void Nivel3::checkCollision() {
     if (puntoEnBloqueMovil(cabezaX, cabezaY))
     {
         gameover = true;
+        guardarPartidaCompletada();
+        actualizarUsuarioTrasPartida();
         timer->stop();
         if (sonidoActivado==true)
         {
@@ -420,6 +430,8 @@ void Nivel3::checkCollision() {
         if (cabezaX == actual->x && cabezaY == actual->y)
         {
             gameover = true;
+            guardarPartidaCompletada();
+            actualizarUsuarioTrasPartida();
             timer->stop();
             if (sonidoActivado==true)
             {
@@ -600,6 +612,7 @@ void Nivel3::paintEvent(QPaintEvent *)
         painter.drawText(QRect(0, height()/2, width(), 30), Qt::AlignCenter,ganoPremio ? "¡Ganó la insignia!" : "No ganó la insignia:(");
 
     }
+    dibujarEncabezadoPartidaPendiente(painter);
 }
 
 
@@ -717,7 +730,7 @@ void Nivel3::intentoFrutaVelocidad() {
 
     if(cafesGeneradas>= CAFES_MAX_GENERADAS)
     {
-        frutaVelocidadCafe==true;
+        frutaVelocidadCafe=true;
     }
     else if(blancasGeneradas>=BLANCAS_MAX_GENERADAS)
     {

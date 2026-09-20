@@ -14,7 +14,7 @@ class menuNiveles : public QWidget
     Q_OBJECT //slots
 public:
     explicit menuNiveles(QWidget *parent = nullptr);
-    explicit menuNiveles(QWidget *menu, bool desdeMenuPrincipal);
+    explicit menuNiveles(QWidget *menu, bool desdeMenuPrincipal, const QString &usuario="");
     void setMenuPrincipal(QWidget *menu)
     {
         menuPrincipal=menu;
@@ -37,7 +37,9 @@ private:
     Nivel3 *ventanaNivel3;
 
     QWidget *menuPrincipal;
+    QString usuarioActual;
     void mostrarInstrucciones(int nivel);
+    void actualizarBotonesNiveles(int nivelActual);
 public slots:
     void abrirNivel1();
     void abrirNivel2();

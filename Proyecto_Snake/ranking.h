@@ -13,15 +13,20 @@ class Ranking : public QWidget
 public:
     explicit Ranking(QWidget *parent = nullptr);
 
-    explicit Ranking(QWidget *menuPrincipal, QWidget *parent);
+    explicit Ranking(QWidget *menuPrincipal, QWidget *parent, const QString &usuario="");
 
+    void setUsuarioActual(const QString &usuario)
+    {
+        usuarioActual=usuario;
+        cargarDatosNiveles();
+    }
 protected:
     void paintEvent(QPaintEvent *event) override;
 
 private:
     QWidget *menuPrincipal;
     QPixmap fondo;
-
+    QString usuarioActual;
     QTableWidget *listaGlobal;
     QTableWidget *listaNiveles;
 
@@ -35,6 +40,10 @@ private:
     void cargarDatosGlobal();
     void cargarDatosNiveles();
 
+
+    QString carpetaPartidaUsuarios() const;
+    void agregarFilaEncabezado(int fila, const QString &texto);
+    void agregarFilaPartida(int fila, int nivel, int rojas, int doradas);
 private slots:
     void volverAlMenu();
 };
