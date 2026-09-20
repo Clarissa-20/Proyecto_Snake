@@ -1,8 +1,10 @@
 #include "nivel.h"
 #include "ui_gamewindow.h"
 #include "musicamanager.h"
+#include "configuracion.h"
 #include <QDebug>
 #include <QFile>
+#include <QPainter>
 //#include <QGuiApplication>
 //#include <QScreen>
 
@@ -30,28 +32,24 @@ Nivel::Nivel(QWidget *parent)
     , tiempoRestanteSegundos(0)
     , intervaloGeneracionMs(0)
     , timerCronometro(nullptr)
-
     , timerGeneracion(nullptr)
     , tiempoTerminado(false)
     , rojasGeneradas(0)
     , rojasComidas(0)
-
     , rojaActualComida(false)
     , doradasGeneradas(0)
     , doradasComidas(0)
     , doradaActualComida(false)
-
     , ganoPremio(false)
-
     //btn pausa
     , pausaBtn(nullptr)
-
     , juegoPausado(false)
     , btnReaunudar(nullptr)
     , btnSonido(nullptr)
     , btnVolver(nullptr)
     , sonidoActivado(true)
     , musicaActivada(true)
+    , usandoWASD(false)
 {
     ui= new Ui::GameWindow();
     ui->setupUi(this);
@@ -121,8 +119,6 @@ Nivel::Nivel(QWidget *parent)
         );
     connect(btnReaunudar, &QPushButton::clicked, this, &Nivel::alternarPausa);
 
-
-
     btnSonido = new QPushButton(this);
     btnSonido->setGeometry(330, 450, 150, 50);
     btnSonido->setStyleSheet(
@@ -183,7 +179,6 @@ Nivel::Nivel(QWidget *parent)
     qDebug() << "Estado:" << sonidoComio->mediaStatus();
     qDebug() << "Existe recurso:" << QFile("qrc:/sonidos/comio.wav").exists();
 
-
     audioGano = new QAudioOutput(this);
     sonidoGano = new QMediaPlayer(this);
 
@@ -203,23 +198,28 @@ Nivel::Nivel(QWidget *parent)
 
     audioPerdio->setVolume(1.0);
 
-    MusicaManger::instance().playMusicaNiveles();
+    MusicaManager::instance().playMusicaNiveles();
+    setFocusPolicy(Qt::StrongFocus);
 }
 
 //destructor
 Nivel::~Nivel()
 {
     limpiarSerpiente();
-
-    //integracion de mapa prueba#1
     destruirMapa();
-
     delete ui;
+}
+
+void Nivel::setUsarWASD(bool usar) {
+    usandoWASD = usar;
+}
+
+bool Nivel::getUsarWASD() const {
+    return usandoWASD;
 }
 
 void Nivel::moveSnake()
 {
-    //integración de nodo prueba #1
     if(cabeza==nullptr)
     {
         return;
@@ -250,18 +250,7 @@ void Nivel::moveSnake()
         break;
     }
     }
-    /*
-    snake.prepend(Head);
-    if(Head==food)
-    {
-        spawnFood();
-    }
-    else
-    {
-        snake.removeLast();
-    }
-    */
-    //bordes infinito
+
     if(newX<0)
     {
         newX=cols-1;
@@ -279,22 +268,20 @@ void Nivel::moveSnake()
     {
         newY=0;
     }
-    //integración de nodo prueba #1
+
     Nodo* nuevoNodo= new Nodo(newX, newY);
     nuevoNodo->siguiente=cabeza;
     cabeza= nuevoNodo;
 
-    //NIVEL 1: bandera para saber si la serpiente comió algo en este movimiento (roja o dorada)
     bool comioAlgo=false;
 
-    //NIVEL 1: primero se revisa la manzana dorada (si está presente)
     if(hayComidaDorada==true && doradaActualComida==false && newX==comidaDorada.x() && newY==comidaDorada.y())
     {
-        puntuacion += VALOR_DORADA; //NIVEL 1: puntos triples (10 x 3)
+        puntuacion += VALOR_DORADA;
         doradasComidas++;
         doradaActualComida=true;
-        hayComidaDorada=false; //la dorada desaparece al comerla
-        crecimientoExtra += 2; //NIVEL 1: este movimiento ya crece 1 (no se borra la cola); +2 para sumar 3 en total
+        hayComidaDorada=false;
+        crecimientoExtra += 2;
         comioAlgo=true;
     }
 
@@ -304,28 +291,9 @@ void Nivel::moveSnake()
         rojasComidas++;
         rojaActualComida=true;
 
-        manzanasComidas= rojasComidas; //NIVEL 1
+        manzanasComidas= rojasComidas;
         puntuacion += VALOR_ROJA;
         avanzarCicloPorRojaComida();
-        /*//NIVEL 1: si se come la roja, la dorada (si estaba en pantalla) desaparece también
-        hayComidaDorada=false;
-
-        if(rojasComidas >= ROJAS_MAX_GENERADAS)
-        {
-            finalizarPorManzanas();
-            /*
-            //NIVEL 2: se completaron las 6 manzanas rojas -> se gana el nivel
-            nivelGanado=true;
-            gameover=true;
-            timer->stop();
-            retryButton->show();
-        }
-        else
-        {
-            avanzarCicloPorRojaComida();
-            /*spawnFood();
-            intentoComidaDorada(); //NIVEL 1: probabilidad de que salga una dorada junto a la nueva roja
-        }*/
     }
 
     if(comioAlgo==true && sonidoActivado==true)
@@ -336,12 +304,11 @@ void Nivel::moveSnake()
 
     if(comioAlgo==false)
     {
-        //NIVEL 1: si queda crecimiento pendiente (de una dorada comida antes), la cola NO se recorta y ese crecimiento pendiente se va consumiendo un nodo por movimiento.
         if(crecimientoExtra>0)
         {
             crecimientoExtra--;
         }
-        else if(cabeza->siguiente !=nullptr)//?
+        else if(cabeza->siguiente !=nullptr)
         {
             Nodo* actual=cabeza;
             while(actual->siguiente->siguiente != nullptr)
@@ -382,7 +349,6 @@ void Nivel::spawnFood()
 
 void Nivel::checkCollision()
 {
-    //integración de nodo prueba #1
     if(cabeza==nullptr)
     {
         return;
@@ -421,7 +387,7 @@ void Nivel::crearMapa()
         mapa[i]= new int[cols];
         for (int j = 0; j < cols; j++)
         {
-            mapa[i][j]=0; //0=vacía
+            mapa[i][j]=0;
         }
     }
 }
@@ -473,26 +439,26 @@ void Nivel::crearSerpienteInicial(int x, int y, Direction direccionInicial)
 
     switch (direccionInicial)
     {
-        case Up:
-        {
-            colaY=y+1;
-            break;
-        }
-        case Down:
-        {
-            colaY=y-1;
-            break;
-        }
-        case Left:
-        {
-            colaX=x+1;
-            break;
-        }
-        case Right:
-        {
-            colaX=x-1;
-            break;
-        }
+    case Up:
+    {
+        colaY=y+1;
+        break;
+    }
+    case Down:
+    {
+        colaY=y-1;
+        break;
+    }
+    case Left:
+    {
+        colaX=x+1;
+        break;
+    }
+    case Right:
+    {
+        colaX=x-1;
+        break;
+    }
     }
 
     Nodo *cola= new Nodo(colaX, colaY);
@@ -522,19 +488,16 @@ void Nivel::intentoComidaDorada()
         y= QRandomGenerator::global()->bounded(rows);
         posicionValida=true;
 
-        //no debe salir sobre un muro
         if(mapa!=nullptr && mapa[y][x]==1)
         {
             posicionValida=false;
         }
 
-        //no debe salir en la misma celda que la manzana roja
         if(posicionValida && x==food.x() && y==food.y())
         {
             posicionValida=false;
         }
 
-        //no debe salir sobre la serpiente
         if(posicionValida==true)
         {
             Nodo* actual=cabeza;
@@ -550,7 +513,7 @@ void Nivel::intentoComidaDorada()
         }
 
         intentos++;
-    } while(!posicionValida && intentos<100); //límite de intentos por seguridad
+    } while(!posicionValida && intentos<100);
 
     if(posicionValida==true)
     {
@@ -578,8 +541,8 @@ void Nivel::cargarSpritesGusano()
 
     imgCurvaArribaDerecha.load(":/skins/skin_predeterminada_curva_abajo_izquierda.png");
     imgCurvaArribaIzquierda.load(":/skins/skin_predeterminada_curva_arriba_derecha.png");
-    imgCurvaAbajoDerecha.load(":/skins/skin_predeterminada_curva_arriba_izquierda.png");//
-    imgCurvaAbajoIzquierda.load(":/skins/skin_predeterminada_curva_abajo_derecha.png");//
+    imgCurvaAbajoDerecha.load(":/skins/skin_predeterminada_curva_arriba_izquierda.png");
+    imgCurvaAbajoIzquierda.load(":/skins/skin_predeterminada_curva_abajo_derecha.png");
 }
 
 void Nivel::dibujarGusano(QPainter &painter)
@@ -702,9 +665,6 @@ void Nivel::dibujarGusano(QPainter &painter)
             }
             else
             {
-                //Direction ladoCabeza= opuesta(direccionEntrada);
-                //Direction ladoCola= direccionSalida;
-
                 bool tieneArriba=((direccionEntrada==Up) || (direccionSalida==Up));
                 bool tieneAbajo=((direccionEntrada==Down) || (direccionSalida==Down));
                 bool tieneIzquierda=((direccionEntrada==Left) || (direccionSalida==Left));
@@ -722,7 +682,7 @@ void Nivel::dibujarGusano(QPainter &painter)
                 {
                     sprite=&imgCurvaAbajoDerecha;
                 }
-                else //tiene abajo y a la izquierda
+                else
                 {
                     sprite=&imgCurvaAbajoIzquierda;
                 }
@@ -838,7 +798,6 @@ void Nivel::iniciarSistemaDeManzanas()
 bool Nivel::ejecutarCicloGeneracion()
 {
     rojaActualComida=false;
-    //descarta la dorada del ciclo anterior
     if(hayComidaDorada && doradaActualComida==false)
     {
         hayComidaDorada=false;
@@ -848,19 +807,6 @@ bool Nivel::ejecutarCicloGeneracion()
     rojasGeneradas++;
     intentoComidaDorada();
     return true;
-    /*if(rojasGeneradas<ROJAS_MAX_GENERADAS)
-    {
-        spawnFood();
-        rojasGeneradas++;
-        intentoComidaDorada();
-        return true;
-    }
-    else
-    {
-        timerGeneracion->stop();
-        return false;
-    }*/
-
 }
 
 void Nivel::avanzarCicloPorRojaComida()
@@ -871,6 +817,7 @@ void Nivel::avanzarCicloPorRojaComida()
         timerGeneracion->start(intervaloGeneracionMs);
     }
 }
+
 void Nivel::cicloGeneracion()
 {
     if(tiempoTerminado==true || gameover==true)
@@ -908,7 +855,6 @@ void Nivel::finalizarPorTiempo()
         timerCronometro->stop();
     }
     timer->stop();
-    //descarta la dorada del ciclo anterior
     if(hayComidaDorada && doradaActualComida==false)
     {
         hayComidaDorada=false;
@@ -934,24 +880,7 @@ void Nivel::finalizarPorTiempo()
     btnVolver->show();
     update();
 }
-/*
-void Nivel::finalizarPorManzanas()
-{
-    if(timerGeneracion!=nullptr)
-    {
-        timerGeneracion->stop();
-    }
-    if(timerCronometro!=nullptr)
-    {
-        timerCronometro->stop();
-    }
-    timer->stop();
-    ganoPremio=(doradasComidas>=DORADAS_MIN_PREMIO);
-    nivelGanado=true;
-    gameover=true;
-    retryButton->show();
-    update();
-}*/
+
 QString Nivel::formatearTiempo(int segundos) const
 {
     if(segundos<0)
@@ -961,7 +890,6 @@ QString Nivel::formatearTiempo(int segundos) const
     int m=segundos/60;
     int s=segundos%60;
     return QString("%1:%2").arg(m, 2, 10, QChar('0')).arg(s, 2, 10, QChar('0'));
-
 }
 
 void Nivel::alternarPausa()
@@ -983,10 +911,8 @@ void Nivel::alternarPausa()
         {
             timerGeneracion->stop();
         }
-        //pausaBtn->setText("Reanudar");
 
         btnReaunudar->show();
-
         btnVolver->show();
         btnSonido->show();
         btnMusica->show();
@@ -998,11 +924,10 @@ void Nivel::alternarPausa()
         {
             timerCronometro->start();
         }
-        if(timerCronometro!=nullptr)
+        if(timerGeneracion!=nullptr)
         {
             timerGeneracion->start();
         }
-        //pausaBtn->setText("Pausa");
         btnReaunudar->hide();
         btnVolver->hide();
         btnSonido->hide();
@@ -1011,7 +936,6 @@ void Nivel::alternarPausa()
         setFocus();
     }
     update();
-
 }
 
 void Nivel::alternarSonido()
@@ -1026,9 +950,6 @@ void Nivel::alternarSonido()
             "QPushButton:hover {"
             "opacity: 0.8;"
             "}"
-            /*"QPushButton:pressed {"
-        "border-image: url(:/imagenes/btnConSonido.png);"
-        "}"*/
             );
         sonidoActivado=false;
     }
@@ -1042,12 +963,8 @@ void Nivel::alternarSonido()
             "QPushButton:hover {"
             "opacity: 0.8;"
             "}"
-            /*"QPushButton:pressed {"
-        "border-image: url(:/imagenes/btnConSonido.png);"
-        "}"*/
             );
         sonidoActivado=true;
-
     }
 }
 
@@ -1072,9 +989,6 @@ void Nivel::alternarMusica()
             "QPushButton:hover {"
             "opacity: 0.8;"
             "}"
-            /*"QPushButton:pressed {"
-        "border-image: url(:/imagenes/btnConSonido.png);"
-        "}"*/
             );
         musicaActivada=false;
     }
@@ -1088,12 +1002,8 @@ void Nivel::alternarMusica()
             "QPushButton:hover {"
             "opacity: 0.8;"
             "}"
-            /*"QPushButton:pressed {"
-        "border-image: url(:/imagenes/btnConSonido.png);"
-        "}"*/
             );
         musicaActivada=true;
-
     }
 }
 
@@ -1111,9 +1021,7 @@ void Nivel::gameloop()
 
 void Nivel::resetGame()
 {
-    //integración de nodo prueba #1
     limpiarSerpiente();
-    //integración de nodo prueba #1
     crearSerpienteInicial(10,10,Right);
 
     direction=Right;
@@ -1132,13 +1040,6 @@ void Nivel::resetGame()
     juegoPausado=false;
     iniciarSistemaDeManzanas();
 
-    /*//NIVEL 1: reiniciar todo lo relacionado al nivel 2
-    manzanasComidas=0;
-    puntuacion=0;
-    nivelGanado=false;
-    hayComidaDorada=false;
-    crecimientoExtra=0; //NIVEL 1*/
-
     spawnFood();
     retryButton->hide();
     setFocusPolicy(Qt::StrongFocus);
@@ -1147,55 +1048,39 @@ void Nivel::resetGame()
     update();
 }
 
-
-
 void Nivel::keyPressEvent(QKeyEvent *event)
 {
-    if(juegoPausado==true)
-    {
-        return;
-    }
-    switch (event->key())
-    {
-    case Qt::Key_Up:
-    {
-        if(direction!=Down)
-        {
-            direction=Up;
+    if(juegoPausado == true) return;
+
+    int ctrl = (usandoWASD || Configuracion::tipoControlGlobal == 1) ? 1 : 0; // 0 = Flechas, 1 = WASD
+
+    if (ctrl == 0) {
+        //modo flechas
+        switch (event->key()) {
+        case Qt::Key_Up:    if(direction != Down)  direction = Up;    break;
+        case Qt::Key_Down:  if(direction != Up)    direction = Down;  break;
+        case Qt::Key_Left:  if(direction != Right) direction = Left;  break;
+        case Qt::Key_Right: if(direction != Left)  direction = Right; break;
+        default: QWidget::keyPressEvent(event); break;
         }
-        break;
-    }
-    case Qt::Key_Down:
-    {
-        if(direction!=Up)
-        {
-            direction=Down;
+    } else {
+        //mdo WASD
+        switch (event->key()) {
+        case Qt::Key_W:     if(direction != Down)  direction = Up;    break;
+        case Qt::Key_S:     if(direction != Up)    direction = Down;  break;
+        case Qt::Key_A:     if(direction != Right) direction = Left;  break;
+        case Qt::Key_D:     if(direction != Left)  direction = Right; break;
+        default: QWidget::keyPressEvent(event); break;
         }
-        break;
     }
-    case Qt::Key_Left:
-    {
-        if(direction!=Right)
-        {
-            direction=Left;
-        }
-        break;
+
+    if (event->key() == Qt::Key_Space && retryButton->isVisible() == true) {
+        retryButton->click();
     }
-    case Qt::Key_Right:
-    {
-        if(direction!=Left)
-        {
-            direction=Right;
-        }
-        break;
-    }
-    case Qt::Key_Space:
-    {
-        if(retryButton->isVisible()==true)
-        {
-            retryButton->click();
-        }
-        break;
-    }
-    }
+}
+
+void Nivel::paintEvent(QPaintEvent *event) {
+    QWidget::paintEvent(event);
+    QPainter painter(this);
+    dibujarGusano(painter);
 }

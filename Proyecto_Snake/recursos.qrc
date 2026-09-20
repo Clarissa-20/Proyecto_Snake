@@ -163,5 +163,6 @@
         <file>btns/monoNivel3Desactivado.png</file>
         <file>btns/registrarse_boton.png</file>
         <file>skins/skin4_cuerpo_vertical.png</file>
+        <file>imagenes/config_fondo.png</file>
     </qresource>
 </RCC>

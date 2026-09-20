@@ -1,25 +1,35 @@
-#ifndef MUSICAMANGER_H
-#define MUSICAMANGER_H
+#ifndef MUSICAMANAGER_H
+#define MUSICAMANAGER_H
 
 #include <QMediaPlayer>
 #include <QAudioOutput>
 #include <QString>
 
-class MusicaManger {
+class MusicaManager {
 public:
-    static MusicaManger& instance();
+    static MusicaManager& instance();
 
     void playMusicaJuego(const QString &fileName = "Musica_Juego.wav");
     void playMusicaNiveles(const QString &fileName = "Musica_Niveles.wav");
     void stopAll();
 
+    //control de volumen (rango 0.0 a 1.0)
+    void setVolumenGlobal(float volumen);
+    void setVolumenNiveles(float volumen);
+    float getVolumenGlobal() const;
+    float getVolumenNiveles() const;
+
+    //control auxiliar para sliders de 0 a 100
+    void setVolumenGlobalPorcentaje(int porcentaje);
+    void setVolumenNivelesPorcentaje(int porcentaje);
+
 private:
-    MusicaManger();
-    ~MusicaManger();
+    MusicaManager();
+    ~MusicaManager();
     QMediaPlayer *globalPlayer;
     QAudioOutput *globalAudio;
     QMediaPlayer *levelPlayer;
     QAudioOutput *levelAudio;
 };
 
-#endif // MUSICAMANGER_H
+#endif // MUSICAMANAGER_H

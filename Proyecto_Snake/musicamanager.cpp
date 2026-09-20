@@ -1,12 +1,13 @@
 #include "musicamanager.h"
 #include <QCoreApplication>
+#include <QtGlobal>
 
-MusicaManger& MusicaManger::instance() {
-    static MusicaManger instance;
+MusicaManager& MusicaManager::instance() {
+    static MusicaManager instance;
     return instance;
 }
 
-MusicaManger::MusicaManger() {
+MusicaManager::MusicaManager() {
     globalPlayer = new QMediaPlayer();
     globalAudio = new QAudioOutput();
     globalPlayer->setAudioOutput(globalAudio);
@@ -26,26 +27,52 @@ MusicaManger::MusicaManger() {
     });
 }
 
-MusicaManger::~MusicaManger() {
+MusicaManager::~MusicaManager() {
     delete globalPlayer; delete globalAudio;
     delete levelPlayer; delete levelAudio;
 }
 
-void MusicaManger::playMusicaJuego(const QString &fileName) {
+void MusicaManager::playMusicaJuego(const QString &fileName) {
     if (levelPlayer->isPlaying()) levelPlayer->stop();
     QString fullPath = QCoreApplication::applicationDirPath() + "/sonidos/" + fileName;
     globalPlayer->setSource(QUrl::fromLocalFile(fullPath));
     globalPlayer->play();
 }
 
-void MusicaManger::playMusicaNiveles(const QString &fileName) {
+void MusicaManager::playMusicaNiveles(const QString &fileName) {
     if (globalPlayer->isPlaying()) globalPlayer->stop();
     QString fullPath = QCoreApplication::applicationDirPath() + "/sonidos/" + fileName;
     levelPlayer->setSource(QUrl::fromLocalFile(fullPath));
     levelPlayer->play();
 }
 
-void MusicaManger::stopAll() {
+void MusicaManager::stopAll() {
     globalPlayer->stop();
     levelPlayer->stop();
+}
+
+void MusicaManager::setVolumenGlobal(float volumen) {
+    volumen = qBound(0.0f, volumen, 1.0f);
+    if (globalAudio) globalAudio->setVolume(volumen);
+}
+
+void MusicaManager::setVolumenNiveles(float volumen) {
+    volumen = qBound(0.0f, volumen, 1.0f);
+    if (levelAudio) levelAudio->setVolume(volumen);
+}
+
+float MusicaManager::getVolumenGlobal() const {
+    return globalAudio ? globalAudio->volume() : 0.0f;
+}
+
+float MusicaManager::getVolumenNiveles() const {
+    return levelAudio ? levelAudio->volume() : 0.0f;
+}
+
+void MusicaManager::setVolumenGlobalPorcentaje(int porcentaje) {
+    setVolumenGlobal(qBound(0, porcentaje, 100) / 100.0f);
+}
+
+void MusicaManager::setVolumenNivelesPorcentaje(int porcentaje) {
+    setVolumenNiveles(qBound(0, porcentaje, 100) / 100.0f);
 }

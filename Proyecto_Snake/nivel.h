@@ -13,7 +13,7 @@
 #include <QKeyEvent>
 //#include <QtGui>
 
-#include <QPixmap> //nuevo]a libreria para manejar las imagenes
+#include <QPixmap> //nueva libreria para manejar las imagenes
 #include <QString>
 
 //sonido
@@ -46,6 +46,8 @@ class Nivel : public QWidget
     Q_OBJECT
 private:
     QWidget *menuNiveles;
+    bool usandoWASD = false; // false = flechas, true = WASD
+
 public:
     explicit Nivel(QWidget *parent = nullptr);
     virtual ~Nivel() override; //PARA EVITAR FUGAS DE MEMORIA EL VIRTUAL
@@ -53,6 +55,10 @@ public:
     {
         menuNiveles=menu;
     }
+
+    void setUsarWASD(bool usar);
+    bool getUsarWASD() const;
+
 public slots:
     void cicloGeneracion();
 
@@ -227,4 +233,4 @@ protected:
     void keyPressEvent(QKeyEvent *event) override;
 
 };
-#endif // GAMEWINDOW_H
+#endif // NIVEL_H

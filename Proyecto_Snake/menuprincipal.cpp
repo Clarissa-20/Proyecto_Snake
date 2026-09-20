@@ -3,6 +3,7 @@
 #include "menuNiveles.h"
 #include "tienda.h"
 #include "inicioscreen.h"
+#include "configuracion.h"
 #include <QPixmap>
 #include <QIcon>
 #include <QCoreApplication>
@@ -141,7 +142,9 @@ void MenuPrincipal::onRecordsClicked() {
 }
 
 void MenuPrincipal::onConfiguracionClicked() {
-    //vtn de configuración
+    Configuracion *config = new Configuracion();
+    config->show();
+    this->close();
 }
 
 void MenuPrincipal::miPerfil(){

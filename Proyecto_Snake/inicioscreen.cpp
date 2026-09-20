@@ -43,7 +43,7 @@ InicioScreen::InicioScreen(QWidget *parent)
     connect(btnIniciar, &QPushButton::clicked, this, &InicioScreen::onIniciarAventuraClicked);
     connect(btnRegresar, &QPushButton::clicked, this, &InicioScreen::regresar);
 
-    MusicaManger::instance().playMusicaJuego();
+    MusicaManager::instance().playMusicaJuego();
 }
 
 InicioScreen::~InicioScreen() {}
