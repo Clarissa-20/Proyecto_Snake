@@ -9,8 +9,8 @@ class MusicaManager {
 public:
     static MusicaManager& instance();
 
-    void playMusicaJuego(const QString &fileName = "Musica_Juego.wav");
-    void playMusicaNiveles(const QString &fileName = "Musica_Niveles.wav");
+    void playMusicaJuego(const QString &fileName = "Musica_Juego.mp3");
+    void playMusicaNiveles(const QString &fileName = "Musica_Niveles.mp3");
     void stopAll();
 
     //control de volumen (rango 0.0 a 1.0)

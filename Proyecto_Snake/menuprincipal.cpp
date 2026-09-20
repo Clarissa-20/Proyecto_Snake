@@ -138,7 +138,7 @@ void MenuPrincipal::onRecordsClicked() {
     Ranking *ranking= new Ranking(this, nullptr);
     ranking->setAttribute(Qt::WA_DeleteOnClose);
     ranking->show();
-    this->hide();
+    this->close();
 }
 
 void MenuPrincipal::onConfiguracionClicked() {

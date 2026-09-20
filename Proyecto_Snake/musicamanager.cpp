@@ -34,14 +34,14 @@ MusicaManager::~MusicaManager() {
 
 void MusicaManager::playMusicaJuego(const QString &fileName) {
     if (levelPlayer->isPlaying()) levelPlayer->stop();
-    QString fullPath = QCoreApplication::applicationDirPath() + "/sonidos/" + fileName;
+    QString fullPath = QCoreApplication::applicationDirPath() + "/musica/" + fileName;
     globalPlayer->setSource(QUrl::fromLocalFile(fullPath));
     globalPlayer->play();
 }
 
 void MusicaManager::playMusicaNiveles(const QString &fileName) {
     if (globalPlayer->isPlaying()) globalPlayer->stop();
-    QString fullPath = QCoreApplication::applicationDirPath() + "/sonidos/" + fileName;
+    QString fullPath = QCoreApplication::applicationDirPath() + "/musica/" + fileName;
     levelPlayer->setSource(QUrl::fromLocalFile(fullPath));
     levelPlayer->play();
 }
