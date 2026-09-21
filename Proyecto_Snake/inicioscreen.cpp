@@ -54,6 +54,10 @@ void InicioScreen::onIniciarAventuraClicked() {
     this->close();
 }
 
+void InicioScreen::setUsuario(const QString &usuario) {
+    usuarioActual = usuario;
+}
+
 void InicioScreen::regresar(){
     this->close();
 }

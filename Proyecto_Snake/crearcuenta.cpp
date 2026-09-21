@@ -14,37 +14,47 @@ CrearCuenta::CrearCuenta(QWidget *parent)
     : QMainWindow(parent), avatarSeleccionado(-1) {
 
     this->setFixedSize(800, 600);
-    this->setWindowTitle("Snake - Registro de Explorador");
-
+    this->setWindowTitle("Snake - El Templo Perdido | Registro de Explorador");
 
     labelFondo = new QLabel(this);
     labelFondo->setGeometry(0, 0, 800, 600);
     QPixmap pixmapFondo(":/imagenes/crear_cuenta_fondo.png");
     labelFondo->setPixmap(pixmapFondo.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
 
-    QString estiloInputs = "QLineEdit {"
-                           "background: transparent;"
-                           "border: none;"
-                           "color: #e6dfc8;"
-                           "font-family: 'Georgia';"
-                           "font-size: 16px;"
-                           "padding-left: 10px;"
-                           "}";
+    // --- TÍTULO DE SECCIÓN DE AVATARES ---
+    QLabel *lblSelAvatar = new QLabel("SELECCIONA TU EXPLORADOR", this);
+    lblSelAvatar->setGeometry(250, 160, 300, 22);
+    lblSelAvatar->setAlignment(Qt::AlignCenter);
+    lblSelAvatar->setStyleSheet("font-family: 'Georgia'; font-size: 13px; font-weight: bold; color: #d4af37; background: transparent; letter-spacing: 1px;");
 
-    int avatarAncho = 65;
-    int avatarAlto = 65;
-    int avatarY = 195;
-    int xs[4] = {295, 370, 445, 520};
+    int avatarAncho = 70;
+    int avatarAlto = 70;
+    int avatarY = 188;
+    // Centrado exacto para 4 elementos de 70px con separación de 15px (total 325px, start = 237)
+    int xs[4] = {237, 322, 407, 492};
 
-    for(int i = 0; i < 4; ++i) {  //CAMBIAR LOS AVATARES
+    for(int i = 0; i < 4; ++i) {
         QPushButton *btnAvatar = new QPushButton(this);
         btnAvatar->setGeometry(xs[i], avatarY, avatarAncho, avatarAlto);
         QString rutaAvatar = QString(":/imagenes/avatar_%1.png").arg(i + 1);
         btnAvatar->setIcon(QIcon(rutaAvatar));
-        btnAvatar->setIconSize(QSize(avatarAncho - 10, avatarAlto - 10));
+        btnAvatar->setIconSize(QSize(avatarAncho - 14, avatarAlto - 14));
         btnAvatar->setCheckable(true);
-        btnAvatar->setStyleSheet("QPushButton { border: 2px solid transparent; background: rgba(0,0,0,0.3); border-radius: 5px; }"
-                                 "QPushButton:checked { border: 2px solid #d4af37; background: rgba(212,175,55,0.3); }");
+        btnAvatar->setStyleSheet(
+            "QPushButton { "
+            "    border: 2px solid #5c4033; "
+            "    background: rgba(30, 20, 15, 0.85); "
+            "    border-radius: 8px; "
+            "} "
+            "QPushButton:hover { "
+            "    border: 2px solid #a67c52; "
+            "    background: rgba(45, 30, 22, 0.95); "
+            "} "
+            "QPushButton:checked { "
+            "    border: 2px solid #d4af37; "
+            "    background: rgba(212, 175, 55, 0.28); "
+            "}"
+            );
 
         connect(btnAvatar, &QPushButton::clicked, [this, i]() {
             seleccionarAvatar(i);
@@ -52,66 +62,88 @@ CrearCuenta::CrearCuenta(QWidget *parent)
         botonesAvatares.append(btnAvatar);
     }
 
+    // --- ESTILO TEMÁTICO PARA CAMPOS DE TEXTO ---
+    QString estiloInputs =
+        "QLineEdit {"
+        "    background: rgba(35, 25, 18, 0.92);"
+        "    border: 2px solid #5c4033;"
+        "    border-radius: 6px;"
+        "    color: #f4efdc;"
+        "    font-family: 'Georgia';"
+        "    font-size: 15px;"
+        "    padding-left: 12px;"
+        "}"
+        "QLineEdit:focus {"
+        "    border: 2px solid #d4af37;"
+        "    background: rgba(45, 33, 24, 0.98);"
+        "}";
 
     txtUsuario = new QLineEdit(this);
-    txtUsuario->setGeometry(275, 290, 260, 35);
-    txtUsuario->setPlaceholderText("Usuario");
+    txtUsuario->setGeometry(270, 278, 260, 38);
+    txtUsuario->setPlaceholderText("Nombre de explorador");
     txtUsuario->setStyleSheet(estiloInputs);
 
-
     txtContrasena = new QLineEdit(this);
-    txtContrasena->setGeometry(275, 345, 260, 35);
+    txtContrasena->setGeometry(270, 328, 260, 38);
     txtContrasena->setEchoMode(QLineEdit::Password);
-    txtContrasena->setPlaceholderText("Contraseña");
+    txtContrasena->setPlaceholderText("Contraseña secreta");
     txtContrasena->setStyleSheet(estiloInputs);
     connect(txtContrasena, &QLineEdit::textChanged, this, &CrearCuenta::validarContrasena);
 
+    // --- BLOQUE DE REQUISITOS ALINEADO Y CENTRADO ---
+    QString estiloReqTitulo = "font-family: 'Georgia'; font-size: 11px; font-weight: bold; color: #d4af37; background: transparent;";
     QString estiloReq = "font-family: 'Georgia'; font-size: 11px; background: transparent;";
 
-    QLabel *lblTituloReq = new QLabel("Requisitos de Contraseña:", this);
-    lblTituloReq->setGeometry(390, 395, 180, 20);
-    lblTituloReq->setStyleSheet("font-family: 'Georgia'; font-size: 12px; font-weight: bold; color: #3e2723; background: transparent;");
+    QLabel *lblTituloReq = new QLabel("Requisitos de seguridad:", this);
+    lblTituloReq->setGeometry(270, 376, 260, 18);
+    lblTituloReq->setStyleSheet(estiloReqTitulo);
 
     lblReqLongitud = new QLabel("✗ Al menos 5 caracteres", this);
-    lblReqLongitud->setGeometry(395, 415, 180, 18);
-    lblReqLongitud->setStyleSheet(estiloReq + "color: #b71c1c;");
+    lblReqLongitud->setGeometry(275, 394, 250, 16);
+    lblReqLongitud->setStyleSheet(estiloReq + "color: #e57373;");
 
     lblReqMayuscula = new QLabel("✗ Al menos una mayúscula", this);
-    lblReqMayuscula->setGeometry(395, 433, 180, 18);
-    lblReqMayuscula->setStyleSheet(estiloReq + "color: #b71c1c;");
+    lblReqMayuscula->setGeometry(275, 410, 250, 16);
+    lblReqMayuscula->setStyleSheet(estiloReq + "color: #e57373;");
 
     lblReqNumero = new QLabel("✗ Al menos un número", this);
-    lblReqNumero->setGeometry(395, 451, 180, 18);
-    lblReqNumero->setStyleSheet(estiloReq + "color: #b71c1c;");
+    lblReqNumero->setGeometry(275, 426, 250, 16);
+    lblReqNumero->setStyleSheet(estiloReq + "color: #e57373;");
 
     lblReqEspecial = new QLabel("✗ Al menos un carácter especial", this);
-    lblReqEspecial->setGeometry(395, 469, 195, 18);
-    lblReqEspecial->setStyleSheet(estiloReq + "color: #b71c1c;");
+    lblReqEspecial->setGeometry(275, 442, 250, 16);
+    lblReqEspecial->setStyleSheet(estiloReq + "color: #e57373;");
 
+    // --- BOTÓN PRINCIPAL CON MARCO DE BRONCE ---
     btnCrearCuenta = new QPushButton(this);
-    btnCrearCuenta->setGeometry(270, 500, 260, 50);
+    btnCrearCuenta->setGeometry(270, 470, 260, 46);
     QPixmap pixmapBtn(":/btns/crear_cuenta_boton.png");
     btnCrearCuenta->setIcon(QIcon(pixmapBtn));
-    btnCrearCuenta->setIconSize(btnCrearCuenta->size());
-    btnCrearCuenta->setStyleSheet("QPushButton { border: none; background: transparent; }");
+    btnCrearCuenta->setIconSize(QSize(250, 40));
+    btnCrearCuenta->setStyleSheet(
+        "QPushButton { border: 2px solid #5c4033; background: rgba(50, 35, 25, 0.9); border-radius: 6px; }"
+        "QPushButton:hover { border: 2px solid #d4af37; background: rgba(65, 45, 32, 0.95); }"
+        );
     connect(btnCrearCuenta, &QPushButton::clicked, this, &CrearCuenta::onCrearCuentaClicked);
 
+    // --- ENLACE A LOGIN ---
     lblLogin = new QLabel(this);
-    lblLogin->setGeometry(250, 560, 300, 25);
-    lblLogin->setText("<a href='login' style='color: #d4af37; text-decoration: none;'>¿Ya tienes una cuenta? Inicia sesion</a>");
+    lblLogin->setGeometry(250, 528, 300, 24);
+    lblLogin->setText("<a href='login' style='color: #d4af37; text-decoration: none; font-weight: bold;'>¿Ya tienes un expediente? Inicia sesión</a>");
     lblLogin->setAlignment(Qt::AlignCenter);
-    lblLogin->setStyleSheet("font-family: 'Georgia'; font-size: 13px; background: transparent;");
+    lblLogin->setStyleSheet("font-family: 'Georgia'; font-size: 12px; background: transparent;");
 
+    // --- BOTÓN REGRESAR ---
     btnRegresar = new QPushButton(this);
-    btnRegresar->setGeometry(20, 20, 80, 80);
+    btnRegresar->setGeometry(20, 20, 65, 65);
     btnRegresar->setStyleSheet(
-        "QPushButton {"
-        "   border-image: url(:/imagenes/btn_volver_pequeno.png);"
-        "   border: none;"
-        "   background: transparent;"
-        "}"
-        "QPushButton:hover {"
-        "   filter: brightness(1.2);"
+        "QPushButton { "
+        "    border-image: url(:/btns/btn_volver_pequeno.png); "
+        "    border: none; "
+        "    background: transparent; "
+        "} "
+        "QPushButton:hover { "
+        "    filter: brightness(1.25); "
         "}"
         );
 
@@ -191,7 +223,7 @@ void CrearCuenta::onCrearCuentaClicked() {
 
     if (registrado) {
         QMessageBox::information(this, "¡Éxito!", "Cuenta creada correctamente. ¡Bienvenido al templo!");
-        MenuPrincipal *menuPrincipal = new MenuPrincipal();
+        MenuPrincipal *menuPrincipal = new MenuPrincipal(nullptr, usuario);
         menuPrincipal->show();
         this->close();
     } else {

@@ -103,8 +103,12 @@ void Configuracion::onVolumenEfectosChanged(int valor) {
     Configuracion::volEfectosGlobal = valor;
 }
 
+void Configuracion::setUsuario(const QString &usuario) {
+    usuarioActual = usuario;
+}
+
 void Configuracion::regresar() {
-    MenuPrincipal *menu = new MenuPrincipal();
+    MenuPrincipal *menu = new MenuPrincipal(nullptr, usuarioActual);
     menu->show();
     this->close();
 }

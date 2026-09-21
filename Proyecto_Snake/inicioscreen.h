@@ -12,6 +12,8 @@ public:
     InicioScreen(QWidget *parent = nullptr);
     ~InicioScreen();
 
+    void setUsuario(const QString &usuario);
+
 private slots:
     void onIniciarAventuraClicked();
     void regresar();
@@ -20,6 +22,7 @@ private:
     QLabel *labelFondo;
     QPushButton *btnIniciar;
     QPushButton *btnRegresar;
+    QString usuarioActual;
 };
 
 #endif // INICIOSCREEN_H

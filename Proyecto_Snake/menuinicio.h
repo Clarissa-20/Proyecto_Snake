@@ -1,15 +1,3 @@
-// #ifndef MENUINICIO_H
-// #define MENUINICIO_H
-
-// class MenuInicio
-// {
-// public:
-//     MenuInicio();
-// };
-
-// #endif // MENUINICIO_H
-
-
 #ifndef MENUINICIO_H
 #define MENUINICIO_H
 

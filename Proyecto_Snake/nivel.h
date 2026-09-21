@@ -23,6 +23,8 @@
 
 #include <QDir>
 
+#include "usermanager.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class GameWindow;
@@ -50,6 +52,8 @@ private:
     QWidget *menuNiveles;
     bool usandoWASD = false; // false = flechas, true = WASD
     QString usuarioActual;
+    int skinActualNivel = 0;
+    void cargarSkinUsuario();
 public:
     explicit Nivel(QWidget *parent = nullptr);
     virtual ~Nivel() override; //PARA EVITAR FUGAS DE MEMORIA EL VIRTUAL
@@ -176,6 +180,7 @@ protected:
     int manzanasComidas;
     int puntuacion;
     bool nivelGanado;
+    bool recompensaProcesada = false; // <-- Blindaje contra doble conteo
 
     //mecanicas extras
     bool hayComidaDorada;

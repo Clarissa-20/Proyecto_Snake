@@ -1,3 +1,756 @@
+// #include "nivel3.h"
+// #include "ui_gamewindow.h"
+// #include <QPainter>
+// #include <QRandomGenerator>
+
+// Nivel3::Nivel3(QWidget *parent) :
+//     Nivel(parent),
+//     hayFrutaVelocidad(false),
+//     frutaVelocidadBlanca(true),
+//     velocidadBase(VELOCIDAD_INICIAL),
+//     efectoDoradaActivo(false),
+//     generacionPartida(0),
+//     desplazamientoBloques(0),
+//     direccionBloques(1),
+//     contadorMovimientoBloques(0),
+//     //manzanas por tiempo
+//     cafesGeneradas(0),
+//     blancasGeneradas(0)
+// {
+
+//     fondo.load(":/imagenes/nivel3_fondo.png");
+//     cols = (width() - (2 * marginX)) / cellsize;
+//     rows = (height() - (2 * marginY)) / cellsize;
+
+
+//     if (pausaBtn != nullptr) { //como obtiene la imagen de nivel.cpp, entonces aqui cambia la imagen
+//         pausaBtn->setGeometry(642, 2, 160, 90);
+//         pausaBtn->setStyleSheet(
+//             "QPushButton {"
+//             "   border-image: url(:/btns/boton_pausa_nivel3.png);"
+//             "   border: none;"
+//             "}"
+//             "QPushButton:hover {"
+//             "   opacity: 0.8;"
+//             "}"
+//             "QPushButton:pressed {"
+//             "   border-image: url(:/btns/boton_pausa_nivel3.png);"
+//             "}"
+//             );
+//     }
+//     // USAR int** mapa (igual que Nivel 2)
+//     crearMapa();
+//     inicializarBloquesMovibles();
+//     //crearSerpienteInicial(2,2,Right);
+
+
+//     //spawnFood();
+//     //manzanas por tiempo
+//     //iniciarSistemaDeManzanas();
+
+//     //timer->start(velocidadBase);
+// }
+// //manzanas por tiempo
+// bool Nivel3::ejecutarCicloGeneracion()
+// {
+//     bool resultado=Nivel::ejecutarCicloGeneracion();
+//     intentoFrutaVelocidad();
+//     return resultado;
+// }
+
+// void Nivel3::inicializarBloquesMovibles()
+// {
+//     centroFilaBloques = rows / 2;
+//     centroColumnaBloques = cols / 2;
+//     grosorBloqueMovil = 2;
+//     altoBloqueMovil = 8;
+//     maxDesplazamientoBloques = centroFilaBloques - altoBloqueMovil - 1;
+//     if (maxDesplazamientoBloques < 0)
+//     {
+//         maxDesplazamientoBloques = 0;
+//     }
+//     desplazamientoBloques = 0;
+//     direccionBloques = 1;
+//     contadorMovimientoBloques = 0;
+
+//     // Dibujar bloques iniciales en mapa[][]
+//     dibujarBloquesEnMapa();
+// }
+
+// void Nivel3::limpiarMapa() {
+//     if (mapa != nullptr)
+//     {
+//         for (int i = 0; i < rows; i++)
+//         {
+//             for (int j = 0; j < cols; j++)
+//             {
+//                 mapa[i][j] = 0;
+//             }
+//         }
+//     }
+// }
+
+// void Nivel3::dibujarBloquesEnMapa() {
+//     if (mapa == nullptr)
+//     {
+//         return;
+//     }
+//     // Barra superior
+//     for (int dy = 0; dy < altoBloqueMovil; dy++)
+//     {
+//         for (int dx = -grosorBloqueMovil; dx <= grosorBloqueMovil; dx++)
+//         {
+//             int x = centroColumnaBloques + dx;
+//             int y = centroFilaBloques - 1 - desplazamientoBloques - dy;
+//             if (x >= 0 && x < cols && y >= 0 && y < rows)
+//             {
+//                 mapa[y][x] = 1;
+//             }
+//         }
+//     }
+
+//     // Barra inferior
+//     for (int dy = 0; dy < altoBloqueMovil; dy++)
+//     {
+//         for (int dx = -grosorBloqueMovil; dx <= grosorBloqueMovil; dx++)
+//         {
+//             int x = centroColumnaBloques + dx;
+//             int y = centroFilaBloques + desplazamientoBloques + dy;
+//             if (x >= 0 && x < cols && y >= 0 && y < rows)
+//             {
+//                 mapa[y][x] = 1;
+//             }
+//         }
+//     }
+// }
+
+// void Nivel3::actualizarBloquesMovibles() {
+//     contadorMovimientoBloques++;
+//     if (contadorMovimientoBloques < INTERVALO_MOVIMIENTO_BLOQUES)
+//     {
+//         return;
+//     }
+
+//     contadorMovimientoBloques = 0;
+
+//     // Mover bloques
+//     desplazamientoBloques += direccionBloques;
+//     if (desplazamientoBloques >= maxDesplazamientoBloques)
+//     {
+//         desplazamientoBloques = maxDesplazamientoBloques;
+//         direccionBloques = -1;
+//     }
+//     else if (desplazamientoBloques <= 0)
+//     {
+//         desplazamientoBloques = 0;
+//         direccionBloques = 1;
+//     }
+
+//     //  Limpiar mapa y redibujar bloques en nuevas posiciones
+//     limpiarMapa();
+//     dibujarBloquesEnMapa();
+// }
+
+// bool Nivel3::puntoEnBloqueMovil(int x, int y) const {
+//     if (mapa == nullptr)
+//     {
+//         return false;
+//     }
+//     if (x < 0 || x >= cols || y < 0 || y >= rows)
+//     {
+//         return false;
+//     }
+//     return mapa[y][x] == 1;
+// }
+
+// void Nivel3::gameloop() {
+//     if (gameover==true)
+//     {
+//         return;
+//     }
+
+//     actualizarBloquesMovibles();
+//     moveSnake();
+//     checkCollision();
+//     update();
+// }
+
+// void Nivel3::moveSnake()
+// {
+//     if (cabeza == nullptr)
+//     {
+//         return;
+//     }
+
+//     int newX = cabeza->x;
+//     int newY = cabeza->y;
+
+//     switch (direction)
+//     {
+//         case Up:
+//         {
+//             newY--;
+//             break;
+//         }
+//         case Down:
+//         {
+//             newY++;
+//             break;
+//         }
+//         case Right:
+//         {
+//             newX++;
+//             break;
+//         }
+//         case Left:
+//         {
+//             newX--;
+//             break;
+
+//         }
+//     }
+
+//     // Validar límites
+//     if (newX < 0 || newY < 0 || newX >= cols || newY >= rows)
+//     {
+//         gameover = true;
+//         guardarPartidaCompletada();
+//         actualizarUsuarioTrasPartida();
+//         timer->stop();
+//         if (sonidoActivado==true)
+//         {
+//             sonidoPerdio->stop();
+//             sonidoPerdio->play();
+//         }
+//         retryButton->show();
+//         btnVolver->setGeometry(330, 490, 150,50);
+//         btnVolver->show();
+//         return;
+//     }
+
+//     //  Validar colisión con bloques usando mapa[][]
+//     if (puntoEnBloqueMovil(newX, newY)==true)
+//     {
+//         gameover = true;
+//         guardarPartidaCompletada();
+//         actualizarUsuarioTrasPartida();
+//         timer->stop();
+//         if (sonidoActivado==true)
+//         {
+//             sonidoPerdio->stop();
+//             sonidoPerdio->play();
+//         }
+//         retryButton->show();
+//         btnVolver->setGeometry(330, 490, 150,50);
+//         btnVolver->show();
+//         return;
+//     }
+
+//     Nodo* nuevoNodo = new Nodo(newX, newY);
+//     nuevoNodo->siguiente = cabeza;
+//     cabeza = nuevoNodo;
+
+//     bool comioAlgo = false;
+
+//     if (hayComidaDorada==true && doradaActualComida==false && newX==comidaDorada.x() && newY==comidaDorada.y())
+//     {
+//         puntuacion += 15;
+//         doradasComidas++;
+//         doradaActualComida=true;
+//         hayComidaDorada = false;
+//         activarReduccionVelocidad();
+//         crecimientoExtra += 2;
+//         comioAlgo = true;
+//     }
+
+//     if (hayFrutaVelocidad==true && newX==frutaVelocidad.x() && newY==frutaVelocidad.y())
+//     {
+//         hayFrutaVelocidad = false;
+//         if (frutaVelocidadBlanca==true)
+//         {
+//             if (velocidadBase - CAMBIO_VELOCIDAD_FRUTA >= VELOCIDAD_MINIMA)
+//             {
+//                 velocidadBase -= CAMBIO_VELOCIDAD_FRUTA;
+//             }
+//         }
+//         else
+//         {
+//             if (velocidadBase + CAMBIO_VELOCIDAD_FRUTA <= VELOCIDAD_MAXIMA)
+//             {
+//                 velocidadBase += CAMBIO_VELOCIDAD_FRUTA;
+//             }
+//         }
+//         if (efectoDoradaActivo==false)
+//         {
+//             timer->setInterval(velocidadBase);
+//         }
+//         if(sonidoActivado==true)
+//         {
+//             sonidoComio->stop();
+//             sonidoComio->play();
+//         }
+//     }
+
+//     if (newX == food.x() && newY == food.y() && rojaActualComida==false)
+//     {
+//         comioAlgo = true;
+//         rojasComidas++;
+//         rojaActualComida=true;
+//         manzanasComidas=rojasComidas;
+//         puntuacion += VALOR_ROJA;
+//         crecimientoExtra += 1;
+//         hayFrutaVelocidad = false;
+
+//         /*if (manzanasComidas >= MANZANAS_META)
+//         {
+//             nivelGanado = true;
+//             gameover = true;
+//             timer->stop();
+//             retryButton->show();
+//         }
+//         else
+//         {
+//             if (manzanasComidas % 2 == 0) aumentarVelocidad();
+//             spawnFood();
+//             intentoComidaDorada();
+//             intentoFrutaVelocidad();
+//         }*/
+//         if (manzanasComidas % 2 == 0)
+//         {
+//             aumentarVelocidad();
+//         }
+//         avanzarCicloPorRojaComida();
+//     }
+//     if(comioAlgo==true && sonidoActivado==true)
+//     {
+//         sonidoComio->stop();
+//         sonidoComio->play();
+//     }
+//     if (comioAlgo==false)
+//     {
+//         if (crecimientoExtra > 0)
+//         {
+//             crecimientoExtra--;
+//         }
+//         else if (cabeza->siguiente != nullptr)
+//         {
+//             Nodo* actual = cabeza;
+//             while (actual->siguiente->siguiente != nullptr)
+//             {
+//                 actual = actual->siguiente;
+//             }
+//             delete actual->siguiente;
+//             actual->siguiente = nullptr;
+//         }
+//     }
+// }
+
+// void Nivel3::spawnFood() {
+//     int x = 0;
+//     int y = 0;
+//     bool posicionValida;
+
+//     do {
+//         x = QRandomGenerator::global()->bounded(cols);
+//         y = QRandomGenerator::global()->bounded(rows);
+//         posicionValida = true;
+
+//         //  Validar con mapa[][]
+//         if (puntoEnBloqueMovil(x, y)==true)
+//         {
+//             posicionValida = false;
+//         }
+
+//         if (posicionValida==true)
+//         {
+//             Nodo* actual = cabeza;
+//             while (actual != nullptr)
+//             {
+//                 if (actual->x == x && actual->y == y)
+//                 {
+//                     posicionValida = false;
+//                     break;
+//                 }
+//                 actual = actual->siguiente;
+//             }
+//         }
+//     } while (posicionValida==false);
+
+//     food = QPoint(x, y);
+// }
+
+// void Nivel3::checkCollision() {
+//     if (cabeza == nullptr)
+//     {
+//         return;
+//     }
+
+//     int cabezaX = cabeza->x;
+//     int cabezaY = cabeza->y;
+
+//     if (cabezaX < 0 || cabezaY < 0 || cabezaX >= cols || cabezaY >= rows)
+//     {
+//         gameover = true;
+//         guardarPartidaCompletada();
+//         actualizarUsuarioTrasPartida();
+//         timer->stop();
+//         if (sonidoActivado==true)
+//         {
+//             sonidoPerdio->stop();
+//             sonidoPerdio->play();
+//         }
+//         retryButton->show();
+//         btnVolver->setGeometry(330, 490, 150,50);
+//         btnVolver->show();
+//         return;
+//     }
+
+//     //  Colisión con bloques usando mapa[][]
+//     if (puntoEnBloqueMovil(cabezaX, cabezaY))
+//     {
+//         gameover = true;
+//         guardarPartidaCompletada();
+//         actualizarUsuarioTrasPartida();
+//         timer->stop();
+//         if (sonidoActivado==true)
+//         {
+//             sonidoPerdio->stop();
+//             sonidoPerdio->play();
+//         }
+//         retryButton->show();
+//         btnVolver->setGeometry(330, 490, 150,50);
+//         btnVolver->show();
+//         return;
+//     }
+
+//     // Colisión con su propio cuerpo
+//     Nodo* actual = cabeza->siguiente;
+//     while (actual != nullptr)
+//     {
+//         if (cabezaX == actual->x && cabezaY == actual->y)
+//         {
+//             gameover = true;
+//             guardarPartidaCompletada();
+//             actualizarUsuarioTrasPartida();
+//             timer->stop();
+//             if (sonidoActivado==true)
+//             {
+//                 sonidoPerdio->stop();
+//                 sonidoPerdio->play();
+//             }
+//             retryButton->show();
+//             btnVolver->setGeometry(330, 490, 150,50);
+//             btnVolver->show();
+//             return;
+//         }
+//         actual = actual->siguiente;
+//     }
+// }
+
+// void Nivel3::paintEvent(QPaintEvent *)
+// {
+//     QPainter painter(this);
+
+//     if (fondo.isNull()==false)
+//     {
+//         painter.drawPixmap(0, 0, width(), height(), fondo);
+//     }
+//     else
+//     {
+//         painter.fillRect(rect(), Qt::black);
+//     }
+
+//     painter.setBrush(QColor(0, 0, 0, 140));
+//     painter.setPen(QPen(QColor(120, 110, 100), 2));
+//     painter.drawRect(marginX, marginY, cols * cellsize, rows * cellsize);
+
+//     painter.setBrush(QColor(120,110,100));
+//     painter.setPen(QPen(QColor(60,55,50), 2));
+//     for(int i=0; i<rows; i++)
+//     {
+//         for(int j=0; j<cols; j++)
+//         {
+//             if(puntoEnBloqueMovil(j,i))
+//             {
+//                 int bloqueX = marginX + (j * cellsize);
+//                 int bloqueY = marginY + (i * cellsize);
+//                 painter.drawPixmap(bloqueX, bloqueY, cellsize, cellsize, imgBloque);
+
+//             }
+//         }
+//     }
+
+//     /*Nodo* actual = cabeza;
+//     bool esCabeza=true;
+//     while (actual != nullptr)
+//     {
+//         if(esCabeza==true)
+//         {
+//             painter.setBrush(QColor(0, 255, 180));
+//             esCabeza=false;
+//         }
+//         else
+//         {
+//             painter.setBrush(QColor(0, 180, 0));
+//         }
+//         painter.setPen(Qt::NoPen);
+//         int posX = marginX + (actual->x * cellsize);
+//         int posY = marginY + (actual->y * cellsize);
+//         painter.drawRoundedRect(posX, posY, cellsize, cellsize, 5, 5);
+//         actual= actual->siguiente;
+//     }*/
+//     dibujarGusano(painter);
+
+//     painter.setPen(Qt::NoPen);
+//     /*painter.setBrush(Qt::red);
+//     int foodX = marginX + (food.x() * cellsize);
+//     int foodY = marginY + (food.y() * cellsize);
+//     painter.drawEllipse(foodX, foodY, cellsize, cellsize);*/
+//     int foodX = marginX + (food.x() * cellsize);
+//     int foodY = marginY + (food.y() * cellsize);
+//     painter.drawPixmap(foodX, foodY, cellsize, cellsize, imgManzanaRoja);
+
+
+//     if(hayComidaDorada==true)
+//     {
+//         /*painter.setBrush(QColor(255,215,0));
+//         int doradaX = marginX + (comidaDorada.x() * cellsize);
+//         int doradaY = marginY + (comidaDorada.y() * cellsize);
+//         painter.drawEllipse(doradaX, doradaY, cellsize, cellsize);*/
+//         int doradaX=marginX+(comidaDorada.x()*cellsize);
+//         int doradaY=marginY+(comidaDorada.y()*cellsize);
+//         painter.drawPixmap(doradaX, doradaY, cellsize, cellsize, imgManzanaDorada);
+//     }
+
+//     if(hayFrutaVelocidad==true)
+//     {
+//         painter.setPen(Qt::NoPen);
+//         int frutax = marginX + (frutaVelocidad.x() * cellsize);
+//         int frutay = marginY + (frutaVelocidad.y() * cellsize);
+//         if(frutaVelocidadBlanca==true)
+//         {
+//             /*painter.setBrush(Qt::white);
+//             painter.drawEllipse(frutax, frutay, cellsize, cellsize);*/
+//             painter.drawPixmap(frutax, frutay, cellsize, cellsize, imgManzanaBlanca);
+
+//         }
+//         else
+//         {
+//             /*painter.setBrush(QColor(150,120,80));
+//             painter.drawEllipse(frutax, frutay, cellsize, cellsize);
+//             painter.setBrush(QColor(85,65,40));
+//             painter.drawEllipse(frutax+3, frutay+3, cellsize, cellsize);
+//             painter.drawEllipse(frutax+cellsize-9, frutay+cellsize-8, 4, 4);*/
+//             painter.drawPixmap(frutax, frutay, cellsize, cellsize, imgManzanaMorada);
+//         }
+//     }
+//     /*
+//     painter.setPen(Qt::white);
+//     painter.setFont(QFont("Arial", 12));
+//     painter.drawText(10, 20, QString("Gemas: %1").arg(puntuacion));
+//     painter.drawText(10, 40, QString("Manzanas: %1/%2").arg(manzanasComidas).arg(MANZANAS_META));
+
+//     if(gameover==true)
+//     {
+//         painter.setPen(Qt::white);
+//         painter.setFont(QFont("Arial", 24));
+//         if(nivelGanado)
+//         {
+//             painter.drawText(rect(), Qt::AlignCenter, "¡NIVEL COMPLETADO!");
+//         }
+//         else
+//         {
+//             painter.drawText(rect(), Qt::AlignCenter, "GAME OVER");
+//         }
+//     }*/
+//     painter.setPen(Qt::white);
+//     painter.setFont(QFont("Arial", 10, QFont::Bold));
+
+//     int topY = 28;
+//     int bottomY = 44;
+
+//     QRect rect1Top(170, topY, 140, 18);
+//     QRect rect1Bottom(170, bottomY, 140, 18);
+//     painter.drawText(rect1Top, Qt::AlignCenter, QString("Gemas: %1").arg(totalManzanasComidas()));
+//     painter.drawText(rect1Bottom, Qt::AlignCenter, QString("Puntos: %1").arg(puntuacion));
+
+//     QRect rect2Top(330, topY, 140, 18);
+//     QRect rect2Bottom(330, bottomY, 140, 18);
+//     painter.drawText(rect2Top, Qt::AlignCenter, QString("Rojas: %1").arg(manzanasComidas));
+//     painter.drawText(rect2Bottom, Qt::AlignCenter, QString("Doradas: %1").arg(doradasComidas));
+
+//     QRect rect3(486, 25, 140, 36);
+//     painter.drawText(rect3, Qt::AlignCenter, QString("Tiempo: %1").arg(formatearTiempo(tiempoRestanteSegundos)));
+
+//     if(juegoPausado==true)
+//     {
+//         painter.fillRect(rect(), QColor(0,0,0,150));
+//         painter.setPen(Qt::white);
+//         painter.setFont(QFont("Trebuchet MS", 24, QFont::Bold));
+//         painter.drawText(QRect(0,330, width(), 60), Qt::AlignCenter, "PARTIDA PAUSADA");
+
+//     }
+//     if(gameover==true)
+//     {
+//         painter.fillRect(rect(), QColor(0,0,0,150));
+//         painter.setPen(Qt::white);
+//         painter.setFont(QFont("Trebuchet MS", 24, QFont::Bold));
+//         if(nivelGanado)
+//         {
+//             painter.drawText(QRect(0, height()/2-130, width(), 50), Qt::AlignHCenter, "¡NIVEL COMPLETADO!");
+//             painter.setFont(QFont("Trebuchet MS", 14, QFont::Bold));
+//             painter.drawText(QRect(0, height()/2-95, width(), 20), Qt::AlignCenter,QString("Puntaje: %1").arg(puntuacion));
+//             painter.drawText(QRect(0, height()/2-72, width(), 20), Qt::AlignCenter,QString("Gemas: %1").arg(totalManzanasComidas()));
+//             painter.drawText(QRect(0, height()/2-49, width(), 20), Qt::AlignCenter,QString("Manzanas rojas: %1").arg(manzanasComidas));
+//             painter.drawText(QRect(0, height()/2-26, width(), 20), Qt::AlignCenter,QString("Manzanas doradas: %1").arg(doradasComidas));
+//         }
+//         else
+//         {
+//             painter.drawText(QRect(0, height()/2-35, width(), 50), Qt::AlignHCenter, "¡GAME OVER!");
+//             painter.setFont(QFont("Trebuchet MS", 14, QFont::Bold));
+//         }
+//         painter.drawText(QRect(0, height()/2, width(), 30), Qt::AlignCenter,ganoPremio ? "¡Ganó la insignia!" : "No ganó la insignia:(");
+
+//     }
+//     dibujarEncabezadoPartidaPendiente(painter);
+// }
+
+
+// void Nivel3::resetGame() {
+//     limpiarSerpiente();
+//     crearSerpienteInicial(2,2,Right);
+
+//     direction = Right;
+//     gameover = false;
+//     puntuacion = 0;
+//     crecimientoExtra = 0;
+//     velocidadBase = VELOCIDAD_INICIAL;
+//     efectoDoradaActivo = false;
+//     generacionPartida++;
+//     hayFrutaVelocidad = false;
+//     frutaVelocidadBlanca = true;
+//     contadorMovimientoBloques = 0;
+
+//     cafesGeneradas=0;
+//     blancasGeneradas=0;
+
+
+//     btnReaunudar->hide();
+//     btnVolver->setGeometry(330, 550, 150, 50);
+//     btnVolver->hide();
+//     btnSonido->hide();
+//     btnMusica->hide();
+//     pausaBtn->show();
+//     juegoPausado=false;
+//     //  Reinicializar bloques
+//     inicializarBloquesMovibles();
+
+//     iniciarSistemaDeManzanas();
+
+//     //spawnFood();
+//     retryButton->hide();
+//     setFocusPolicy(Qt::StrongFocus);
+//     setFocus();
+//     timer->start(velocidadBase);
+//     update();
+// }
+
+// void Nivel3::aumentarVelocidad() {
+//     if (velocidadBase > VELOCIDAD_MINIMA)
+//     {
+//         velocidadBase -= 10;
+//         if (efectoDoradaActivo==false)
+//         {
+//             timer->setInterval(velocidadBase);
+//         }
+//     }
+// }
+
+// void Nivel3::activarReduccionVelocidad() {
+//     efectoDoradaActivo = true;
+//     timer->setInterval(velocidadBase + 80);
+//     int generacionActual = generacionPartida;
+//     QTimer::singleShot(5000, this, [this, generacionActual]()
+//                        {
+//                            if (generacionActual == generacionPartida)
+//                            {
+//                                restaurarVelocidadNormal();
+//                            }
+//                        });
+// }
+
+// void Nivel3::restaurarVelocidadNormal() {
+//     efectoDoradaActivo = false;
+//     timer->setInterval(velocidadBase);
+// }
+
+// void Nivel3::intentoFrutaVelocidad() {
+//     if (cafesGeneradas >= CAFES_MAX_GENERADAS && blancasGeneradas >= BLANCAS_MAX_GENERADAS)
+//     {
+//         return;
+//     }
+
+//     int x = 0;
+//     int y = 0;
+//     bool posicionValida;
+//     int intentos = 0;
+
+//     do {
+//         x = QRandomGenerator::global()->bounded(cols);
+//         y = QRandomGenerator::global()->bounded(rows);
+//         posicionValida = true;
+
+//         if (puntoEnBloqueMovil(x, y)) posicionValida = false;
+//         if (posicionValida && hayComidaDorada && x == comidaDorada.x() && y == comidaDorada.y())
+//         {
+//             posicionValida = false;
+//         }
+//         if (posicionValida)
+//         {
+//             Nodo* actual = cabeza;
+//             while (actual != nullptr)
+//             {
+//                 if (actual->x == x && actual->y == y)
+//                 {
+//                     posicionValida = false;
+//                     break;
+//                 }
+//                 actual = actual->siguiente;
+//             }
+//         }
+//         intentos++;
+//     } while (!posicionValida && intentos < 100);
+
+//     if (posicionValida==true)
+//     {
+//         frutaVelocidad = QPoint(x, y);
+//         hayFrutaVelocidad = true;
+//         frutaVelocidadBlanca = (QRandomGenerator::global()->bounded(100) < 50);
+//     }
+
+//     if(cafesGeneradas>= CAFES_MAX_GENERADAS)
+//     {
+//         frutaVelocidadCafe=true;
+//     }
+//     else if(blancasGeneradas>=BLANCAS_MAX_GENERADAS)
+//     {
+//         frutaVelocidadBlanca=false;
+//     }
+//     else
+//     {
+//         frutaVelocidadBlanca=(QRandomGenerator::global()->bounded(100)<50);
+//     }
+//     if(frutaVelocidadBlanca==true)
+//     {
+//         blancasGeneradas++;
+//     }
+//     else
+//     {
+//         cafesGeneradas++;
+//     }
+// }
+
+
 #include "nivel3.h"
 #include "ui_gamewindow.h"
 #include <QPainter>
@@ -7,83 +760,66 @@ Nivel3::Nivel3(QWidget *parent) :
     Nivel(parent),
     hayFrutaVelocidad(false),
     frutaVelocidadBlanca(true),
+    frutaVelocidadCafe(false),
     velocidadBase(VELOCIDAD_INICIAL),
     efectoDoradaActivo(false),
     generacionPartida(0),
     desplazamientoBloques(0),
     direccionBloques(1),
     contadorMovimientoBloques(0),
-    //manzanas por tiempo
     cafesGeneradas(0),
     blancasGeneradas(0)
 {
-
     fondo.load(":/imagenes/nivel3_fondo.png");
     cols = (width() - (2 * marginX)) / cellsize;
     rows = (height() - (2 * marginY)) / cellsize;
 
-
-    if (pausaBtn != nullptr) { //como obtiene la imagen de nivel.cpp, entonces aqui cambia la imagen
+    if (pausaBtn != nullptr) {
         pausaBtn->setGeometry(642, 2, 160, 90);
         pausaBtn->setStyleSheet(
             "QPushButton {"
-            "   border-image: url(:/btns/boton_pausa_nivel3.png);"
-            "   border: none;"
+            "    border-image: url(:/btns/boton_pausa_nivel3.png);"
+            "    border: none;"
             "}"
             "QPushButton:hover {"
-            "   opacity: 0.8;"
+            "    opacity: 0.8;"
             "}"
             "QPushButton:pressed {"
-            "   border-image: url(:/btns/boton_pausa_nivel3.png);"
+            "    border-image: url(:/btns/boton_pausa_nivel3.png);"
             "}"
             );
     }
-    // USAR int** mapa (igual que Nivel 2)
+
     crearMapa();
     inicializarBloquesMovibles();
-    //crearSerpienteInicial(2,2,Right);
-
-
-    //spawnFood();
-    //manzanas por tiempo
-    //iniciarSistemaDeManzanas();
-
-    //timer->start(velocidadBase);
 }
-//manzanas por tiempo
-bool Nivel3::ejecutarCicloGeneracion()
-{
-    bool resultado=Nivel::ejecutarCicloGeneracion();
+
+bool Nivel3::ejecutarCicloGeneracion() {
+    bool resultado = Nivel::ejecutarCicloGeneracion();
     intentoFrutaVelocidad();
     return resultado;
 }
 
-void Nivel3::inicializarBloquesMovibles()
-{
+void Nivel3::inicializarBloquesMovibles() {
     centroFilaBloques = rows / 2;
     centroColumnaBloques = cols / 2;
     grosorBloqueMovil = 2;
     altoBloqueMovil = 8;
     maxDesplazamientoBloques = centroFilaBloques - altoBloqueMovil - 1;
-    if (maxDesplazamientoBloques < 0)
-    {
+    if (maxDesplazamientoBloques < 0) {
         maxDesplazamientoBloques = 0;
     }
     desplazamientoBloques = 0;
     direccionBloques = 1;
     contadorMovimientoBloques = 0;
 
-    // Dibujar bloques iniciales en mapa[][]
     dibujarBloquesEnMapa();
 }
 
 void Nivel3::limpiarMapa() {
-    if (mapa != nullptr)
-    {
-        for (int i = 0; i < rows; i++)
-        {
-            for (int j = 0; j < cols; j++)
-            {
+    if (mapa != nullptr) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
                 mapa[i][j] = 0;
             }
         }
@@ -91,33 +827,25 @@ void Nivel3::limpiarMapa() {
 }
 
 void Nivel3::dibujarBloquesEnMapa() {
-    if (mapa == nullptr)
-    {
-        return;
-    }
+    if (mapa == nullptr) return;
+
     // Barra superior
-    for (int dy = 0; dy < altoBloqueMovil; dy++)
-    {
-        for (int dx = -grosorBloqueMovil; dx <= grosorBloqueMovil; dx++)
-        {
+    for (int dy = 0; dy < altoBloqueMovil; dy++) {
+        for (int dx = -grosorBloqueMovil; dx <= grosorBloqueMovil; dx++) {
             int x = centroColumnaBloques + dx;
             int y = centroFilaBloques - 1 - desplazamientoBloques - dy;
-            if (x >= 0 && x < cols && y >= 0 && y < rows)
-            {
+            if (x >= 0 && x < cols && y >= 0 && y < rows) {
                 mapa[y][x] = 1;
             }
         }
     }
 
     // Barra inferior
-    for (int dy = 0; dy < altoBloqueMovil; dy++)
-    {
-        for (int dx = -grosorBloqueMovil; dx <= grosorBloqueMovil; dx++)
-        {
+    for (int dy = 0; dy < altoBloqueMovil; dy++) {
+        for (int dx = -grosorBloqueMovil; dx <= grosorBloqueMovil; dx++) {
             int x = centroColumnaBloques + dx;
             int y = centroFilaBloques + desplazamientoBloques + dy;
-            if (x >= 0 && x < cols && y >= 0 && y < rows)
-            {
+            if (x >= 0 && x < cols && y >= 0 && y < rows) {
                 mapa[y][x] = 1;
             }
         }
@@ -126,122 +854,95 @@ void Nivel3::dibujarBloquesEnMapa() {
 
 void Nivel3::actualizarBloquesMovibles() {
     contadorMovimientoBloques++;
-    if (contadorMovimientoBloques < INTERVALO_MOVIMIENTO_BLOQUES)
-    {
+    if (contadorMovimientoBloques < INTERVALO_MOVIMIENTO_BLOQUES) {
         return;
     }
 
     contadorMovimientoBloques = 0;
-
-    // Mover bloques
     desplazamientoBloques += direccionBloques;
-    if (desplazamientoBloques >= maxDesplazamientoBloques)
-    {
+    if (desplazamientoBloques >= maxDesplazamientoBloques) {
         desplazamientoBloques = maxDesplazamientoBloques;
         direccionBloques = -1;
-    }
-    else if (desplazamientoBloques <= 0)
-    {
+    } else if (desplazamientoBloques <= 0) {
         desplazamientoBloques = 0;
         direccionBloques = 1;
     }
 
-    //  Limpiar mapa y redibujar bloques en nuevas posiciones
     limpiarMapa();
     dibujarBloquesEnMapa();
 }
 
 bool Nivel3::puntoEnBloqueMovil(int x, int y) const {
-    if (mapa == nullptr)
-    {
-        return false;
-    }
-    if (x < 0 || x >= cols || y < 0 || y >= rows)
-    {
-        return false;
-    }
+    if (mapa == nullptr) return false;
+    if (x < 0 || x >= cols || y < 0 || y >= rows) return false;
     return mapa[y][x] == 1;
 }
 
 void Nivel3::gameloop() {
-    if (gameover==true)
-    {
+    if (gameover == true) {
         return;
     }
 
     actualizarBloquesMovibles();
     moveSnake();
     checkCollision();
+
+    // Verificación de victoria por tiempo límite cumplido (sobrevivir/completar ciclo temporal)
+    if (!gameover && tiempoRestanteSegundos <= 0) {
+        nivelGanado = true;
+        gameover = true;
+        guardarPartidaCompletada();
+        actualizarUsuarioTrasPartida();
+        timer->stop();
+        retryButton->show();
+        btnVolver->setGeometry(330, 490, 150, 50);
+        btnVolver->show();
+    }
+
     update();
 }
 
-void Nivel3::moveSnake()
-{
-    if (cabeza == nullptr)
-    {
-        return;
-    }
+void Nivel3::moveSnake() {
+    if (cabeza == nullptr) return;
 
     int newX = cabeza->x;
     int newY = cabeza->y;
 
-    switch (direction)
-    {
-        case Up:
-        {
-            newY--;
-            break;
-        }
-        case Down:
-        {
-            newY++;
-            break;
-        }
-        case Right:
-        {
-            newX++;
-            break;
-        }
-        case Left:
-        {
-            newX--;
-            break;
-
-        }
+    switch (direction) {
+    case Up: newY--; break;
+    case Down: newY++; break;
+    case Right: newX++; break;
+    case Left: newX--; break;
     }
 
     // Validar límites
-    if (newX < 0 || newY < 0 || newX >= cols || newY >= rows)
-    {
+    if (newX < 0 || newY < 0 || newX >= cols || newY >= rows) {
         gameover = true;
         guardarPartidaCompletada();
         actualizarUsuarioTrasPartida();
         timer->stop();
-        if (sonidoActivado==true)
-        {
+        if (sonidoActivado == true) {
             sonidoPerdio->stop();
             sonidoPerdio->play();
         }
         retryButton->show();
-        btnVolver->setGeometry(330, 490, 150,50);
+        btnVolver->setGeometry(330, 490, 150, 50);
         btnVolver->show();
         return;
     }
 
-    //  Validar colisión con bloques usando mapa[][]
-    if (puntoEnBloqueMovil(newX, newY)==true)
-    {
+    // Validar colisión con bloques usando mapa[][]
+    if (puntoEnBloqueMovil(newX, newY) == true) {
         gameover = true;
         guardarPartidaCompletada();
         actualizarUsuarioTrasPartida();
         timer->stop();
-        if (sonidoActivado==true)
-        {
+        if (sonidoActivado == true) {
             sonidoPerdio->stop();
             sonidoPerdio->play();
         }
         retryButton->show();
-        btnVolver->setGeometry(330, 490, 150,50);
+        btnVolver->setGeometry(330, 490, 150, 50);
         btnVolver->show();
         return;
     }
@@ -252,91 +953,62 @@ void Nivel3::moveSnake()
 
     bool comioAlgo = false;
 
-    if (hayComidaDorada==true && doradaActualComida==false && newX==comidaDorada.x() && newY==comidaDorada.y())
-    {
+    if (hayComidaDorada == true && doradaActualComida == false && newX == comidaDorada.x() && newY == comidaDorada.y()) {
         puntuacion += 15;
         doradasComidas++;
-        doradaActualComida=true;
+        doradaActualComida = true;
         hayComidaDorada = false;
         activarReduccionVelocidad();
         crecimientoExtra += 2;
         comioAlgo = true;
     }
 
-    if (hayFrutaVelocidad==true && newX==frutaVelocidad.x() && newY==frutaVelocidad.y())
-    {
+    if (hayFrutaVelocidad == true && newX == frutaVelocidad.x() && newY == frutaVelocidad.y()) {
         hayFrutaVelocidad = false;
-        if (frutaVelocidadBlanca==true)
-        {
-            if (velocidadBase - CAMBIO_VELOCIDAD_FRUTA >= VELOCIDAD_MINIMA)
-            {
+        if (frutaVelocidadBlanca == true) {
+            if (velocidadBase - CAMBIO_VELOCIDAD_FRUTA >= VELOCIDAD_MINIMA) {
                 velocidadBase -= CAMBIO_VELOCIDAD_FRUTA;
             }
-        }
-        else
-        {
-            if (velocidadBase + CAMBIO_VELOCIDAD_FRUTA <= VELOCIDAD_MAXIMA)
-            {
+        } else {
+            if (velocidadBase + CAMBIO_VELOCIDAD_FRUTA <= VELOCIDAD_MAXIMA) {
                 velocidadBase += CAMBIO_VELOCIDAD_FRUTA;
             }
         }
-        if (efectoDoradaActivo==false)
-        {
+        if (efectoDoradaActivo == false) {
             timer->setInterval(velocidadBase);
         }
-        if(sonidoActivado==true)
-        {
+        if (sonidoActivado == true) {
             sonidoComio->stop();
             sonidoComio->play();
         }
     }
 
-    if (newX == food.x() && newY == food.y() && rojaActualComida==false)
-    {
+    if (newX == food.x() && newY == food.y() && rojaActualComida == false) {
         comioAlgo = true;
         rojasComidas++;
-        rojaActualComida=true;
-        manzanasComidas=rojasComidas;
+        rojaActualComida = true;
+        manzanasComidas = rojasComidas;
         puntuacion += VALOR_ROJA;
         crecimientoExtra += 1;
         hayFrutaVelocidad = false;
 
-        /*if (manzanasComidas >= MANZANAS_META)
-        {
-            nivelGanado = true;
-            gameover = true;
-            timer->stop();
-            retryButton->show();
-        }
-        else
-        {
-            if (manzanasComidas % 2 == 0) aumentarVelocidad();
-            spawnFood();
-            intentoComidaDorada();
-            intentoFrutaVelocidad();
-        }*/
-        if (manzanasComidas % 2 == 0)
-        {
+        if (manzanasComidas % 2 == 0) {
             aumentarVelocidad();
         }
         avanzarCicloPorRojaComida();
     }
-    if(comioAlgo==true && sonidoActivado==true)
-    {
+
+    if (comioAlgo == true && sonidoActivado == true) {
         sonidoComio->stop();
         sonidoComio->play();
     }
-    if (comioAlgo==false)
-    {
-        if (crecimientoExtra > 0)
-        {
+
+    if (comioAlgo == false) {
+        if (crecimientoExtra > 0) {
             crecimientoExtra--;
-        }
-        else if (cabeza->siguiente != nullptr)
-        {
+        } else if (cabeza->siguiente != nullptr) {
             Nodo* actual = cabeza;
-            while (actual->siguiente->siguiente != nullptr)
-            {
+            while (actual->siguiente->siguiente != nullptr) {
                 actual = actual->siguiente;
             }
             delete actual->siguiente;
@@ -355,91 +1027,74 @@ void Nivel3::spawnFood() {
         y = QRandomGenerator::global()->bounded(rows);
         posicionValida = true;
 
-        //  Validar con mapa[][]
-        if (puntoEnBloqueMovil(x, y)==true)
-        {
+        if (puntoEnBloqueMovil(x, y) == true) {
             posicionValida = false;
         }
 
-        if (posicionValida==true)
-        {
+        if (posicionValida == true) {
             Nodo* actual = cabeza;
-            while (actual != nullptr)
-            {
-                if (actual->x == x && actual->y == y)
-                {
+            while (actual != nullptr) {
+                if (actual->x == x && actual->y == y) {
                     posicionValida = false;
                     break;
                 }
                 actual = actual->siguiente;
             }
         }
-    } while (posicionValida==false);
+    } while (posicionValida == false);
 
     food = QPoint(x, y);
 }
 
 void Nivel3::checkCollision() {
-    if (cabeza == nullptr)
-    {
-        return;
-    }
+    if (cabeza == nullptr) return;
 
     int cabezaX = cabeza->x;
     int cabezaY = cabeza->y;
 
-    if (cabezaX < 0 || cabezaY < 0 || cabezaX >= cols || cabezaY >= rows)
-    {
+    if (cabezaX < 0 || cabezaY < 0 || cabezaX >= cols || cabezaY >= rows) {
         gameover = true;
         guardarPartidaCompletada();
         actualizarUsuarioTrasPartida();
         timer->stop();
-        if (sonidoActivado==true)
-        {
+        if (sonidoActivado == true) {
             sonidoPerdio->stop();
             sonidoPerdio->play();
         }
         retryButton->show();
-        btnVolver->setGeometry(330, 490, 150,50);
+        btnVolver->setGeometry(330, 490, 150, 50);
         btnVolver->show();
         return;
     }
 
-    //  Colisión con bloques usando mapa[][]
-    if (puntoEnBloqueMovil(cabezaX, cabezaY))
-    {
+    if (puntoEnBloqueMovil(cabezaX, cabezaY)) {
         gameover = true;
         guardarPartidaCompletada();
         actualizarUsuarioTrasPartida();
         timer->stop();
-        if (sonidoActivado==true)
-        {
+        if (sonidoActivado == true) {
             sonidoPerdio->stop();
             sonidoPerdio->play();
         }
         retryButton->show();
-        btnVolver->setGeometry(330, 490, 150,50);
+        btnVolver->setGeometry(330, 490, 150, 50);
         btnVolver->show();
         return;
     }
 
-    // Colisión con su propio cuerpo
     Nodo* actual = cabeza->siguiente;
-    while (actual != nullptr)
-    {
-        if (cabezaX == actual->x && cabezaY == actual->y)
-        {
+    while (actual != nullptr) {
+        if (cabezaX == actual->x && cabezaY == actual->y) {
             gameover = true;
             guardarPartidaCompletada();
             actualizarUsuarioTrasPartida();
             timer->stop();
-            if (sonidoActivado==true)
-            {
+            if (sonidoActivado == true) {
                 sonidoPerdio->stop();
                 sonidoPerdio->play();
             }
             retryButton->show();
-            btnVolver->setGeometry(330, 490, 150,50);
+            btnVolver->setGeometry(330, 490, 150, 50);
             btnVolver->show();
             return;
         }
@@ -447,16 +1102,12 @@ void Nivel3::checkCollision() {
     }
 }
 
-void Nivel3::paintEvent(QPaintEvent *)
-{
+void Nivel3::paintEvent(QPaintEvent *) {
     QPainter painter(this);
 
-    if (fondo.isNull()==false)
-    {
+    if (fondo.isNull() == false) {
         painter.drawPixmap(0, 0, width(), height(), fondo);
-    }
-    else
-    {
+    } else {
         painter.fillRect(rect(), Qt::black);
     }
 
@@ -464,105 +1115,42 @@ void Nivel3::paintEvent(QPaintEvent *)
     painter.setPen(QPen(QColor(120, 110, 100), 2));
     painter.drawRect(marginX, marginY, cols * cellsize, rows * cellsize);
 
-    painter.setBrush(QColor(120,110,100));
-    painter.setPen(QPen(QColor(60,55,50), 2));
-    for(int i=0; i<rows; i++)
-    {
-        for(int j=0; j<cols; j++)
-        {
-            if(puntoEnBloqueMovil(j,i))
-            {
+    painter.setBrush(QColor(120, 110, 100));
+    painter.setPen(QPen(QColor(60, 55, 50), 2));
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            if (puntoEnBloqueMovil(j, i)) {
                 int bloqueX = marginX + (j * cellsize);
                 int bloqueY = marginY + (i * cellsize);
                 painter.drawPixmap(bloqueX, bloqueY, cellsize, cellsize, imgBloque);
-
             }
         }
     }
 
-    /*Nodo* actual = cabeza;
-    bool esCabeza=true;
-    while (actual != nullptr)
-    {
-        if(esCabeza==true)
-        {
-            painter.setBrush(QColor(0, 255, 180));
-            esCabeza=false;
-        }
-        else
-        {
-            painter.setBrush(QColor(0, 180, 0));
-        }
-        painter.setPen(Qt::NoPen);
-        int posX = marginX + (actual->x * cellsize);
-        int posY = marginY + (actual->y * cellsize);
-        painter.drawRoundedRect(posX, posY, cellsize, cellsize, 5, 5);
-        actual= actual->siguiente;
-    }*/
     dibujarGusano(painter);
 
     painter.setPen(Qt::NoPen);
-    /*painter.setBrush(Qt::red);
-    int foodX = marginX + (food.x() * cellsize);
-    int foodY = marginY + (food.y() * cellsize);
-    painter.drawEllipse(foodX, foodY, cellsize, cellsize);*/
     int foodX = marginX + (food.x() * cellsize);
     int foodY = marginY + (food.y() * cellsize);
     painter.drawPixmap(foodX, foodY, cellsize, cellsize, imgManzanaRoja);
 
-
-    if(hayComidaDorada==true)
-    {
-        /*painter.setBrush(QColor(255,215,0));
+    if (hayComidaDorada == true) {
         int doradaX = marginX + (comidaDorada.x() * cellsize);
         int doradaY = marginY + (comidaDorada.y() * cellsize);
-        painter.drawEllipse(doradaX, doradaY, cellsize, cellsize);*/
-        int doradaX=marginX+(comidaDorada.x()*cellsize);
-        int doradaY=marginY+(comidaDorada.y()*cellsize);
         painter.drawPixmap(doradaX, doradaY, cellsize, cellsize, imgManzanaDorada);
     }
 
-    if(hayFrutaVelocidad==true)
-    {
+    if (hayFrutaVelocidad == true) {
         painter.setPen(Qt::NoPen);
         int frutax = marginX + (frutaVelocidad.x() * cellsize);
         int frutay = marginY + (frutaVelocidad.y() * cellsize);
-        if(frutaVelocidadBlanca==true)
-        {
-            /*painter.setBrush(Qt::white);
-            painter.drawEllipse(frutax, frutay, cellsize, cellsize);*/
+        if (frutaVelocidadBlanca == true) {
             painter.drawPixmap(frutax, frutay, cellsize, cellsize, imgManzanaBlanca);
-
-        }
-        else
-        {
-            /*painter.setBrush(QColor(150,120,80));
-            painter.drawEllipse(frutax, frutay, cellsize, cellsize);
-            painter.setBrush(QColor(85,65,40));
-            painter.drawEllipse(frutax+3, frutay+3, cellsize, cellsize);
-            painter.drawEllipse(frutax+cellsize-9, frutay+cellsize-8, 4, 4);*/
+        } else {
             painter.drawPixmap(frutax, frutay, cellsize, cellsize, imgManzanaMorada);
         }
     }
-    /*
-    painter.setPen(Qt::white);
-    painter.setFont(QFont("Arial", 12));
-    painter.drawText(10, 20, QString("Gemas: %1").arg(puntuacion));
-    painter.drawText(10, 40, QString("Manzanas: %1/%2").arg(manzanasComidas).arg(MANZANAS_META));
 
-    if(gameover==true)
-    {
-        painter.setPen(Qt::white);
-        painter.setFont(QFont("Arial", 24));
-        if(nivelGanado)
-        {
-            painter.drawText(rect(), Qt::AlignCenter, "¡NIVEL COMPLETADO!");
-        }
-        else
-        {
-            painter.drawText(rect(), Qt::AlignCenter, "GAME OVER");
-        }
-    }*/
     painter.setPen(Qt::white);
     painter.setFont(QFont("Arial", 10, QFont::Bold));
 
@@ -582,46 +1170,41 @@ void Nivel3::paintEvent(QPaintEvent *)
     QRect rect3(486, 25, 140, 36);
     painter.drawText(rect3, Qt::AlignCenter, QString("Tiempo: %1").arg(formatearTiempo(tiempoRestanteSegundos)));
 
-    if(juegoPausado==true)
-    {
-        painter.fillRect(rect(), QColor(0,0,0,150));
+    if (juegoPausado == true) {
+        painter.fillRect(rect(), QColor(0, 0, 0, 150));
         painter.setPen(Qt::white);
         painter.setFont(QFont("Trebuchet MS", 24, QFont::Bold));
-        painter.drawText(QRect(0,330, width(), 60), Qt::AlignCenter, "PARTIDA PAUSADA");
-
+        painter.drawText(QRect(0, 330, width(), 60), Qt::AlignCenter, "PARTIDA PAUSADA");
     }
-    if(gameover==true)
-    {
-        painter.fillRect(rect(), QColor(0,0,0,150));
+
+    if (gameover == true) {
+        painter.fillRect(rect(), QColor(0, 0, 0, 150));
         painter.setPen(Qt::white);
         painter.setFont(QFont("Trebuchet MS", 24, QFont::Bold));
-        if(nivelGanado)
-        {
+        if (nivelGanado) {
             painter.drawText(QRect(0, height()/2-130, width(), 50), Qt::AlignHCenter, "¡NIVEL COMPLETADO!");
             painter.setFont(QFont("Trebuchet MS", 14, QFont::Bold));
-            painter.drawText(QRect(0, height()/2-95, width(), 20), Qt::AlignCenter,QString("Puntaje: %1").arg(puntuacion));
-            painter.drawText(QRect(0, height()/2-72, width(), 20), Qt::AlignCenter,QString("Gemas: %1").arg(totalManzanasComidas()));
-            painter.drawText(QRect(0, height()/2-49, width(), 20), Qt::AlignCenter,QString("Manzanas rojas: %1").arg(manzanasComidas));
-            painter.drawText(QRect(0, height()/2-26, width(), 20), Qt::AlignCenter,QString("Manzanas doradas: %1").arg(doradasComidas));
-        }
-        else
-        {
+            painter.drawText(QRect(0, height()/2-95, width(), 20), Qt::AlignCenter, QString("Puntaje: %1").arg(puntuacion));
+            painter.drawText(QRect(0, height()/2-72, width(), 20), Qt::AlignCenter, QString("Gemas: %1").arg(totalManzanasComidas()));
+            painter.drawText(QRect(0, height()/2-49, width(), 20), Qt::AlignCenter, QString("Manzanas rojas: %1").arg(manzanasComidas));
+            painter.drawText(QRect(0, height()/2-26, width(), 20), Qt::AlignCenter, QString("Manzanas doradas: %1").arg(doradasComidas));
+        } else {
             painter.drawText(QRect(0, height()/2-35, width(), 50), Qt::AlignHCenter, "¡GAME OVER!");
             painter.setFont(QFont("Trebuchet MS", 14, QFont::Bold));
         }
-        painter.drawText(QRect(0, height()/2, width(), 30), Qt::AlignCenter,ganoPremio ? "¡Ganó la insignia!" : "No ganó la insignia:(");
-
+        painter.drawText(QRect(0, height()/2, width(), 30), Qt::AlignCenter, ganoPremio ? "¡Ganó la insignia!" : "No ganó la insignia:(");
     }
+
     dibujarEncabezadoPartidaPendiente(painter);
 }
 
-
 void Nivel3::resetGame() {
     limpiarSerpiente();
-    crearSerpienteInicial(2,2,Right);
+    crearSerpienteInicial(2, 2, Right);
 
     direction = Right;
     gameover = false;
+    nivelGanado = false;
     puntuacion = 0;
     crecimientoExtra = 0;
     velocidadBase = VELOCIDAD_INICIAL;
@@ -631,9 +1214,8 @@ void Nivel3::resetGame() {
     frutaVelocidadBlanca = true;
     contadorMovimientoBloques = 0;
 
-    cafesGeneradas=0;
-    blancasGeneradas=0;
-
+    cafesGeneradas = 0;
+    blancasGeneradas = 0;
 
     btnReaunudar->hide();
     btnVolver->setGeometry(330, 550, 150, 50);
@@ -641,13 +1223,11 @@ void Nivel3::resetGame() {
     btnSonido->hide();
     btnMusica->hide();
     pausaBtn->show();
-    juegoPausado=false;
-    //  Reinicializar bloques
-    inicializarBloquesMovibles();
+    juegoPausado = false;
 
+    inicializarBloquesMovibles();
     iniciarSistemaDeManzanas();
 
-    //spawnFood();
     retryButton->hide();
     setFocusPolicy(Qt::StrongFocus);
     setFocus();
@@ -656,11 +1236,9 @@ void Nivel3::resetGame() {
 }
 
 void Nivel3::aumentarVelocidad() {
-    if (velocidadBase > VELOCIDAD_MINIMA)
-    {
+    if (velocidadBase > VELOCIDAD_MINIMA) {
         velocidadBase -= 10;
-        if (efectoDoradaActivo==false)
-        {
+        if (efectoDoradaActivo == false) {
             timer->setInterval(velocidadBase);
         }
     }
@@ -670,13 +1248,11 @@ void Nivel3::activarReduccionVelocidad() {
     efectoDoradaActivo = true;
     timer->setInterval(velocidadBase + 80);
     int generacionActual = generacionPartida;
-    QTimer::singleShot(5000, this, [this, generacionActual]()
-                       {
-                           if (generacionActual == generacionPartida)
-                           {
-                               restaurarVelocidadNormal();
-                           }
-                       });
+    QTimer::singleShot(5000, this, [this, generacionActual]() {
+        if (generacionActual == generacionPartida) {
+            restaurarVelocidadNormal();
+        }
+    });
 }
 
 void Nivel3::restaurarVelocidadNormal() {
@@ -685,8 +1261,7 @@ void Nivel3::restaurarVelocidadNormal() {
 }
 
 void Nivel3::intentoFrutaVelocidad() {
-    if (cafesGeneradas >= CAFES_MAX_GENERADAS && blancasGeneradas >= BLANCAS_MAX_GENERADAS)
-    {
+    if (cafesGeneradas >= CAFES_MAX_GENERADAS && blancasGeneradas >= BLANCAS_MAX_GENERADAS) {
         return;
     }
 
@@ -701,17 +1276,13 @@ void Nivel3::intentoFrutaVelocidad() {
         posicionValida = true;
 
         if (puntoEnBloqueMovil(x, y)) posicionValida = false;
-        if (posicionValida && hayComidaDorada && x == comidaDorada.x() && y == comidaDorada.y())
-        {
+        if (posicionValida && hayComidaDorada && x == comidaDorada.x() && y == comidaDorada.y()) {
             posicionValida = false;
         }
-        if (posicionValida)
-        {
+        if (posicionValida) {
             Nodo* actual = cabeza;
-            while (actual != nullptr)
-            {
-                if (actual->x == x && actual->y == y)
-                {
+            while (actual != nullptr) {
+                if (actual->x == x && actual->y == y) {
                     posicionValida = false;
                     break;
                 }
@@ -721,31 +1292,22 @@ void Nivel3::intentoFrutaVelocidad() {
         intentos++;
     } while (!posicionValida && intentos < 100);
 
-    if (posicionValida==true)
-    {
+    if (posicionValida == true) {
         frutaVelocidad = QPoint(x, y);
         hayFrutaVelocidad = true;
+    }
+
+    if (cafesGeneradas >= CAFES_MAX_GENERADAS) {
+        frutaVelocidadBlanca = true;
+    } else if (blancasGeneradas >= BLANCAS_MAX_GENERADAS) {
+        frutaVelocidadBlanca = false;
+    } else {
         frutaVelocidadBlanca = (QRandomGenerator::global()->bounded(100) < 50);
     }
 
-    if(cafesGeneradas>= CAFES_MAX_GENERADAS)
-    {
-        frutaVelocidadCafe=true;
-    }
-    else if(blancasGeneradas>=BLANCAS_MAX_GENERADAS)
-    {
-        frutaVelocidadBlanca=false;
-    }
-    else
-    {
-        frutaVelocidadBlanca=(QRandomGenerator::global()->bounded(100)<50);
-    }
-    if(frutaVelocidadBlanca==true)
-    {
+    if (frutaVelocidadBlanca == true) {
         blancasGeneradas++;
-    }
-    else
-    {
+    } else {
         cafesGeneradas++;
     }
 }

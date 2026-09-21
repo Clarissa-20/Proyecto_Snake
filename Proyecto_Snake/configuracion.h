@@ -19,6 +19,8 @@ public:
     static int volAmbienteGlobal; // 0 a 100
     static int volEfectosGlobal;  // 0 a 100
 
+    void setUsuario(const QString &usuario);
+
 signals:
     void volverMenuClicked();
 
@@ -43,6 +45,8 @@ private:
     QSlider *sliderEfectos;
     int volAmbiente;
     int volEfectos;
+
+    QString usuarioActual;
 };
 
 #endif // CONFIGURACION_H

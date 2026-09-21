@@ -2,6 +2,8 @@
 #include <QPainter>
 #include "instruccionesnivel.h"
 #include "usermanager.h"
+
+
 menuNiveles::menuNiveles(QWidget *parent)
     : QWidget(parent),
     sonidoActivado(true),
@@ -116,7 +118,7 @@ menuNiveles::menuNiveles(QWidget *menu, bool desdeMenuPrincipal, const QString &
     }
 }
 
-void menuNiveles::paintEvent(QPaintEvent *event)
+/*void menuNiveles::paintEvent(QPaintEvent *event)
 {
     if(usuarioActual.isEmpty()==false)
     {
@@ -134,6 +136,17 @@ void menuNiveles::paintEvent(QPaintEvent *event)
     }
     else
     {
+        painter.fillRect(rect(), Qt::black);
+    }
+}*/
+
+void menuNiveles::paintEvent(QPaintEvent *event) {
+    Q_UNUSED(event);
+    QPainter painter(this);
+
+    if (!fondoMenu.isNull()) {
+        painter.drawPixmap(rect(), fondoMenu);
+    } else {
         painter.fillRect(rect(), Qt::black);
     }
 }
@@ -298,4 +311,3 @@ void menuNiveles::actualizarBotonesNiveles(int nivelActual)
             );
     }
 }
-

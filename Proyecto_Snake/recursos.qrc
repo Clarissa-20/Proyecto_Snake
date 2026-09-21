@@ -162,5 +162,19 @@
         <file>btns/registrarse_boton.png</file>
         <file>skins/skin4_cuerpo_vertical.png</file>
         <file>imagenes/config_fondo.png</file>
+        <file>btns/btn_modo_historia.png</file>
+        <file>btns/btn_modo_libre.png</file>
+        <file>skins/skin_predeterminada_tienda.png</file>
+        <file>imagenes/miPerfil_fondo.png</file>
+        <file>imagenes/avatar_1.png</file>
+        <file>imagenes/avatar_2.png</file>
+        <file>imagenes/avatar_3.png</file>
+        <file>imagenes/avatar_4.png</file>
+        <file>imagenes/map_piece_1.png</file>
+        <file>imagenes/map_piece_2.png</file>
+        <file>imagenes/map_piece_3.png</file>
+        <file>imagenes/insignia_1.png</file>
+        <file>imagenes/insignia_2.png</file>
+        <file>imagenes/insignia_3.png</file>
     </qresource>
 </RCC>

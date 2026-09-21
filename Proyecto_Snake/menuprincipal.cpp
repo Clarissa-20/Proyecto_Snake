@@ -4,6 +4,8 @@
 #include "tienda.h"
 #include "inicioscreen.h"
 #include "configuracion.h"
+#include "modojuego.h"
+#include "miperfil.h"
 #include <QPixmap>
 #include <QIcon>
 #include <QCoreApplication>
@@ -14,7 +16,6 @@ MenuPrincipal::MenuPrincipal(QWidget *parent, const QString &usuario)
     : QMainWindow(parent),
     usuarioActual(usuario)
 {
-
     this->setFixedSize(800, 600);
     this->setWindowTitle("Snake - Menú Principal");
 
@@ -59,23 +60,16 @@ MenuPrincipal::MenuPrincipal(QWidget *parent, const QString &usuario)
     btnConfiguracion->setIconSize(btnConfiguracion->size());
     btnConfiguracion->setStyleSheet("QPushButton { border: none; background: transparent; }");
 
-    //NIVEL LIBRE
-    // btnSalir = new QPushButton(this);
-    // btnSalir->setGeometry(posX, posYInicial + (separacionY * 5), anchoBtn, altoBtn);
-    // btnSalir->setIcon(QIcon(":/imagenes/boton_salir.png"));
-    // btnSalir->setIconSize(btnSalir->size());
-    // btnSalir->setStyleSheet("QPushButton { border: none; background: transparent; }");
-
     iconoPerfil = new QPushButton(this);
     iconoPerfil->setGeometry(710, 20, 80, 80);
     iconoPerfil->setStyleSheet(
         "QPushButton {"
-        "   border-image: url(:/btns/icono_miPerfil.png);"
-        "   border: none;"
-        "   background: transparent;"
+        "    border-image: url(:/btns/icono_miPerfil.png);"
+        "    border: none;"
+        "    background: transparent;"
         "}"
         "QPushButton:hover {"
-        "   filter: brightness(1.2);"
+        "    filter: brightness(1.2);"
         "}"
         );
 
@@ -83,12 +77,12 @@ MenuPrincipal::MenuPrincipal(QWidget *parent, const QString &usuario)
     btnManualUsuario->setGeometry(710, 510, 80, 80);
     btnManualUsuario->setStyleSheet(
         "QPushButton {"
-        "   border-image: url(:/btns/icono_manualUsuario.png);"
-        "   border: none;"
-        "   background: transparent;"
+        "    border-image: url(:/btns/icono_manualUsuario.png);"
+        "    border: none;"
+        "    background: transparent;"
         "}"
         "QPushButton:hover {"
-        "   filter: brightness(1.2);"
+        "    filter: brightness(1.2);"
         "}"
         );
 
@@ -96,12 +90,12 @@ MenuPrincipal::MenuPrincipal(QWidget *parent, const QString &usuario)
     btnRegresar->setGeometry(20, 20, 80, 80);
     btnRegresar->setStyleSheet(
         "QPushButton {"
-        "   border-image: url(:/btns/btn_volver_pequeno.png);"
-        "   border: none;"
-        "   background: transparent;"
+        "    border-image: url(:/btns/btn_volver_pequeno.png);"
+        "    border: none;"
+        "    background: transparent;"
         "}"
         "QPushButton:hover {"
-        "   filter: brightness(1.2);"
+        "    filter: brightness(1.2);"
         "}"
         );
 
@@ -110,7 +104,6 @@ MenuPrincipal::MenuPrincipal(QWidget *parent, const QString &usuario)
     connect(btnTienda, &QPushButton::clicked, this, &MenuPrincipal::onTiendaClicked);
     connect(btnRecords, &QPushButton::clicked, this, &MenuPrincipal::onRecordsClicked);
     connect(btnConfiguracion, &QPushButton::clicked, this, &MenuPrincipal::onConfiguracionClicked);
-    //connect(btnSalir, &QPushButton::clicked, this, &MenuPrincipal::onSalirClicked); NIVEL LIBRE
     connect(iconoPerfil, &QPushButton::clicked, this, &MenuPrincipal::miPerfil);
     connect(btnManualUsuario, &QPushButton::clicked, this, &MenuPrincipal::verManualUsuario);
     connect(btnRegresar, &QPushButton::clicked, this, &MenuPrincipal::regresar);
@@ -119,56 +112,53 @@ MenuPrincipal::MenuPrincipal(QWidget *parent, const QString &usuario)
 MenuPrincipal::~MenuPrincipal() {}
 
 void MenuPrincipal::onJugarClicked() {
-    menuNiveles *niveles = new menuNiveles(this, true, usuarioActual);
-    niveles->show();
+    ModoJuego *modo = new ModoJuego();
+    modo->setMenuAnterior(this);
+    modo->setUsuarioActual(usuarioActual);
+    modo->show();
     this->close();
 }
 
 void MenuPrincipal::onInstruccionesClicked() {
-    InstruccionesGenerales *instrucciones = new InstruccionesGenerales();
+    InstruccionesGenerales *instrucciones = new InstruccionesGenerales(nullptr);
+    instrucciones->setUsuario(usuarioActual);
     instrucciones->show();
     this->close();
 }
 
 void MenuPrincipal::onTiendaClicked() {
-    Tienda *tienda = new Tienda();
+    Tienda *tienda = new Tienda(nullptr, usuarioActual);
     tienda->show();
     this->close();
 }
 
 void MenuPrincipal::onRecordsClicked() {
-    Ranking *ranking= new Ranking(this, nullptr, usuarioActual);
+    Ranking *ranking = new Ranking(nullptr, nullptr, usuarioActual);
     ranking->setAttribute(Qt::WA_DeleteOnClose);
     ranking->show();
     this->close();
 }
 
 void MenuPrincipal::onConfiguracionClicked() {
-    Configuracion *config = new Configuracion();
+    Configuracion *config = new Configuracion(nullptr);
+    config->setUsuario(usuarioActual);
     config->show();
     this->close();
 }
 
 void MenuPrincipal::miPerfil(){
-    //vtn de mi perfil
-}
-
-void MenuPrincipal::verManualUsuario(){
-    //vtn manual usuario
-}
-
-//poner el boton de jugar modo libre
-//cambiar el boton de salir a la flecha
-
-void MenuPrincipal::nivelLibre(){
-
-}
-
-void MenuPrincipal::regresar() {
-    InicioScreen *inicio = new InicioScreen();
-    inicio->show();
+    MiPerfil *perfil = new MiPerfil(nullptr);
+    perfil->setUsuario(usuarioActual);
+    perfil->show();
     this->close();
 }
 
+void MenuPrincipal::verManualUsuario(){
+}
 
-//presentacion: mucho del manual de usuario, parte del dis;o, que se va a esperar, dinamica del juego como tal, vender el juego
+void MenuPrincipal::regresar() {
+    InicioScreen *inicio = new InicioScreen(nullptr);
+    inicio->setUsuario(usuarioActual);
+    inicio->show();
+    this->close();
+}

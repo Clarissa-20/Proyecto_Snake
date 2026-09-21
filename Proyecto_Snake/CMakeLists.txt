@@ -43,6 +43,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         configuracion.h configuracion.cpp
         configuracionnivel4.h configuracionnivel4.cpp
         nivel4.h nivel4.cpp
+        modojuego.h modojuego.cpp
+        miperfil.h miperfil.cpp
 
 
 

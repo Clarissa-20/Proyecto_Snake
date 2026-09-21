@@ -18,11 +18,9 @@ private slots:
     void onTiendaClicked();
     void onRecordsClicked();
     void onConfiguracionClicked();
-    //void onSalirClicked();
     void miPerfil();
     void verManualUsuario();
     void regresar();
-    void nivelLibre();
 
 private:
     QLabel *labelFondo;
@@ -31,7 +29,6 @@ private:
     QPushButton *btnTienda;
     QPushButton *btnRecords;
     QPushButton *btnConfiguracion;
-    //QPushButton *btnSalir;
     QPushButton *iconoPerfil;
     QPushButton *btnManualUsuario;
     QPushButton *btnRegresar;

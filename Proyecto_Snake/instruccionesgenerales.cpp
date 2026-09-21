@@ -32,8 +32,12 @@ InstruccionesGenerales::InstruccionesGenerales(QWidget *parent)
 
 InstruccionesGenerales::~InstruccionesGenerales() {}
 
+void InstruccionesGenerales::setUsuario(const QString &usuario) {
+    usuarioActual = usuario;
+}
+
 void InstruccionesGenerales::onVolverMenuClicked() {
-    MenuPrincipal *menuPrincipal = new MenuPrincipal();
+    MenuPrincipal *menuPrincipal = new MenuPrincipal(nullptr, usuarioActual);
     menuPrincipal->show();
     this->close();
 }
