@@ -1021,7 +1021,7 @@ void Nivel::alternarSonido()
     {
         btnSonido->setStyleSheet(
             "QPushButton {"
-            "border-image: url(:/imagenes/btnSinSonido.png);"
+            "border-image: url(:/btns/btnSinSonido.png);"
             "border: none;"
             "}"
             "QPushButton:hover {"
@@ -1034,7 +1034,7 @@ void Nivel::alternarSonido()
     {
         btnSonido->setStyleSheet(
             "QPushButton {"
-            "border-image: url(:/imagenes/btnConSonido.png);"
+            "border-image: url(:/btns/btnConSonido.png);"
             "border: none;"
             "}"
             "QPushButton:hover {"
@@ -1064,7 +1064,7 @@ void Nivel::alternarMusica()
     {
         btnMusica->setStyleSheet(
             "QPushButton {"
-            "border-image: url(:/imagenes/btnSinMusica.png);"
+            "border-image: url(:/btns/btnSinMusica.png);"
             "border: none;"
             "}"
             "QPushButton:hover {"
@@ -1077,7 +1077,7 @@ void Nivel::alternarMusica()
     {
         btnMusica->setStyleSheet(
             "QPushButton {"
-            "border-image: url(:/imagenes/btnConMusica.png);"
+            "border-image: url(:/btns/btnConMusica.png);"
             "border: none;"
             "}"
             "QPushButton:hover {"
