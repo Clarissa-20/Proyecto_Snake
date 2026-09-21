@@ -10,6 +10,7 @@
 #include <QPainter>
 #include <QGuiApplication>
 #include <QScreen>
+#include <QShowEvent>
 
 class MiPerfil : public QWidget {
     Q_OBJECT
@@ -69,6 +70,7 @@ public:
 
 protected:
     void paintEvent(QPaintEvent *event) override;
+    void showEvent(QShowEvent *event) override;
 
 private slots:
     void onVolverClicked();

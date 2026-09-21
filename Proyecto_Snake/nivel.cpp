@@ -4483,6 +4483,39 @@ void Nivel::dibujarEncabezadoPartidaPendiente(QPainter &painter)
     painter.drawText(QRect(0, 345, width(), 30), Qt::AlignCenter, "Elige si deseas continuar donde la dejaste o comenzar una nueva partida");
 }
 
+// void Nivel::actualizarUsuarioTrasPartida()
+// {
+//     if(usuarioActual.isEmpty())
+//     {
+//         return;
+//     }
+
+//     if(nivelGanado==false)
+//     {
+//         return;
+//     }
+//     std::string nombreUsuario= usuarioActual.toStdString();
+//     Usuario usuario;
+//     if(UserManager::cargarDatosUsuario(nombreUsuario, usuario)==false)
+//     {
+//         return;
+//     }
+//     usuario.puntosTotales= usuario.puntosTotales+puntuacion;
+//     usuario.gemas= usuario.gemas+totalManzanasComidas();
+
+//     if(nivelGanado==true && numeroNivel()==usuario.nivelActual && usuario.nivelActual<3)
+//     {
+//         usuario.nivelActual= usuario.nivelActual+1;
+//     }
+//     else if(nivelGanado==true && numeroNivel()==3)
+//     {
+//         usuario.completoJuego=true;
+//     }
+
+//     UserManager::guardarProgresoUsuario(usuario);
+//     cargarSkinUsuario();
+// }
+
 void Nivel::actualizarUsuarioTrasPartida()
 {
     if(usuarioActual.isEmpty())
@@ -4502,6 +4535,13 @@ void Nivel::actualizarUsuarioTrasPartida()
     }
     usuario.puntosTotales= usuario.puntosTotales+puntuacion;
     usuario.gemas= usuario.gemas+totalManzanasComidas();
+
+    int n = numeroNivel();
+    if(n >= 1 && n <= 3)
+    {
+        usuario.insignias |= (1 << (n - 1));
+        usuario.pedazosMapa |= (1 << (n - 1));
+    }
 
     if(nivelGanado==true && numeroNivel()==usuario.nivelActual && usuario.nivelActual<3)
     {

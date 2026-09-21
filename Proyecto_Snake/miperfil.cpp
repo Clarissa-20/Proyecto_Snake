@@ -318,13 +318,102 @@ void MiPerfil::setUsuario(const QString &usuario) {
     cargarDatosUsuario();
 }
 
+// void MiPerfil::cargarDatosUsuario() {
+//     QString nombresSkins[7] = {
+//         "GUARDIÁN",            // Fallback / predeterminada (ID 0 / por defecto)
+//         "SERPIENTE ESMERALDA", // ID 1
+//         "SERPIENTE CÍTRICA",   // ID 2
+//         "SERPIENTE RUBÍ",      // ID 3
+//         "SERPIENTE ZAFIR",     // ID 4
+//         "SERPIENTE AMESTISTA", // ID 5
+//         "SERPIENTE AUREA"      // ID 6
+//     };
+
+//     if (usuarioActual.isEmpty()) {
+//         imgAvatarUser.load(":/imagenes/avatar_default.png");
+//         if (lblAvatarMarco && !imgAvatarUser.isNull()) {
+//             lblAvatarMarco->setPixmap(imgAvatarUser.scaled(138, 138, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+//         }
+//         imgAvatarSkin.load(":/skins/skin_predeterminada_tienda.png");
+//         if (lblSkinNameBlock) lblSkinNameBlock->setText("GUARDIÁN");
+//         if (lblGemas) lblGemas->setText("GEMAS ACUMULADAS: 0");
+//         if (lblPuntaje) lblPuntaje->setText("PUNTAJE TOTAL: 0");
+//         for(int i=0; i<3; ++i) {
+//             nivelesProgreso[i] = 0;
+//             insigniasDesbloqueadas[i] = false;
+//         }
+//         pedazosMapaRecolectados = 0;
+//         actualizarBloquesVisuales();
+//         return;
+//     }
+
+//     std::string uStr = usuarioActual.toStdString();
+//     Usuario user;
+
+//     if (UserManager::cargarDatosUsuario(uStr, user)) {
+//         int avId = (user.avatarId > 0) ? user.avatarId : 1;
+//         QString rutaAvatar = QString(":/imagenes/avatar_%1.png").arg(avId);
+//         if (!imgAvatarUser.load(rutaAvatar)) {
+//             imgAvatarUser.load(":/imagenes/avatar_default.png");
+//         }
+//         if (lblAvatarMarco && !imgAvatarUser.isNull()) {
+//             lblAvatarMarco->setPixmap(imgAvatarUser.scaled(138, 138, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+//         }
+
+//         if (lblGemas) lblGemas->setText(QString("GEMAS ACUMULADAS: %L1").arg(user.gemas));
+//         if (lblPuntaje) lblPuntaje->setText(QString("PUNTAJE TOTAL: %L1").arg(user.puntosTotales));
+
+//         int skinId = (user.skinActual > 0) ? user.skinActual : 1;
+//         QString rutaSkin = QString(":/skins/skin_%1.png").arg(skinId);
+//         if (!imgAvatarSkin.load(rutaSkin)) {
+//             imgAvatarSkin.load(":/skins/skin_predeterminada_tienda.png");
+//             skinId = 0; // usar índice 0 para "GUARDIÁN" si falla la imagen específica
+//         }
+
+//         if (lblSkinNameBlock) {
+//             int idx = (skinId >= 1 && skinId <= 6) ? skinId : 0;
+//             lblSkinNameBlock->setText(nombresSkins[idx]);
+//         }
+
+//         for(int i=0; i<3; ++i) {
+//             nivelesProgreso[i] = (user.completoJuego || user.nivelActual > (i + 1)) ? 100 : 0;
+//         }
+
+//         for(int i=0; i<3; ++i) {
+//             insigniasDesbloqueadas[i] = (i < user.insignias);
+//         }
+
+//         pedazosMapaRecolectados = user.pedazosMapa;
+
+//         actualizarBloquesVisuales();
+//     } else {
+//         imgAvatarUser.load(":/imagenes/avatar_default.png");
+//         imgAvatarSkin.load(":/skins/skin_predeterminada_tienda.png");
+//         if (lblSkinNameBlock) lblSkinNameBlock->setText("GUARDIÁN");
+//         if (lblGemas) lblGemas->setText("GEMAS ACUMULADAS: 0");
+//         if (lblPuntaje) lblPuntaje->setText("PUNTAJE TOTAL: 0");
+//         actualizarBloquesVisuales();
+//     }
+// }
+
 void MiPerfil::cargarDatosUsuario() {
+    QString nombresSkins[7] = {
+        "GUARDIÁN",            // ID 0 / por defecto
+        "SERPIENTE ESMERALDA", // ID 1
+        "SERPIENTE CÍTRICA",   // ID 2
+        "SERPIENTE RUBÍ",      // ID 3
+        "SERPIENTE ZAFIR",     // ID 4
+        "SERPIENTE AMESTISTA", // ID 5
+        "SERPIENTE AUREA"      // ID 6
+    };
+
     if (usuarioActual.isEmpty()) {
         imgAvatarUser.load(":/imagenes/avatar_default.png");
         if (lblAvatarMarco && !imgAvatarUser.isNull()) {
             lblAvatarMarco->setPixmap(imgAvatarUser.scaled(138, 138, Qt::KeepAspectRatio, Qt::SmoothTransformation));
         }
         imgAvatarSkin.load(":/skins/skin_predeterminada_tienda.png");
+        if (lblSkinNameBlock) lblSkinNameBlock->setText("GUARDIÁN");
         if (lblGemas) lblGemas->setText("GEMAS ACUMULADAS: 0");
         if (lblPuntaje) lblPuntaje->setText("PUNTAJE TOTAL: 0");
         for(int i=0; i<3; ++i) {
@@ -352,26 +441,41 @@ void MiPerfil::cargarDatosUsuario() {
         if (lblGemas) lblGemas->setText(QString("GEMAS ACUMULADAS: %L1").arg(user.gemas));
         if (lblPuntaje) lblPuntaje->setText(QString("PUNTAJE TOTAL: %L1").arg(user.puntosTotales));
 
-        int skinId = (user.skinActual > 0) ? user.skinActual : 1;
-        QString rutaSkin = QString(":/skins/skin_%1.png").arg(skinId);
-        if (!imgAvatarSkin.load(rutaSkin)) {
+        // Manejo de skin activa real
+        int skinId = user.skinActual;
+        QString rutaSkin = QString(":/skins/skin%1_tienda.png").arg(skinId);
+        if (skinId <= 0 || !imgAvatarSkin.load(rutaSkin)) {
             imgAvatarSkin.load(":/skins/skin_predeterminada_tienda.png");
+            skinId = 0;
+        }
+
+        if (lblSkinNameBlock) {
+            int idx = (skinId >= 0 && skinId <= 6) ? skinId : 0;
+            lblSkinNameBlock->setText(nombresSkins[idx]);
         }
 
         for(int i=0; i<3; ++i) {
             nivelesProgreso[i] = (user.completoJuego || user.nivelActual > (i + 1)) ? 100 : 0;
         }
 
+        // Lectura por bitmask para insignias y mapa del templo
         for(int i=0; i<3; ++i) {
-            insigniasDesbloqueadas[i] = (i < user.insignias);
+            insigniasDesbloqueadas[i] = ((user.insignias & (1 << i)) != 0);
         }
 
-        pedazosMapaRecolectados = user.pedazosMapa;
+        int countMapPieces = 0;
+        for(int i=0; i<3; ++i) {
+            if ((user.pedazosMapa & (1 << i)) != 0) {
+                countMapPieces++;
+            }
+        }
+        pedazosMapaRecolectados = countMapPieces;
 
         actualizarBloquesVisuales();
     } else {
         imgAvatarUser.load(":/imagenes/avatar_default.png");
         imgAvatarSkin.load(":/skins/skin_predeterminada_tienda.png");
+        if (lblSkinNameBlock) lblSkinNameBlock->setText("GUARDIÁN");
         if (lblGemas) lblGemas->setText("GEMAS ACUMULADAS: 0");
         if (lblPuntaje) lblPuntaje->setText("PUNTAJE TOTAL: 0");
         actualizarBloquesVisuales();
@@ -386,6 +490,12 @@ void MiPerfil::paintEvent(QPaintEvent *event) {
     if (!imgFondoPerfil.isNull()) {
         painter.drawPixmap(rect(), imgFondoPerfil);
     }
+}
+
+void MiPerfil::showEvent(QShowEvent *event) {
+    QWidget::showEvent(event);
+    cargarDatosUsuario(); // Recarga fresca al mostrar la ventana
+    qDebug() << "MiPerfil - usuarioActual:" << usuarioActual;
 }
 
 void MiPerfil::onVolverClicked() {

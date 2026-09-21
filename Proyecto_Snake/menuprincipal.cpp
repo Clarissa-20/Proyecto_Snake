@@ -133,7 +133,7 @@ void MenuPrincipal::onTiendaClicked() {
 }
 
 void MenuPrincipal::onRecordsClicked() {
-    Ranking *ranking = new Ranking(nullptr, nullptr, usuarioActual);
+    Ranking *ranking = new Ranking(this, nullptr, usuarioActual);
     ranking->setAttribute(Qt::WA_DeleteOnClose);
     ranking->show();
     this->close();
