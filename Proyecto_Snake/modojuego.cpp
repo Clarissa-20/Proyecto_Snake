@@ -81,6 +81,7 @@ void ModoJuego::onModoHistoriaClicked() {
 
 void ModoJuego::onModoLibreClicked() {
     ConfiguracionNivel4 *nivel = new ConfiguracionNivel4();
+    nivel->setUsuarioActual(usuarioActual);
     nivel->show();
     this->close();
 }

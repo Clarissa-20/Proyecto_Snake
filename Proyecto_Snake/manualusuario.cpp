@@ -14,7 +14,7 @@ ManualUsuario::ManualUsuario(QWidget *parent)
     labelFondo->setPixmap(pixmapFondo.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
 
     btnVolver = new QPushButton(this);
-    btnVolver->setGeometry(30, 30, 160, 65);
+    btnVolver->setGeometry(25, 5, 155, 60);
 
     btnVolver->setStyleSheet(
         "QPushButton {"

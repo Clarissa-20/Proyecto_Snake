@@ -52,13 +52,14 @@ private:
     QWidget *menuNiveles;
     bool usandoWASD = false; // false = flechas, true = WASD
     QString usuarioActual;
+    QString usuarioRetorno;
     int skinActualNivel = 0;
     void cargarSkinUsuario();
 public:
     explicit Nivel(QWidget *parent = nullptr);
     virtual ~Nivel() override; //PARA EVITAR FUGAS DE MEMORIA EL VIRTUAL
     void setUsuarioActual(const QString &usuario);
-
+    void setUsuarioRetorno(const QString &usuario);
     void setMenuNiveles(QWidget *menu)
     {
         menuNiveles=menu;

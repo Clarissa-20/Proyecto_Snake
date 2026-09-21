@@ -7,26 +7,6 @@ MusicaManager& MusicaManager::instance() {
     return instance;
 }
 
-// MusicaManager::MusicaManager() {
-//     globalPlayer = new QMediaPlayer();
-//     globalAudio = new QAudioOutput();
-//     globalPlayer->setAudioOutput(globalAudio);
-//     globalAudio->setVolume(0.4);
-
-//     levelPlayer = new QMediaPlayer();
-//     levelAudio = new QAudioOutput();
-//     levelPlayer->setAudioOutput(levelAudio);
-//     levelAudio->setVolume(0.5);
-
-//     QObject::connect(globalPlayer, &QMediaPlayer::playbackStateChanged, [=](QMediaPlayer::PlaybackState state){
-//         if(state == QMediaPlayer::StoppedState) globalPlayer->play();
-//     });
-
-//     QObject::connect(levelPlayer, &QMediaPlayer::playbackStateChanged, [=](QMediaPlayer::PlaybackState state){
-//         if(state == QMediaPlayer::StoppedState) levelPlayer->play();
-//     });
-// }
-
 MusicaManager::MusicaManager() {
     globalPlayer = new QMediaPlayer();
     globalAudio = new QAudioOutput();

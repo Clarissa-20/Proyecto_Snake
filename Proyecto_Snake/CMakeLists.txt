@@ -46,6 +46,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         modojuego.h modojuego.cpp
         miperfil.h miperfil.cpp
         manualusuario.h manualusuario.cpp
+        filtroventanas.h filtroventanas.cpp
 
 
 

@@ -13,7 +13,7 @@ class ConfiguracionNivel4 : public QWidget
     Q_OBJECT
 public:
     explicit ConfiguracionNivel4(QWidget *parent = nullptr);
-
+    void setUsuarioActual(const QString &usuario);
 private slots:
     void onComenzarClicked();
 
@@ -30,6 +30,8 @@ private:
     QSpinBox *spinSkin;
 
     QPushButton *btnComenzar;
+
+    QString usuarioActual;
 };
 
 #endif // CONFIGURACIONNIVEL4_H

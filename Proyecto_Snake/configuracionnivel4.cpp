@@ -69,7 +69,14 @@ void ConfiguracionNivel4::onComenzarClicked()
 
     Nivel4 *nivel4 = new Nivel4(murosInfinitos, bloquesEstaticos, cantidadBloques, skinSeleccionada);
     nivel4->setAttribute(Qt::WA_DeleteOnClose);
+    nivel4->setUsuarioRetorno(usuarioActual);
     nivel4->iniciarPartida();
     nivel4->show();
     this->close();
 }
+
+void ConfiguracionNivel4::setUsuarioActual(const QString &usuario)
+{
+    usuarioActual=usuario;
+}
+
