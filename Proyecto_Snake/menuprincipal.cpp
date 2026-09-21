@@ -11,7 +11,7 @@
 #include <QCoreApplication>
 #include <QMessageBox>
 #include "ranking.h"
-
+#include "manualusuario.h"
 MenuPrincipal::MenuPrincipal(QWidget *parent, const QString &usuario)
     : QMainWindow(parent),
     usuarioActual(usuario)
@@ -154,6 +154,10 @@ void MenuPrincipal::miPerfil(){
 }
 
 void MenuPrincipal::verManualUsuario(){
+    ManualUsuario *manual = new ManualUsuario(nullptr);
+    manual->setUsuario(usuarioActual);
+    manual->show();
+    this->close();
 }
 
 void MenuPrincipal::regresar() {
