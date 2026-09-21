@@ -27,14 +27,14 @@ Nivel3::Nivel3(QWidget *parent) :
         pausaBtn->setGeometry(642, 2, 160, 90);
         pausaBtn->setStyleSheet(
             "QPushButton {"
-            "   border-image: url(:/imagenes/boton_pausa_nivel3.png);"
+            "   border-image: url(:/btns/boton_pausa_nivel3.png);"
             "   border: none;"
             "}"
             "QPushButton:hover {"
             "   opacity: 0.8;"
             "}"
             "QPushButton:pressed {"
-            "   border-image: url(:/imagenes/boton_pausa_nivel3.png);"
+            "   border-image: url(:/btns/boton_pausa_nivel3.png);"
             "}"
             );
     }
