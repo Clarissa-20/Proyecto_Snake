@@ -20,37 +20,31 @@ private:
 
     QPushButton *btnVolver;
 
-    // Imágenes
     QPixmap imgFondoPerfil;
-    QPixmap imgAvatarUser; // Avatar de perfil real de usuario
-    QPixmap imgAvatarSkin; // Skin activa (bloque inferior derecho)
+    QPixmap imgAvatarUser;
+    QPixmap imgAvatarSkin;
 
-    // Tarjeta superior de usuario unificada
     QFrame *frameInfoUsuario;
     QLabel *lblAvatarMarco;
     QLabel *lblNombre;
     QLabel *lblPuntaje;
     QLabel *lblGemas;
 
-    // Bloques inferiores (4 contenedores amplios)
     QFrame *frameBloqueNiveles;
     QFrame *frameBloqueInsignias;
     QFrame *frameBloqueMapa;
     QFrame *frameBloqueSkin;
 
-    // Elementos dinámicos / contadores
     QLabel *lblSkinImgBlock;
     QLabel *lblSkinNameBlock;
     QLabel *lblMapaStatus;
     QLabel *lblInsStatus;
 
-    // Referencias a elementos dinámicos para actualización en vivo
     QLabel *lblNivelStatus[3];
     QLabel *lblInsImg[3];
     QLabel *lblMapaImg[3];
 
-    // Datos de progreso
-    int nivelesProgreso[3] = {0, 0, 0}; // % por nivel
+    int nivelesProgreso[3] = {0, 0, 0};
     bool insigniasDesbloqueadas[3] = {false, false, false};
     int pedazosMapaRecolectados = 0; // 0 a 3
 

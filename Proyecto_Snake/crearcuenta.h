@@ -30,13 +30,11 @@ private:
     QLabel *lblLogin;
     QPushButton *btnRegresar;
 
-    // Requisitos de contraseña
     QLabel *lblReqLongitud;
     QLabel *lblReqMayuscula;
     QLabel *lblReqNumero;
     QLabel *lblReqEspecial;
 
-    // Selección de avatares
     QList<QPushButton*> botonesAvatares;
     int avatarSeleccionado;
 };

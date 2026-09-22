@@ -1,7 +1,6 @@
 #ifndef NIVEL1_H
 #define NIVEL1_H
 
-//#include <QObject>
 #include "nivel.h"
 
 class Nivel1 : public Nivel{

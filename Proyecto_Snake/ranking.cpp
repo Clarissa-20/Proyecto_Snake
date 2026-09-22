@@ -20,7 +20,7 @@ Ranking::Ranking(QWidget *menuPrincipal, QWidget *parent, const QString &usuario
     usuarioActual(usuario)
 {
     setWindowTitle("Ranking");
-    setFixedSize(980, 600);
+    setFixedSize(920, 600);
     move(QGuiApplication::primaryScreen()->availableGeometry().center()-rect().center());
     fondo.load(":/imagenes/fondoRanking.png");
 

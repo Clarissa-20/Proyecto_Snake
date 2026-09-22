@@ -6,65 +6,77 @@
 #include <QPixmap>
 #include <QIcon>
 #include <QMessageBox>
+#include <QLabel>
 #include <fstream>
 #include <sstream>
 
 Login::Login(QWidget *parent)
     : QMainWindow(parent) {
 
-    this->setFixedSize(800, 600);
+    this->setFixedSize(1280, 720);
     this->setWindowTitle("Snake - Acceso de Explorador");
 
     labelFondo = new QLabel(this);
-    labelFondo->setGeometry(0, 0, 800, 600);
+    labelFondo->setGeometry(0, 0, 1280, 720);
     QPixmap pixmapFondo(":/imagenes/login_fondo.jpg");
     labelFondo->setPixmap(pixmapFondo.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
 
     QString estiloInputs = "QLineEdit {"
-                           "background: transparent;"
-                           "border: none;"
+                           "background-color: rgba(25, 20, 15, 210);"
+                           "border: 2px solid #d4af37;"
+                           "border-radius: 8px;"
                            "color: #e6dfc8;"
                            "font-family: 'Georgia';"
                            "font-size: 16px;"
-                           "padding-left: 10px;"
+                           "padding-left: 12px;"
+                           "selection-background-color: #d4af37;"
                            "}";
 
+    int xCentro = 475;
+    int anchoBloque = 330;
+
+    QLabel *lblLabelUsuario = new QLabel("USUARIO", this);
+    lblLabelUsuario->setGeometry(xCentro, 290, anchoBloque, 22);
+    lblLabelUsuario->setStyleSheet("font-family: 'Georgia'; font-size: 13px; color: #d4af37; font-weight: bold; background: transparent;");
+
     txtUsuario = new QLineEdit(this);
-    txtUsuario->setGeometry(255, 230, 290, 45);
-    txtUsuario->setPlaceholderText("Usuario");
+    txtUsuario->setGeometry(xCentro, 315, anchoBloque, 48);
+    txtUsuario->setPlaceholderText("Ingresa tu usuario");
     txtUsuario->setStyleSheet(estiloInputs);
 
-    //ARREGLAR LO DE LOS CAMPOS DE DATOS
+    QLabel *lblLabelContrasena = new QLabel("CONTRASEÑA", this);
+    lblLabelContrasena->setGeometry(xCentro, 385, anchoBloque, 22);
+    lblLabelContrasena->setStyleSheet("font-family: 'Georgia'; font-size: 13px; color: #d4af37; font-weight: bold; background: transparent;");
 
     txtContrasena = new QLineEdit(this);
-    txtContrasena->setGeometry(255, 335, 290, 45);
+    txtContrasena->setGeometry(xCentro, 410, anchoBloque, 48);
     txtContrasena->setEchoMode(QLineEdit::Password);
-    txtContrasena->setPlaceholderText("Contraseña");
+    txtContrasena->setPlaceholderText("Ingresa tu contraseña");
     txtContrasena->setStyleSheet(estiloInputs);
 
     btnEntrar = new QPushButton(this);
-    btnEntrar->setGeometry(265, 435, 270, 55);
+    btnEntrar->setGeometry(xCentro, 480, anchoBloque, 75);
     QPixmap pixmapBtn(":/btns/boton_entrar.png");
     btnEntrar->setIcon(QIcon(pixmapBtn));
     btnEntrar->setIconSize(btnEntrar->size());
-    btnEntrar->setStyleSheet("QPushButton { border: none; background: transparent; }");
+    btnEntrar->setStyleSheet("QPushButton { border: none; background: transparent; } QPushButton:hover { filter: brightness(1.2); }");
 
     lblRegistrarse = new QLabel(this);
-    lblRegistrarse->setGeometry(250, 530, 300, 30);
-    lblRegistrarse->setText("<a href='registrar' style='color: #d4af37; text-decoration: none;'>¿No tienes cuenta? Registrate aqui</a>");
+    lblRegistrarse->setGeometry(xCentro, 570, anchoBloque, 32);
+    lblRegistrarse->setText("<a href='registrar' style='color: #ffd700; text-decoration: none; font-weight: bold;'>¿No tienes cuenta? Regístrate aquí</a>");
     lblRegistrarse->setAlignment(Qt::AlignCenter);
-    lblRegistrarse->setStyleSheet("font-family: 'Georgia'; font-size: 14px; background: transparent;");
+    lblRegistrarse->setStyleSheet("font-family: 'Georgia'; font-size: 14px; background: rgba(20, 12, 8, 0.7); border-radius: 4px; padding: 2px;");
 
     btnRegresar = new QPushButton(this);
     btnRegresar->setGeometry(20, 20, 80, 80);
     btnRegresar->setStyleSheet(
         "QPushButton {"
-        "   border-image: url(:/btns/btn_volver_pequeno.png);"
-        "   border: none;"
-        "   background: transparent;"
+        "    border-image: url(:/btns/btn_volver_pequeno.png);"
+        "    border: none;"
+        "    background: transparent;"
         "}"
         "QPushButton:hover {"
-        "   filter: brightness(1.2);"
+        "    filter: brightness(1.25);"
         "}"
         );
 

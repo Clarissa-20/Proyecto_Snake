@@ -4,7 +4,6 @@
 Nivel1::Nivel1(QWidget *parent)
     : Nivel(parent)
 {
-    //cargamos aqui la img de fondo para el nivel 1
     fondo.load(":/imagenes/nivel1_fondo.png");
 
     cols=((width()-(2*marginX))/cellsize)-1;
@@ -22,7 +21,6 @@ void Nivel1::paintEvent(QPaintEvent *)
         painter.fillRect(rect(), Qt::black);
     }
 
-    // Cuadro semitransparente para delimitar el área jugable
     painter.setBrush(QColor(0, 0, 0, 140));
     painter.setPen(QPen(QColor(120, 110, 100), 2));
     painter.drawRect(marginX, marginY, cols * cellsize, rows * cellsize);
@@ -69,28 +67,77 @@ void Nivel1::paintEvent(QPaintEvent *)
         painter.drawText(QRect(0,330, width(), 60), Qt::AlignCenter, "PARTIDA PAUSADA");
 
     }
+
     if(gameover==true)
     {
-        painter.fillRect(rect(), QColor(0,0,0,150));
-        painter.setPen(Qt::white);
-        painter.setFont(QFont("Trebuchet MS", 24, QFont::Bold));
+        painter.fillRect(rect(), QColor(0,0,0,180));
+
+        int panelW = 460;
+        int panelH = nivelGanado ? 520 : 340;
+        int panelX = (width() - panelW) / 2;
+        int panelY = (height() - panelH) / 2;
+
+        painter.setBrush(QColor(30, 22, 14, 230));
+        painter.setPen(QPen(QColor(212, 175, 55), 3));
+        painter.drawRoundedRect(panelX, panelY, panelW, panelH, 16, 16);
+
         if(nivelGanado)
         {
-            painter.drawText(QRect(0, height()/2-130, width(), 50), Qt::AlignHCenter, "¡NIVEL COMPLETADO!");
-            painter.setFont(QFont("Trebuchet MS", 14, QFont::Bold));
-            painter.drawText(QRect(0, height()/2-95, width(), 20), Qt::AlignCenter,QString("Puntaje: %1").arg(puntuacion));
-            painter.drawText(QRect(0, height()/2-72, width(), 20), Qt::AlignCenter,QString("Gemas: %1").arg(totalManzanasComidas()));
-            painter.drawText(QRect(0, height()/2-49, width(), 20), Qt::AlignCenter,QString("Manzanas rojas: %1").arg(manzanasComidas));
-            painter.drawText(QRect(0, height()/2-26, width(), 20), Qt::AlignCenter,QString("Manzanas doradas: %1").arg(doradasComidas));
+            painter.setPen(QColor(255, 215, 0));
+            painter.setFont(QFont("Trebuchet MS", 26, QFont::Bold));
+            painter.drawText(QRect(panelX, panelY + 20, panelW, 40), Qt::AlignCenter, "¡NIVEL COMPLETADO!");
+
+            painter.setPen(QColor(244, 232, 193));
+            painter.setFont(QFont("Segoe UI", 12, QFont::Bold));
+            int startStatsY = panelY + 68;
+            int lineHeight = 21;
+            painter.drawText(QRect(panelX, startStatsY, panelW, 20), Qt::AlignCenter, QString("Puntaje: %1").arg(puntuacion));
+            painter.drawText(QRect(panelX, startStatsY + lineHeight, panelW, 20), Qt::AlignCenter, QString("Gemas: %1").arg(totalManzanasComidas()));
+            painter.drawText(QRect(panelX, startStatsY + lineHeight*2, panelW, 20), Qt::AlignCenter, QString("Manzanas rojas: %1").arg(manzanasComidas));
+            painter.drawText(QRect(panelX, startStatsY + lineHeight*3, panelW, 20), Qt::AlignCenter, QString("Manzanas doradas: %1").arg(doradasComidas));
+
+            painter.setPen(QColor(212, 175, 55));
+            painter.setFont(QFont("Segoe UI", 11, QFont::Bold));
+            painter.drawText(QRect(panelX, panelY + 160, panelW, 20), Qt::AlignCenter, ganoPremio ? "¡Ganó la insignia!" : "No ganó la insignia:(");
+
+            QPixmap imgInsignia(":/imagenes/insignia_1.png");
+            QPixmap imgMapa(":/imagenes/map_piece_1.png");
+
+            int slotSize = 68;
+            int slotY = panelY + 190;
+
+            int slotInsigniaX = panelX + (panelW / 2) - 85;
+            painter.setBrush(QColor(20, 15, 10, 180));
+            painter.setPen(QPen(QColor(139, 115, 85), 1));
+            painter.drawRoundedRect(slotInsigniaX, slotY, slotSize, slotSize, 8, 8);
+            if(!imgInsignia.isNull()) {
+                painter.drawPixmap(slotInsigniaX + 8, slotY + 8, slotSize - 16, slotSize - 16, imgInsignia);
+            }
+            painter.setPen(QColor(224, 208, 176));
+            painter.setFont(QFont("Segoe UI", 9));
+            painter.drawText(QRect(slotInsigniaX, slotY + slotSize + 3, slotSize, 16), Qt::AlignCenter, "Insignia");
+
+            int slotMapaX = panelX + (panelW / 2) + 17;
+            painter.setBrush(QColor(20, 15, 10, 180));
+            painter.setPen(QPen(QColor(139, 115, 85), 1));
+            painter.drawRoundedRect(slotMapaX, slotY, slotSize, slotSize, 8, 8);
+            if(!imgMapa.isNull()) {
+                painter.drawPixmap(slotMapaX + 8, slotY + 8, slotSize - 16, slotSize - 16, imgMapa);
+            }
+            painter.setPen(QColor(224, 208, 176));
+            painter.drawText(QRect(slotMapaX, slotY + slotSize + 3, slotSize, 16), Qt::AlignCenter, "Parte Mapa");
         }
         else
         {
-            painter.drawText(QRect(0, height()/2-35, width(), 50), Qt::AlignHCenter, "¡GAME OVER!");
-            painter.setFont(QFont("Trebuchet MS", 14, QFont::Bold));
+            painter.setPen(QColor(255, 77, 77));
+            painter.setFont(QFont("Trebuchet MS", 26, QFont::Bold));
+            painter.drawText(QRect(panelX, panelY + 75, panelW, 40), Qt::AlignCenter, "¡GAME OVER!");
+
+            painter.setPen(QColor(244, 232, 193));
+            painter.setFont(QFont("Segoe UI", 13));
+            painter.drawText(QRect(panelX, panelY + 140, panelW, 30), Qt::AlignCenter, ganoPremio ? "¡Ganó la insignia!" : "No ganó la insignia:(");
         }
-
-        painter.drawText(QRect(0, height()/2, width(), 30), Qt::AlignCenter,ganoPremio ? "¡Ganó la insignia!" : "No ganó la insignia:(");
-
     }
+
     dibujarEncabezadoPartidaPendiente(painter);
 }

@@ -6,24 +6,24 @@
 InicioScreen::InicioScreen(QWidget *parent)
     : QMainWindow(parent) {
 
-    this->setFixedSize(800, 600);
+    this->setFixedSize(1280, 720);
     this->setWindowTitle("Snake - El Templo Perdido");
 
     labelFondo = new QLabel(this);
-    labelFondo->setGeometry(0, 0, 800, 600);
+    labelFondo->setGeometry(0, 0, 1280, 720);
     QPixmap pixmapFondo(":/imagenes/inicio_screen_fondo.jpg");
     labelFondo->setPixmap(pixmapFondo.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
 
     btnIniciar = new QPushButton(this);
-    btnIniciar->setGeometry(160, 250, 490, 200);
+    btnIniciar->setGeometry(270, 420, 740, 200);
     btnIniciar->setStyleSheet(
         "QPushButton {"
-        "   border-image: url(:/btns/boton_play.png);"
-        "   border: none;"
-        "   background: transparent;"
+        "    border-image: url(:/btns/boton_play.png);"
+        "    border: none;"
+        "    background: transparent;"
         "}"
         "QPushButton:hover {"
-        "   filter: brightness(1.2);"
+        "    filter: brightness(1.25);"
         "}"
         );
 

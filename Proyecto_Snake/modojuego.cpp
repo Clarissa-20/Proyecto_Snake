@@ -14,7 +14,7 @@ ModoJuego::ModoJuego(QWidget *parent)
     , btnVolver(nullptr)
     , menuAnterior(nullptr)
 {
-    setFixedSize(800, 600);
+    setFixedSize(1280, 720);
     move(QGuiApplication::primaryScreen()->availableGeometry().center() - rect().center());
     setFocusPolicy(Qt::StrongFocus);
 
@@ -24,30 +24,36 @@ ModoJuego::ModoJuego(QWidget *parent)
     btnVolver->setGeometry(20, 20, 80, 80);
     btnVolver->setStyleSheet(
         "QPushButton {"
-        "   border-image: url(:/btns/btn_volver_pequeno.png);"
-        "   border: none;"
+        "    border-image: url(:/btns/btn_volver_pequeno.png);"
+        "    border: none;"
         "}"
         "QPushButton:hover { opacity: 0.8; }"
         );
     connect(btnVolver, &QPushButton::clicked, this, &ModoJuego::onVolverClicked);
 
+    int anchoBtn = 380;
+    int altoBtn = 68;
+    int posX = (1280 - anchoBtn) / 2;
+    int posYInicial = 280;
+    int separacionY = 90;
+
     btnModoHistoria = new QPushButton(this);
-    btnModoHistoria->setGeometry(250, 270, 300, 60);
+    btnModoHistoria->setGeometry(posX, posYInicial, anchoBtn, altoBtn);
     btnModoHistoria->setStyleSheet(
         "QPushButton {"
-        "   border-image: url(:/btns/btn_modo_historia.png);"
-        "   border: none;"
+        "    border-image: url(:/btns/btn_modo_historia.png);"
+        "    border: none;"
         "}"
         "QPushButton:hover { opacity: 0.8; }"
         );
     connect(btnModoHistoria, &QPushButton::clicked, this, &ModoJuego::onModoHistoriaClicked);
 
     btnModoLibre = new QPushButton(this);
-    btnModoLibre->setGeometry(250, 350, 300, 60);
+    btnModoLibre->setGeometry(posX, posYInicial + separacionY, anchoBtn, altoBtn);
     btnModoLibre->setStyleSheet(
         "QPushButton {"
-        "   border-image: url(:/btns/btn_modo_libre.png);"
-        "   border: none;"
+        "    border-image: url(:/btns/btn_modo_libre.png);"
+        "    border: none;"
         "}"
         "QPushButton:hover { opacity: 0.8; }"
         );
