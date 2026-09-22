@@ -10,8 +10,6 @@
 #include <cstdio>
 #include <QDir>
 #include "menuprincipal.h"
-//#include <QGuiApplication>
-//#include <QScreen>
 
 Nivel::Nivel(QWidget *parent)
     : QWidget(parent)

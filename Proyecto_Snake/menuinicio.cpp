@@ -8,23 +8,23 @@
 MenuInicio::MenuInicio(QWidget *parent)
     : QMainWindow(parent) {
 
-    this->setFixedSize(800, 600);
+    this->setFixedSize(1280, 720);
     this->setWindowTitle("Snake - Menú de Inicio");
 
     labelFondo = new QLabel(this);
-    labelFondo->setGeometry(0, 0, 800, 600);
+    labelFondo->setGeometry(0, 0, 1280, 720);
     QPixmap pixmapFondo(":/imagenes/inicio_screen_fondo.jpg");
     labelFondo->setPixmap(pixmapFondo.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
 
     btnIniciarSesion = new QPushButton(this);
-    btnIniciarSesion->setGeometry(100, 420, 280, 55);
+    btnIniciarSesion->setGeometry(260, 480, 360, 85);
     QPixmap pixmapBtn1(":/btns/iniciar_sesion_boton.png");
     btnIniciarSesion->setIcon(QIcon(pixmapBtn1));
     btnIniciarSesion->setIconSize(btnIniciarSesion->size());
     btnIniciarSesion->setStyleSheet("QPushButton { border: none; background: transparent; }");
 
     btnRegistrarse = new QPushButton(this);
-    btnRegistrarse->setGeometry(420, 420, 280, 55);
+    btnRegistrarse->setGeometry(660, 480, 360, 85);
     QPixmap pixmapBtn2(":/btns/registrarse_boton.png");
     btnRegistrarse->setIcon(QIcon(pixmapBtn2));
     btnRegistrarse->setIconSize(btnRegistrarse->size());
@@ -34,12 +34,12 @@ MenuInicio::MenuInicio(QWidget *parent)
     btnRegresar->setGeometry(20, 20, 80, 80);
     btnRegresar->setStyleSheet(
         "QPushButton {"
-        "   border-image: url(:/btns/btn_volver_pequeno.png);"
-        "   border: none;"
-        "   background: transparent;"
+        "    border-image: url(:/btns/btn_volver_pequeno.png);"
+        "    border: none;"
+        "    background: transparent;"
         "}"
         "QPushButton:hover {"
-        "   filter: brightness(1.2);"
+        "    filter: brightness(1.2);"
         "}"
         );
 

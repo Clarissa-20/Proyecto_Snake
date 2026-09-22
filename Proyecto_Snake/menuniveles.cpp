@@ -89,9 +89,6 @@ menuNiveles::menuNiveles(QWidget *parent)
         "QPushButton:hover {"
         "opacity: 0.8;"
         "}"
-        /*"QPushButton:pressed {"
-        "border-image: url(:/imagenes/btnConSonido.png);"
-        "}"*/
         );
     connect(btnNivel1, &QPushButton::clicked, this, [this](){mostrarInstrucciones(1);});
     connect(btnNivel2, &QPushButton::clicked, this, [this](){mostrarInstrucciones(2);});
@@ -117,28 +114,6 @@ menuNiveles::menuNiveles(QWidget *menu, bool desdeMenuPrincipal, const QString &
         actualizarBotonesNiveles(1);
     }
 }
-
-/*void menuNiveles::paintEvent(QPaintEvent *event)
-{
-    if(usuarioActual.isEmpty()==false)
-    {
-        Usuario datosUsuarioActual;
-        if(UserManager::cargarDatosUsuario(usuarioActual.toStdString(), datosUsuarioActual)==true)
-        {
-            actualizarBotonesNiveles(datosUsuarioActual.nivelActual);
-        }
-    }
-    QPainter painter(this);
-
-    if(!fondoMenu.isNull())
-    {
-        painter.drawPixmap(rect(), fondoMenu);
-    }
-    else
-    {
-        painter.fillRect(rect(), Qt::black);
-    }
-}*/
 
 void menuNiveles::paintEvent(QPaintEvent *event) {
     Q_UNUSED(event);
@@ -218,9 +193,6 @@ void menuNiveles::alternarSonido()
             "QPushButton:hover {"
             "opacity: 0.8;"
             "}"
-            /*"QPushButton:pressed {"
-        "border-image: url(:/imagenes/btnConSonido.png);"
-        "}"*/
             );
         sonidoActivado=false;
     }
@@ -234,9 +206,6 @@ void menuNiveles::alternarSonido()
             "QPushButton:hover {"
             "opacity: 0.8;"
             "}"
-            /*"QPushButton:pressed {"
-        "border-image: url(:/imagenes/btnConSonido.png);"
-        "}"*/
             );
         sonidoActivado=true;
 

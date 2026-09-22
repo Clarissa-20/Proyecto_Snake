@@ -87,7 +87,7 @@ Tienda::Tienda(QWidget *parent, const QString &usuario)
             "background: transparent;"
             );
 
-        labelPrecios[i] = new QLabel(QString("💎 %1 Gemas 💎").arg(costosSkins[i]), labelSkins[i]);
+        labelPrecios[i] = new QLabel(QString(" %1 Gemas ").arg(costosSkins[i]), labelSkins[i]);
         labelPrecios[i]->setGeometry(10, altoItem - 35, anchoItem - 20, 22);
         labelPrecios[i]->setAlignment(Qt::AlignCenter);
         labelPrecios[i]->setStyleSheet(
@@ -114,7 +114,7 @@ Tienda::Tienda(QWidget *parent, const QString &usuario)
             "}"
             );
 
-        int skinIdReal = i + 1; // IDs del 1 al 6
+        int skinIdReal = i + 1;
         int costoActual = costosSkins[i];
         connect(btnComprar[i], &QPushButton::clicked, [=]() {
             onComprarSkinClicked(skinIdReal, costoActual);
@@ -190,7 +190,6 @@ void Tienda::onComprarSkinClicked(int skinId, int costo) {
         return;
     }
 
-    // Refrescar datos actuales
     UserManager::cargarDatosUsuario(usuarioActual.toStdString(), usuarioData);
 
     bool comprada = usuarioData.tieneSkin(skinId);
@@ -199,7 +198,6 @@ void Tienda::onComprarSkinClicked(int skinId, int costo) {
     if (equipada) return;
 
     if (comprada) {
-        // Equipar skin ya poseída
         usuarioData.skinActual = skinId;
         UserManager::guardarProgresoUsuario(usuarioData);
         qDebug() << "Skin equipada:" << skinId;
@@ -207,7 +205,6 @@ void Tienda::onComprarSkinClicked(int skinId, int costo) {
         return;
     }
 
-    // Comprar nueva skin
     if (usuarioData.gemas >= costo) {
         usuarioData.gemas -= costo;
         usuarioData.skinActual = skinId;

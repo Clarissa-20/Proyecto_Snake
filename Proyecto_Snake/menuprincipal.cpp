@@ -12,23 +12,24 @@
 #include <QMessageBox>
 #include "ranking.h"
 #include "manualusuario.h"
+
 MenuPrincipal::MenuPrincipal(QWidget *parent, const QString &usuario)
     : QMainWindow(parent),
     usuarioActual(usuario)
 {
-    this->setFixedSize(800, 600);
+    this->setFixedSize(1280, 720);
     this->setWindowTitle("Snake - Menú Principal");
 
     labelFondo = new QLabel(this);
-    labelFondo->setGeometry(0, 0, 800, 600);
+    labelFondo->setGeometry(0, 0, 1280, 720);
     QPixmap pixmapFondo(":/imagenes/menu_principal_fondo.jpg");
     labelFondo->setPixmap(pixmapFondo.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
 
-    int anchoBtn = 300;
-    int altoBtn = 48;
-    int posX = 250;
-    int posYInicial = 265;
-    int separacionY = 53;
+    int anchoBtn = 360;
+    int altoBtn = 60;
+    int posX = (1280 - anchoBtn) / 2;
+    int posYInicial = 245;
+    int separacionY = 70;
 
     btnJugar = new QPushButton(this);
     btnJugar->setGeometry(posX, posYInicial, anchoBtn, altoBtn);
@@ -60,8 +61,10 @@ MenuPrincipal::MenuPrincipal(QWidget *parent, const QString &usuario)
     btnConfiguracion->setIconSize(btnConfiguracion->size());
     btnConfiguracion->setStyleSheet("QPushButton { border: none; background: transparent; }");
 
+    int rightX = 1280 - 80 - 20;
+
     iconoPerfil = new QPushButton(this);
-    iconoPerfil->setGeometry(710, 20, 80, 80);
+    iconoPerfil->setGeometry(rightX, 20, 80, 80);
     iconoPerfil->setStyleSheet(
         "QPushButton {"
         "    border-image: url(:/btns/icono_miPerfil.png);"
@@ -74,7 +77,7 @@ MenuPrincipal::MenuPrincipal(QWidget *parent, const QString &usuario)
         );
 
     btnManualUsuario = new QPushButton(this);
-    btnManualUsuario->setGeometry(710, 510, 80, 80);
+    btnManualUsuario->setGeometry(rightX, 720 - 80 - 20, 80, 80);
     btnManualUsuario->setStyleSheet(
         "QPushButton {"
         "    border-image: url(:/btns/icono_manualUsuario.png);"

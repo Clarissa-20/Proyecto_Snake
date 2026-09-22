@@ -173,11 +173,11 @@
         <file>imagenes/map_piece_1.png</file>
         <file>imagenes/map_piece_2.png</file>
         <file>imagenes/map_piece_3.png</file>
-        <file>imagenes/insignia_1.png</file>
-        <file>imagenes/insignia_2.png</file>
-        <file>imagenes/insignia_3.png</file>
         <file>musica/Musica_Juego.mp3</file>
         <file>musica/Musica_Niveles.mp3</file>
         <file>imagenes/manualUsuario.png</file>
+        <file>imagenes/insignia_1.png</file>
+        <file>imagenes/insignia_2.png</file>
+        <file>imagenes/insignia_3.png</file>
     </qresource>
 </RCC>

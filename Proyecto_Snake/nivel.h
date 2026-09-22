@@ -1,22 +1,18 @@
 #ifndef NIVEL_H
 #define NIVEL_H
 
-//#include <QtCore>
 #include <QTimer>
 #include <QPushButton>
 #include <QPoint>
 
-//#include <QtWidgets>
 #include <QWidget>
 #include <QRandomGenerator>
 #include <QPainter>
 #include <QKeyEvent>
-//#include <QtGui>
 
-#include <QPixmap> //nueva libreria para manejar las imagenes
+#include <QPixmap>
 #include <QString>
 
-//sonido
 #include <QMediaPlayer>
 #include <QAudioOutput>
 #include <QUrl>
@@ -30,7 +26,6 @@ namespace Ui {
 class GameWindow;
 }
 QT_END_NAMESPACE
-//integración de nodo prueba #1
 struct Nodo
 {
     int x;
