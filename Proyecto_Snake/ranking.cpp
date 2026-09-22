@@ -195,8 +195,8 @@ void Ranking::cargarDatosGlobal()
                 QTableWidgetItem *tempUsuario= listaGlobal->takeItem(j, 0);
                 QTableWidgetItem *tempPuntos= listaGlobal->takeItem(j, 1);
 
-                listaGlobal->setItem(j, 0, listaGlobal->takeItem(j+1, 0));
-                listaGlobal->setItem(j, 1, listaGlobal->takeItem(j+1, 1));
+                listaGlobal->setItem(j, 0, listaGlobal->takeItem(j+1, 0));//columnaUsuario
+                listaGlobal->setItem(j, 1, listaGlobal->takeItem(j+1, 1));//columnaPuntoss
 
                 listaGlobal->setItem(j+1, 0, tempUsuario);
                 listaGlobal->setItem(j+1, 1, tempPuntos);

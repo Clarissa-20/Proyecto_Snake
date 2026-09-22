@@ -44,7 +44,7 @@ void Nivel2::iniciarGeneracionPorTiempo()
 
     ejecutarCicloGeneracion();
     timerGeneracion->start(intervaloGeneracionMs);
-    timerCronometro->start(1000);
+    timerCronometro->start(1000); //90s
 }
 
 void Nivel2::finalizarPorTiempo()
